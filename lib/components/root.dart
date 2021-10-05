@@ -69,7 +69,7 @@ class _RootState extends State<Root> {
         context: context,
         builder: (context) {
           return Container(
-              height: 240,
+              height: 280,
               padding: EdgeInsets.only(top: 20),
               child: ListView.builder(
                 itemCount: EventsNavigation.titles.length,
