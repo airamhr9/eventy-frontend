@@ -6,65 +6,162 @@ class AddEvent extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _eventNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _summaryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return (Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(color: Colors.white),
-        child: Form(
-            child: Column(
-          children: [
-            TextFormField(
-              controller: _eventNameController,
-              validator: (value) {
-                return (value!.isEmpty) ? 'El evento debe tener nombre' : null;
-              },
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none),
-                  filled: true,
-                  hintText: "Nombre"),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
+    return (SingleChildScrollView(
+        child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(color: Colors.white),
+            child: Form(
+                child: Column(
               children: [
-                Icon(
-                  Icons.calendar_today_rounded,
-                  color: Theme.of(context).primaryColor,
+                TextFormField(
+                  controller: _eventNameController,
+                  validator: (value) {
+                    return (value!.isEmpty)
+                        ? 'El evento debe tener nombre'
+                        : null;
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none),
+                      filled: true,
+                      hintText: "Nombre"),
                 ),
                 SizedBox(
-                  width: 10,
+                  height: 20,
                 ),
-                Text(
-                  "Fecha y hora",
-                  style: TextStyle(fontSize: 18, color: Colors.black54),
+                buildDatePickers("Fecha de inicio", context),
+                SizedBox(
+                  height: 20,
                 ),
-                Spacer(),
-                TextButton(
-                  child: Text(
-                    "Cambiar",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(context,
-                        showTitleActions: true,
-                        minTime: DateTime.now(),
-                        maxTime: DateTime.now().add(Duration(days: 730)),
-                        onChanged: (date) {
-                      print('change $date');
-                    }, onConfirm: (date) {
-                      print('confirm $date');
-                    }, currentTime: DateTime.now(), locale: LocaleType.es);
+                buildDatePickers("Fecha de final", context),
+                SizedBox(
+                  height: 20,
+                ),
+                buildMapPicker(context),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  minLines: 1,
+                  controller: _summaryController,
+                  validator: (value) {
+                    return (value!.isEmpty)
+                        ? 'El evento debe tener resumen'
+                        : null;
                   },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none),
+                      filled: true,
+                      hintText: "Resumen"),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  minLines: 8,
+                  maxLines: 20,
+                  controller: _descriptionController,
+                  validator: (value) {
+                    return (value!.isEmpty)
+                        ? 'El evento debe tener descripcion'
+                        : null;
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none),
+                      filled: true,
+                      hintText: "Descripcion"),
                 ),
               ],
-            )
+            )))));
+  }
+
+  Widget buildDatePickers(String title, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(color: Colors.black54),
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.calendar_today_rounded,
+              color: Theme.of(context).primaryColor,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Sin seleccionar",
+              style: TextStyle(fontSize: 18, color: Colors.black54),
+            ),
+            Spacer(),
+            TextButton(
+              child: Text(
+                "Cambiar",
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime.now(),
+                    maxTime: DateTime.now().add(Duration(days: 730)),
+                    onChanged: (date) {
+                  print('change $date');
+                }, onConfirm: (date) {
+                  print('confirm $date');
+                }, currentTime: DateTime.now(), locale: LocaleType.es);
+              },
+            ),
           ],
-        ))));
+        )
+      ],
+    );
+  }
+
+  Widget buildMapPicker(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Ubicación",
+          style: TextStyle(color: Colors.black54),
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.place_rounded,
+              color: Theme.of(context).primaryColor,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Sin seleccionar",
+              style: TextStyle(fontSize: 18, color: Colors.black54),
+            ),
+            Spacer(),
+            TextButton(
+              child: Text(
+                "Cambiar",
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        )
+      ],
+    );
   }
 }
