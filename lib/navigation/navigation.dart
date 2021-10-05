@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import '../components/pages/home.dart';
+import 'package:eventy_front/components/pages/communities.dart';
+import 'package:eventy_front/components/pages/home.dart';
+import 'package:eventy_front/components/pages/profile.dart';
+import 'package:eventy_front/components/pages/search.dart';
+import 'package:flutter/material.dart';
 
 class EventsNavigation {
   static const NAV_HOME = 0;
@@ -18,11 +21,11 @@ class EventsNavigation {
       case NAV_HOME:
         return Home();
       case NAV_SEARCH:
-        return Home();
+        return Search();
       case NAV_COMMUNITY:
-        return Home();
+        return Communities();
       case NAV_PROFILE:
-        return Home();
+        return Profile();
       default:
         return Home();
     }
