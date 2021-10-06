@@ -1,3 +1,4 @@
+import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/navigation/custom_bottom_drawer.dart';
 import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
@@ -51,11 +52,7 @@ class _RootState extends State<Root> {
         shape: AutomaticNotchedShape(
             RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: Text("Unirse"),
-        icon: Icon(Icons.add_rounded),
-      ),
+      floatingActionButton: getCurrentFab(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -89,5 +86,61 @@ class _RootState extends State<Root> {
                 },
               ));
         });
+  }
+
+  Widget getCurrentFab(BuildContext context) {
+    late Text label;
+    late Icon icon;
+    Function onPressed = () {};
+
+    switch (currentSelectedIndex) {
+      case EventsNavigation.NAV_HOME:
+        {
+          icon = Icon(Icons.person_add_rounded);
+          label = Text("Unirse");
+          break;
+        }
+      case EventsNavigation.NAV_SEARCH:
+        {
+          icon = Icon(Icons.search_rounded);
+          label = Text("Buscar");
+          break;
+        }
+      case EventsNavigation.NAV_COMMUNITY:
+        {
+          icon = Icon(Icons.search_rounded);
+          label = Text("Buscar");
+          break;
+        }
+      case EventsNavigation.NAV_PROFILE:
+        {
+          icon = Icon(Icons.edit_rounded);
+          label = Text("Editar");
+          break;
+        }
+      case EventsNavigation.NAV_MY_EVENTS:
+        {
+          onPressed = () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddEvent()),
+            );
+          };
+          icon = Icon(Icons.add_rounded);
+          label = Text("Crear evento");
+          break;
+        }
+      default:
+        {
+          icon = Icon(Icons.search_rounded);
+          label = Text("Buscar");
+          break;
+        }
+    }
+    return FloatingActionButton.extended(
+      onPressed: () => onPressed(),
+      label: label,
+      icon: icon,
+    );
   }
 }

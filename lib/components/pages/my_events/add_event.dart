@@ -22,130 +22,136 @@ class _AddEventState extends State<AddEvent> {
 
   @override
   Widget build(BuildContext context) {
-    return (SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: BoxDecoration(color: Colors.white),
-            child: Form(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: BorderSide(
-                          color: Theme.of(context).primaryColor,
-                          width: 2,
-                          style: BorderStyle.solid)),
-                  child: Container(
-                    height: 100,
-                    child: Center(
-                        child: Icon(Icons.photo_camera_rounded,
-                            color: Theme.of(context).primaryColor)),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Crear evento"),
+        automaticallyImplyLeading: true,
+      ),
+      body: (SingleChildScrollView(
+          child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              decoration: BoxDecoration(color: Colors.white),
+              child: Form(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                            style: BorderStyle.solid)),
+                    child: Container(
+                      height: 100,
+                      child: Center(
+                          child: Icon(Icons.photo_camera_rounded,
+                              color: Theme.of(context).primaryColor)),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _eventNameController,
-                  validator: (value) {
-                    return (value!.isEmpty)
-                        ? 'El evento debe tener nombre'
-                        : null;
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none),
-                      filled: true,
-                      hintText: "Nombre"),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                buildDatePickers("Fecha de inicio", context),
-                SizedBox(
-                  height: 20,
-                ),
-                buildDatePickers("Fecha de final", context),
-                SizedBox(
-                  height: 20,
-                ),
-                buildMapPicker(context),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  minLines: 1,
-                  controller: _summaryController,
-                  validator: (value) {
-                    return (value!.isEmpty)
-                        ? 'El evento debe tener resumen'
-                        : null;
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none),
-                      filled: true,
-                      hintText: "Resumen"),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  minLines: 8,
-                  maxLines: 20,
-                  controller: _descriptionController,
-                  validator: (value) {
-                    return (value!.isEmpty)
-                        ? 'El evento debe tener descripcion'
-                        : null;
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none),
-                      filled: true,
-                      hintText: "Descripcion"),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                buildVisibilityRadioGroup(context),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: 180,
-                  child: TextFormField(
-                    maxLength: 10,
-                    controller: _priceController,
-                    keyboardType: TextInputType.number,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _eventNameController,
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'El evento debe tener nombre'
+                          : null;
+                    },
                     decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.euro_rounded),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none),
                         filled: true,
-                        hintText: "Precio"),
+                        hintText: "Nombre"),
                   ),
-                ),
-                buildMaxAssistants(context),
-                ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity,
-                            50), // double.infinity is the width and 30 is the height
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                    onPressed: () {},
-                    icon: Icon(Icons.add_rounded),
-                    label: Text("Publicar evento"))
-              ],
-            )))));
+                  SizedBox(
+                    height: 20,
+                  ),
+                  buildDatePickers("Fecha de inicio", context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  buildDatePickers("Fecha de final", context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  buildMapPicker(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    minLines: 1,
+                    controller: _summaryController,
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'El evento debe tener resumen'
+                          : null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Resumen"),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    minLines: 8,
+                    maxLines: 20,
+                    controller: _descriptionController,
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'El evento debe tener descripcion'
+                          : null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Descripcion"),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  buildVisibilityRadioGroup(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 180,
+                    child: TextFormField(
+                      maxLength: 10,
+                      controller: _priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.euro_rounded),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none),
+                          filled: true,
+                          hintText: "Precio"),
+                    ),
+                  ),
+                  buildMaxAssistants(context),
+                  ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity,
+                              50), // double.infinity is the width and 30 is the height
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                      onPressed: () {},
+                      icon: Icon(Icons.add_rounded),
+                      label: Text("Publicar evento"))
+                ],
+              ))))),
+    );
   }
 
   Widget buildMaxAssistants(BuildContext context) {
