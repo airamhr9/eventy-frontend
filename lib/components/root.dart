@@ -28,7 +28,6 @@ class _RootState extends State<Root> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawerEnableOpenDragGesture: true,
       appBar: AppBar(
         title: Text(title),
         elevation: 0,
@@ -54,7 +53,7 @@ class _RootState extends State<Root> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
         label: Text("Unirse"),
-        icon: Icon(Icons.add),
+        icon: Icon(Icons.add_rounded),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
