@@ -39,7 +39,7 @@ class _AddCommunityState extends State<AddCommunity> {
                           width: 2,
                           style: BorderStyle.solid)),
                   child: Container(
-                    height: 100,
+                    height: 150,
                     child: Center(
                         child: Icon(Icons.photo_camera_rounded,
                             color: Theme.of(context).primaryColor)),
@@ -66,6 +66,13 @@ class _AddCommunityState extends State<AddCommunity> {
                 SizedBox(
                   height: 20,
                 ),
+                Text(
+                  "Logo",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
                 Card(
                   //Logo
                   elevation: 0,
@@ -77,6 +84,7 @@ class _AddCommunityState extends State<AddCommunity> {
                           style: BorderStyle.solid)),
                   child: Container(
                     height: 100,
+                    width: 100,
                     child: Center(
                         child: Icon(Icons.photo_camera_rounded,
                             color: Theme.of(context).primaryColor)),
@@ -104,10 +112,37 @@ class _AddCommunityState extends State<AddCommunity> {
                 SizedBox(
                   height: 20,
                 ),
-                buildVisibilityRadioGroup(context),
+                Text(
+                  "Añadir Evento",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity,
+                            40), // double.infinity is the width and 40 is the height
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    onPressed: () {},
+                    icon: Icon(Icons.add_circle_rounded),
+                    label: Text("")),
+                /**************/
+                //ListView.builder(itemBuilder: itemBuilder),
+                /**************/
                 SizedBox(
                   height: 20,
                 ),
+                Text(
+                  "Etiquetas",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                /**************/
+                //ListView.builder(itemBuilder: itemBuilder),
+                /**************/
+                buildVisibilityRadioGroup(context),
                 ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity,
@@ -116,8 +151,11 @@ class _AddCommunityState extends State<AddCommunity> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15))),
                     onPressed: () {},
-                    icon: Icon(Icons.add_rounded),
-                    label: Text("Publicar evento"))
+                    icon: Icon(Icons.add),
+                    label: Text("Crear comunidad")),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             )))));
   }
