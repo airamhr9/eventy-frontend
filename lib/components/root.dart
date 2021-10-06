@@ -35,6 +35,7 @@ class _RootState extends State<Root> {
       ),
       body: body,
       drawer: CustomBottomDrawer(),
+      drawerEnableOpenDragGesture: false,
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
