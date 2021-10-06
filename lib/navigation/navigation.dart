@@ -1,3 +1,4 @@
+import 'package:eventy_front/components/pages/add_communities.dart';
 import 'package:eventy_front/components/pages/add_event.dart';
 import 'package:eventy_front/components/pages/communities.dart';
 import 'package:eventy_front/components/pages/home.dart';
@@ -11,12 +12,14 @@ class EventsNavigation {
   static const NAV_COMMUNITY = 2;
   static const NAV_PROFILE = 3;
   static const NAV_ADD_EVENT = 4;
+  static const NAV_ADD_COMM = 5;
   static const titles = [
     "Home",
     "Búsqueda",
     "Comunidades",
     "Perfil",
-    "Crear Evento"
+    "Crear Evento",
+    "Crear Comunidad"
   ];
 
   static Widget getNavItem(int navItem) {
@@ -31,6 +34,8 @@ class EventsNavigation {
         return Profile();
       case NAV_ADD_EVENT:
         return AddEvent();
+      case NAV_ADD_COMM:
+        return AddCommunity();
       default:
         return Home();
     }

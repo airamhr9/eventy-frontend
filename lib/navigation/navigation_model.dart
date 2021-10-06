@@ -12,5 +12,6 @@ List<NavigationModel> navigationItems = [
   NavigationModel(text: "Búsqueda", icon: Icons.search_rounded),
   NavigationModel(text: "Comunidades", icon: Icons.people_rounded),
   NavigationModel(text: "Perfil", icon: Icons.person),
-  NavigationModel(text: "Crear evento", icon: Icons.add)
+  NavigationModel(text: "Crear evento", icon: Icons.add),
+  NavigationModel(text: "Crear comunidad", icon: Icons.add)
 ];
