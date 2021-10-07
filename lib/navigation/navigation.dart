@@ -1,6 +1,6 @@
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/components/pages/communities/communities.dart';
-import 'package:eventy_front/components/pages/home.dart';
+import 'package:eventy_front/components/pages/home/home.dart';
 import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile.dart';
 import 'package:eventy_front/components/pages/search.dart';
@@ -13,7 +13,7 @@ class EventsNavigation {
   static const NAV_PROFILE = 3;
   static const NAV_MY_EVENTS = 4;
   static const titles = [
-    "Home",
+    "Eventos para ti",
     "Búsqueda",
     "Comunidades",
     "Perfil",

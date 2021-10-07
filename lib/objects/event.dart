@@ -1,4 +1,4 @@
-class Eventy {
+class Event {
   int id;
   String description;
   String startDate; //Solo String temporalmente
@@ -6,6 +6,7 @@ class Eventy {
   List<String> images;
   String location; //Solo String temporalmente
   int maxParticipants;
+  List<int> participants;
   String name;
   int ownerId;
   double price;
@@ -13,7 +14,7 @@ class Eventy {
   String summary;
   List<String> tags;
 
-  Eventy(
+  Event(
       this.id,
       this.description,
       this.startDate,
@@ -21,6 +22,7 @@ class Eventy {
       this.images,
       this.location,
       this.maxParticipants,
+      this.participants,
       this.name,
       this.ownerId,
       this.price,
@@ -28,8 +30,8 @@ class Eventy {
       this.summary,
       this.tags);
 
-  factory Eventy.fromJson(Map<String, dynamic> json) {
-    return Eventy(
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
       json['id'],
       json['description'],
       json['startDate'],
@@ -37,6 +39,7 @@ class Eventy {
       (json['images'] as List).cast<String>(),
       json['location'],
       json['maxParticipants'],
+      (json['participants'] as List).cast<int>(),
       json['name'],
       json['owner'],
       json['price'].toDouble(),

@@ -8,6 +8,7 @@
   "name" : "Fiesta erasmus",
   "owner" : 0,
   "price" : 25,
+  "participants" : [ 1 ],
   "private" : false,
   "startDate" : "24/09/2021 20:00",
   "summary" : "Fiesta de bienvenida",

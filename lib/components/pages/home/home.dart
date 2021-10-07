@@ -1,3 +1,4 @@
+import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Color> colors = [Colors.black, Colors.red, Colors.blue, Colors.green];
-  List<Eventy> events = [];
+  List<Event> events = [];
 
   @override
   void initState() {
@@ -32,12 +33,7 @@ class _HomeState extends State<Home> {
             swipeVelocityThreshold: 2000,
             animationDuration: const Duration(milliseconds: 200),
             builder: (BuildContext context, int index) {
-              return Container(
-                child: Text(
-                  events[index].name,
-                  style: const TextStyle(fontSize: 48, color: Colors.black),
-                ),
-              );
+              return RecommendedEvent(events[index]);
             },
           )
         : Center(

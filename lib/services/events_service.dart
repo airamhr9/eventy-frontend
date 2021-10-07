@@ -8,13 +8,13 @@ class EventService {
   @override
   String url = "";
 
-  Future<List<Eventy>> get() async {
+  Future<List<Event>> get() async {
     //sustituir por llamada a server
     print("Here service");
     final String response =
         await rootBundle.loadString('mock_data/events.json');
     final data = await json.decode(response) as List;
-    List<Eventy> events = data.map((event) => Eventy.fromJson(event)).toList();
+    List<Event> events = data.map((event) => Event.fromJson(event)).toList();
     return events;
   }
 }
