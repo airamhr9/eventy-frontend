@@ -1,3 +1,4 @@
+import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/navigation/custom_bottom_drawer.dart';
 import 'package:eventy_front/navigation/drawer_tile.dart';
@@ -108,8 +109,14 @@ class _RootState extends State<Root> {
         }
       case EventsNavigation.NAV_COMMUNITY:
         {
-          icon = Icon(Icons.search_rounded);
-          label = Text("Buscar");
+          onPressed = () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddCommunity()),
+            );
+          };
+          icon = Icon(Icons.add_rounded);
+          label = Text("Crear comunidad");
           break;
         }
       case EventsNavigation.NAV_PROFILE:

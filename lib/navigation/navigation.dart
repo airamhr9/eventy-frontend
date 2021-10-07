@@ -1,5 +1,5 @@
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
-import 'package:eventy_front/components/pages/communities.dart';
+import 'package:eventy_front/components/pages/communities/communities.dart';
 import 'package:eventy_front/components/pages/home.dart';
 import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile.dart';
