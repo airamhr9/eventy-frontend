@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
 class AddCommunity extends StatefulWidget {
@@ -15,9 +14,7 @@ class _AddCommunityState extends State<AddCommunity> {
   final TextEditingController _descriptionCommunityController =
       TextEditingController();
 
-  //final TextEditingController _membersController = TextEditingController();
   String _visibilityValue = "Público";
-  //bool hasMaxMembers = false;
 
   @override
   Widget build(BuildContext context) {
