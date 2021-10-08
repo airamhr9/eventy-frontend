@@ -1,5 +1,6 @@
+import 'package:eventy_front/components/pages/communities/my_communities.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
-import 'package:eventy_front/components/pages/communities/communities.dart';
+import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
 import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile.dart';
@@ -15,7 +16,7 @@ class EventsNavigation {
   static const titles = [
     "Eventos para ti",
     "Búsqueda",
-    "Comunidades",
+    "Mis Comunidades",
     "Perfil",
     "Mis Eventos"
   ];
@@ -27,7 +28,7 @@ class EventsNavigation {
       case NAV_SEARCH:
         return Search();
       case NAV_COMMUNITY:
-        return Communities();
+        return MyCommunities();
       case NAV_PROFILE:
         return Profile();
       case NAV_MY_EVENTS:

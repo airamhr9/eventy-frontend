@@ -2,15 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:flutter/material.dart';
 
-class Communities extends StatefulWidget {
+class Community_view extends StatefulWidget {
   final Community community;
-  const Communities(this.community) : super();
+  const Community_view(this.community) : super();
 
   @override
   _CommunitiesState createState() => _CommunitiesState();
 }
 
-class _CommunitiesState extends State<Communities> {
+class _CommunitiesState extends State<Community_view> {
   get placeholderImages => null;
 
   @override
