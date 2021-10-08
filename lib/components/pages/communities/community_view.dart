@@ -67,16 +67,6 @@ class _CommunitiesState extends State<Community_view> {
                   ),
                   SizedBox(
                     height: 10,
-                  ),
-                  Text(
-                    widget.community.summary,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 10,
                   )
                 ],
               ),
