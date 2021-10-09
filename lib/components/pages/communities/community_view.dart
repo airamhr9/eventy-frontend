@@ -11,7 +11,11 @@ class CommunityView extends StatefulWidget {
 }
 
 class _CommunitiesState extends State<CommunityView> {
-  get placeholderImages => null;
+  List<String> placeholderImages = [
+    "https://media-exp1.licdn.com/dms/image/C561BAQE-51J-8KkMZg/company-background_10000/0/1548357920228?e=2159024400&v=beta&t=D9EoYj6SBCp9zbnp8ZZdHpF27Kl29zabOtAvJw3qz4w",
+    "https://partfy.com/user_files/images/12814/96d27938569aab78a9b1f8c3f5f4b045_live-event-streaming.jpg",
+    "https://www1.chester.ac.uk/sites/default/files/styles/hero_mobile/public/Music-Production-and-Promotion_0.jpg?itok=AMRG5XBn"
+  ];
 
   @override
   Widget build(BuildContext context) {

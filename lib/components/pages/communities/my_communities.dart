@@ -1,4 +1,6 @@
+import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/material.dart';
 
 class MyCommunities extends StatefulWidget {
@@ -8,27 +10,47 @@ class MyCommunities extends StatefulWidget {
   _MyCommunitiesState createState() => _MyCommunitiesState();
 }
 
-List<Community> MyCommunitiesList = [];
-
 class _MyCommunitiesState extends State<MyCommunities> {
+  List<Community> myCommunitiesList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    CommunityService().get().then((value) => setState(() {
+          print("Here");
+          myCommunitiesList = value;
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      color: Colors.transparent,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          /*ListView.builder(
-            itemCount: MyCommunitiesList.length,
-            itemBuilder: (context, position){
-              // Devolver la comunidad 
-            },
-          ),*/
-        ],
-      ),
+    return Scaffold(
+        body: ListView.builder(
+      itemCount: myCommunitiesList.length,
+      itemBuilder: (context, position) {
+        return ListTile(
+          title: Text(myCommunitiesList[position].name),
+          subtitle: Row(
+            children: [
+              Icon(Icons.person),
+              Text(myCommunitiesList[position].members.length.toString() +
+                  " miembros")
+            ],
+          ),
+          leading: Icon(Icons.person)
+          /*CircleAvatar(backgroundImage: 
+              AssetImage(myCommunitiesList[position].logo)
+            )*/
+          ,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CommunityView(myCommunitiesList[position])));
+          },
+        );
+      },
     ));
   }
 }

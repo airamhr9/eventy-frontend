@@ -28,7 +28,6 @@ class RecommendedEventState extends State<RecommendedEvent> {
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
