@@ -7,13 +7,12 @@ class Community {
   List<Event> events;
   int members;
   String name;
-  int ownerId;
+  int creator;
   bool private;
-  String summary;
   List<String> tags;
 
   Community(this.id, this.description, this.images, this.events, this.members,
-      this.name, this.ownerId, this.private, this.summary, this.tags);
+      this.name, this.creator, this.private, this.tags);
 
   factory Community.fromJson(Map<String, dynamic> json) {
     return Community(
@@ -23,9 +22,8 @@ class Community {
       (json['events'] as List).cast<Event>(),
       json['members'],
       json['name'],
-      json['owner'],
+      json['creator'],
       json['private'],
-      json['summary'],
       (json['tags'] as List).cast<String>(),
     );
   }
