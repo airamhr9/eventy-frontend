@@ -1,0 +1,23 @@
+[ {
+  "creator" : 2,
+  "description" : "Quedadas para jugar a Pokemos Go en Valencia. El videojuego requiere que el jugador recorra las calles de su ciudad para descubrir toda clase de Pokémon, cuyas distintas especies aparecen dependiendo de la zona visitada. Las calles del mundo real aparecen representadas en Pokémon GO en forma de mapa, que muestra el lugar donde se encuentra el jugador. Además, los mapas de Pokémon GO integran diferentes Pokeparadas (Pokéstops) que permiten conocer museos, instalaciones artísticas, monumentos y lugares históricos, entre otros. Utiliza la realidad aumentada y de acuerdo con el concepto original, los entrenadores podrán capturar Pokémon hasta completar una colección. Otro objetivo es adiestrarlos para que ganen batallas frente a otros. Haciendo uso del GPS del teléfono, la app le avisará con una vibración y una luz intermitente cuando el usuario se encuentre cerca de un Pokémon.",
+  "id" : 0,
+  "images" : [ "pokemonGo1.jpg", "pokemonGo2.jpg" ],
+  "logo" : "pokemonGoLogo.jpg",
+  "members" : [ 0, 1 ],
+  "name" : "Pokemon Go Valencia",
+  "private" : false,
+  "tags" : [ "Gaming" ]
+} ,
+{
+  "creator" : 2,
+  "description" : "Quedadas para jugar a Pokemos Go en Valencia",
+  "id" : 0,
+  "images" : [ "pokemonGo1.jpg", "pokemonGo2.jpg" ],
+  "logo" : "pokemonGoLogo.jpg",
+  "members" : [ 0, 1, 2, 3 ],
+  "name" : "Pokemon Go Madrid",
+  "private" : false,
+  "tags" : [ "Gaming" ]
+}
+]
