@@ -28,20 +28,24 @@ class _MyCommunitiesState extends State<MyCommunities> {
         body: ListView.builder(
       itemCount: myCommunitiesList.length,
       itemBuilder: (context, position) {
-        return ListTile(
+        return Card(
+            child: ListTile(
           title: Text(myCommunitiesList[position].name),
           subtitle: Row(
             children: [
-              Icon(Icons.person),
-              Text(myCommunitiesList[position].members.length.toString() +
+              Icon(Icons.people, size: 18),
+              Text("  " +
+                  myCommunitiesList[position].members.length.toString() +
                   " miembros")
             ],
           ),
-          leading: Icon(Icons.person)
-          /*CircleAvatar(backgroundImage: 
+          leading:
+              /*CircleAvatar(backgroundImage: 
               AssetImage(myCommunitiesList[position].logo)
             )*/
-          ,
+              CircleAvatar(
+            backgroundColor: Colors.purpleAccent,
+          ),
           onTap: () {
             Navigator.push(
                 context,
@@ -49,7 +53,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
                     builder: (context) =>
                         CommunityView(myCommunitiesList[position])));
           },
-        );
+        ));
       },
     ));
   }

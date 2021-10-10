@@ -19,13 +19,22 @@ class _CommunitiesState extends State<CommunityView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        color: Colors.transparent,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.community.name),
+        actions: [
+          IconButton(
+              onPressed: () {
+                //Redireccion al chat de la comunidad
+              },
+              icon: Icon(Icons.chat))
+        ],
+        automaticallyImplyLeading: true,
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(color: Colors.white),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           children: [
             CarouselSlider(
               options: CarouselOptions(
@@ -50,29 +59,50 @@ class _CommunitiesState extends State<CommunityView> {
                 );
               }).toList(),
             ),
-            Spacer(),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  SizedBox(
-                    height: 15,
-                  ),
+                  Spacer(),
+                  Icon(Icons.people, size: 24),
                   Text(
-                    widget.community.name,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 26,
-                        color: Colors.black87),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  )
+                      "  " +
+                          widget.community.members.length.toString() +
+                          " miembros",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18)),
+                  Spacer()
                 ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(
+                          250, 50), // 250 is the width and 100 is the height
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                  onPressed: () {
+                    //Redireccion a lista de eventos de la comunidad
+                  },
+                  icon: Icon(Icons.calendar_today_rounded),
+                  label: Text("Eventos organizados")),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: 200,
+              child: SingleChildScrollView(
+                child: Text(widget.community.description),
               ),
             ),
           ],
