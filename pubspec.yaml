@@ -32,6 +32,7 @@ dependencies:
   tiktoklikescroller: ^0.1.8
   carousel_slider: ^4.0.0
   http: ^0.13.3
+  geolocator: ^7.7.0
 
 dev_dependencies:
   flutter_test:
