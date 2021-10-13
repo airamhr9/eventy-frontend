@@ -1,9 +1,11 @@
 import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
+import 'package:eventy_front/components/pages/profile/profile.dart';
 import 'package:eventy_front/navigation/custom_bottom_drawer.dart';
 import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
 import 'package:eventy_front/navigation/navigation_model.dart';
+import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:flutter/material.dart';
 
 class Root extends StatefulWidget {
@@ -133,6 +135,12 @@ class _RootState extends State<Root> {
         }
       case EventsNavigation.NAV_PROFILE:
         {
+          onPressed = () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileEdit()),
+            );
+          };
           icon = Icon(Icons.edit_rounded);
           label = Text("Editar");
           break;

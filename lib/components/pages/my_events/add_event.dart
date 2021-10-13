@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent() : super();
@@ -19,6 +22,17 @@ class _AddEventState extends State<AddEvent> {
   final TextEditingController _assistantsController = TextEditingController();
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
+  late File _image;
+
+  _imgFromGallery() async {
+    ImagePicker picker = ImagePicker();
+    PickedFile? image =
+    await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = image as File;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +49,25 @@ class _AddEventState extends State<AddEvent> {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                            style: BorderStyle.solid)),
-                    child: Container(
-                      height: 100,
-                      child: Center(
-                          child: Icon(Icons.photo_camera_rounded,
-                              color: Theme.of(context).primaryColor)),
-                    ),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        _imgFromGallery();
+                      }, // handle your image tap here
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2,
+                                style: BorderStyle.solid)),
+                        child: Container(
+                          height: 100,
+                          child: Center(
+                              child: Icon(Icons.photo_camera_rounded,
+                                  color: Theme.of(context).primaryColor)),
+                        ),
+                      )),
                   SizedBox(
                     height: 20,
                   ),
@@ -141,8 +159,8 @@ class _AddEventState extends State<AddEvent> {
                   buildMaxAssistants(context),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity,
-                              50), // double.infinity is the width and 30 is the height
+                          minimumSize: Size(double.infinity, 50),
+                          // double.infinity is the width and 30 is the height
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),

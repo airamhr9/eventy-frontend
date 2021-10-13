@@ -31,6 +31,7 @@ dependencies:
   group_radio_button: ^1.1.0
   tiktoklikescroller: ^0.1.8
   carousel_slider: ^4.0.0
+  image_picker: ^0.8.4+2
 
 dev_dependencies:
   flutter_test:
