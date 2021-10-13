@@ -11,11 +11,11 @@
 } ,
 {
   "creator" : 2,
-  "description" : "Quedadas para jugar a Pokemos Go en Valencia",
+  "description" : "Quedadas para jugar a Pokemos Go en Madrid",
   "id" : 0,
   "images" : [ "pokemonGo1.jpg", "pokemonGo2.jpg" ],
   "logo" : "pokemonGoLogo.jpg",
-  "members" : [ 0, 1, 2, 3 ],
+  "members" : [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ],
   "name" : "Pokemon Go Madrid",
   "private" : false,
   "tags" : [ "Gaming" ]

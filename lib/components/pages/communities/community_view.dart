@@ -12,9 +12,9 @@ class CommunityView extends StatefulWidget {
 
 class _CommunitiesState extends State<CommunityView> {
   List<String> placeholderImages = [
-    "https://media-exp1.licdn.com/dms/image/C561BAQE-51J-8KkMZg/company-background_10000/0/1548357920228?e=2159024400&v=beta&t=D9EoYj6SBCp9zbnp8ZZdHpF27Kl29zabOtAvJw3qz4w",
-    "https://partfy.com/user_files/images/12814/96d27938569aab78a9b1f8c3f5f4b045_live-event-streaming.jpg",
-    "https://www1.chester.ac.uk/sites/default/files/styles/hero_mobile/public/Music-Production-and-Promotion_0.jpg?itok=AMRG5XBn"
+    "https://pokemongolive.com/img/posts/gobattleleague-season1.jpg",
+    "https://lh3.googleusercontent.com/3TSaKxXGo2wT0lu0AyNUBnkk6wkCC2AzOhJyy3JXIPm-AmZ1k9DSAroWeBUyePswCZSs5lVp3mPF7HzUpY9VPlyOV5eddITONINr3WSqLNLm=e365-w600",
+    "https://i.blogs.es/2e39a5/anniversaryposter2019/1366_2000.jpeg",
   ];
 
   @override
