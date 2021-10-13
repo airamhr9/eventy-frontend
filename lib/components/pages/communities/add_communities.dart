@@ -9,6 +9,8 @@ class AddCommunity extends StatefulWidget {
 }
 
 class _AddCommunityState extends State<AddCommunity> {
+  List<Chip> tags = [];
+
   final TextEditingController _communityNameController =
       TextEditingController();
   final TextEditingController _descriptionCommunityController =
@@ -141,9 +143,16 @@ class _AddCommunityState extends State<AddCommunity> {
                   SizedBox(
                     height: 20,
                   ),
-                  /**************/
-                  //ListView.builder(itemBuilder: itemBuilder),
-                  /**************/
+                  ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity,
+                              40), // double.infinity is the width and 30 is the height
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      onPressed: () {},
+                      icon: Icon(Icons.tag),
+                      label: Text("Lista de etiquetas")),
                   buildVisibilityRadioGroup(context),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
