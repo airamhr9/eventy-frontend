@@ -7,12 +7,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final primaryBlue = Color.fromARGB(255, 204, 234, 253);
+  //final primaryBlue = Color.fromARGB(255, 204, 234, 253);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primaryColor: primaryBlue, accentColor: primaryBlue),
+      //theme: ThemeData(primaryColor: primaryBlue, accentColor: primaryBlue),
       home: Root(selectedPage: EventsNavigation.NAV_HOME),
     );
   }

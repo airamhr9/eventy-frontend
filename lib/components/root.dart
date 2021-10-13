@@ -19,7 +19,7 @@ class _RootState extends State<Root> {
   late Widget body;
   late String title;
   int currentSelectedIndex = 0;
-  Color darkBlue = Color.fromARGB(255, 1, 31, 46);
+  //Color darkBlue = Color.fromARGB(255, 1, 31, 46);
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _RootState extends State<Root> {
       appBar: AppBar(
         title: Text(
           title,
-          style: TextStyle(color: darkBlue),
+          //style: TextStyle(color: darkBlue),
         ),
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -51,13 +51,13 @@ class _RootState extends State<Root> {
                 },
                 icon: Icon(
                   Icons.menu_rounded,
-                  color: darkBlue,
+                  //color: darkBlue,
                 )),
             Spacer(),
             IconButton(
                 icon: Icon(
                   Icons.more_vert,
-                  color: darkBlue,
+                  //color: darkBlue,
                 ),
                 onPressed: () {}),
           ],
@@ -159,7 +159,7 @@ class _RootState extends State<Root> {
     return FloatingActionButton.extended(
       onPressed: () => onPressed(),
       label: label,
-      foregroundColor: Color.fromARGB(255, 1, 31, 46),
+      //foregroundColor: Color.fromARGB(255, 1, 31, 46),
       icon: icon,
     );
   }
