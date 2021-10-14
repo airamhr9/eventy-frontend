@@ -9,7 +9,15 @@ class AddCommunity extends StatefulWidget {
 }
 
 class _AddCommunityState extends State<AddCommunity> {
-  List<Chip> tags = [];
+  List<Chip> tags = [
+    Chip(
+      label: Text("Tag1"),
+    ),
+    Chip(
+      label: Text("Tag2"),
+    )
+  ];
+  List<String> tagsCommunity = [];
 
   final TextEditingController _communityNameController =
       TextEditingController();
@@ -141,18 +149,17 @@ class _AddCommunityState extends State<AddCommunity> {
                     style: TextStyle(color: Colors.black54),
                   ),
                   SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      child: Wrap(
+                    spacing: 5,
+                    runSpacing: 3,
+                    children: [...tags.map(buildTagFilterChip)],
+                  )),
+                  SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity,
-                              40), // double.infinity is the width and 30 is the height
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {},
-                      icon: Icon(Icons.tag),
-                      label: Text("Lista de etiquetas")),
                   buildVisibilityRadioGroup(context),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -207,4 +214,21 @@ class _AddCommunityState extends State<AddCommunity> {
       ],
     );
   }
+
+  Widget buildTagFilterChip(Chip tag) => FilterChip(
+        label: tag.label,
+        selected: tagsCommunity.contains(tag.label),
+        selectedColor: Colors.blueAccent,
+        onSelected: (bool selected) {
+          setState(() {
+            if (selected) {
+              tagsCommunity.add(tag.label.toString());
+              print("\n" + tagsCommunity.toString());
+            } else {
+              tagsCommunity.remove(tag.label);
+              print("\n" + tagsCommunity.toString());
+            }
+          });
+        },
+      );
 }
