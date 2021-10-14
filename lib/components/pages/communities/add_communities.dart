@@ -1,3 +1,5 @@
+import 'package:eventy_front/objects/tag.dart';
+import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
@@ -9,14 +11,17 @@ class AddCommunity extends StatefulWidget {
 }
 
 class _AddCommunityState extends State<AddCommunity> {
-  List<Chip> tags = [
-    Chip(
-      label: Text("Tag1"),
-    ),
-    Chip(
-      label: Text("Tag2"),
-    )
-  ];
+  List<Tag> tags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    TagsService().get().then((value) => setState(() {
+          print("Here");
+          tags = value;
+        }));
+  }
+
   List<String> tagsCommunity = [];
 
   final TextEditingController _communityNameController =
@@ -155,7 +160,27 @@ class _AddCommunityState extends State<AddCommunity> {
                       child: Wrap(
                     spacing: 5,
                     runSpacing: 3,
-                    children: [...tags.map(buildTagFilterChip)],
+                    children: [
+                      ...tags.map(buildTagFilterChip).toList()
+                      /*tags.forEach((tag) {
+                        FilterChip(
+                          label: Text(tag.name),
+                          selected: tagsCommunity.contains(tag.name),
+                          selectedColor: Colors.blueAccent,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (!selected) {
+                                tagsCommunity.add(tag.name.toString());
+                                print("\n" + tagsCommunity.toString());
+                              } else {
+                                tagsCommunity.remove(tag.name);
+                                print("\n" + tagsCommunity.toString());
+                              }
+                            });
+                          },
+                        );
+                      })*/
+                    ],
                   )),
                   SizedBox(
                     height: 20,
@@ -215,17 +240,17 @@ class _AddCommunityState extends State<AddCommunity> {
     );
   }
 
-  Widget buildTagFilterChip(Chip tag) => FilterChip(
-        label: tag.label,
-        selected: tagsCommunity.contains(tag.label),
+  Widget buildTagFilterChip(Tag tag) => FilterChip(
+        label: Text(tag.name),
+        selected: tagsCommunity.contains(tag.name),
         selectedColor: Colors.blueAccent,
         onSelected: (bool selected) {
           setState(() {
             if (selected) {
-              tagsCommunity.add(tag.label.toString());
+              tagsCommunity.add(tag.name.toString());
               print("\n" + tagsCommunity.toString());
             } else {
-              tagsCommunity.remove(tag.label);
+              tagsCommunity.remove(tag.name);
               print("\n" + tagsCommunity.toString());
             }
           });
