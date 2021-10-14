@@ -1,7 +1,9 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:google_geocoding/google_geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationService {
-  static Future<Position> determinePosition() async {
+  static Future<LatLng> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -13,7 +15,6 @@ class LocationService {
       // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -27,6 +28,15 @@ class LocationService {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    return await Geolocator.getCurrentPosition();
+    Position geoPosition = await Geolocator.getCurrentPosition();
+
+    return LatLng(geoPosition.latitude, geoPosition.longitude);
+  }
+
+  static Future<String> getAddressFromCoords(LatLng coords) async {
+    var googleGeocoding = GoogleGeocoding("Your-Key");
+    return googleGeocoding.geocoding
+        .getReverse(LatLon(coords.latitude, coords.longitude))
+        .toString();
   }
 }

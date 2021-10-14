@@ -29,8 +29,8 @@ class _HomeState extends State<Home> {
     return events.length > 0
         ? TikTokStyleFullPageScroller(
             contentSize: events.length,
-            swipePositionThreshold: 0.2,
-            swipeVelocityThreshold: 2000,
+            swipePositionThreshold: 0.1,
+            swipeVelocityThreshold: 500,
             animationDuration: const Duration(milliseconds: 200),
             builder: (BuildContext context, int index) {
               return RecommendedEvent(events[index]);

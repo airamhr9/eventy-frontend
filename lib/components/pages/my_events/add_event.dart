@@ -1,6 +1,11 @@
+import 'dart:collection';
+
+import 'package:eventy_front/components/pages/my_events/map_view.dart';
+import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
 class AddEvent extends StatefulWidget {
@@ -154,6 +159,19 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
+  void showPlacePicker(BuildContext context) async {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MapPositionSelector()));
+/*     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PlacePicker(
+              "AIzaSyAWIQCv7tzqa0MojVSQ_VkHlwpVjrOFFLM",
+              displayLocation:
+                  LatLng(currentPosition.latitude, currentPosition.longitude),
+            ))); */
+
+    //print(result);
+  }
+
   Widget buildMaxAssistants(BuildContext context) {
     return (Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,7 +275,9 @@ class _AddEventState extends State<AddEvent> {
                 "Cambiar",
                 style: TextStyle(fontSize: 18),
               ),
-              onPressed: () {},
+              onPressed: () {
+                showPlacePicker(context);
+              },
             ),
           ],
         )

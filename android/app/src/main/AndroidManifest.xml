@@ -4,6 +4,10 @@
    <application
         android:label="eventy_front"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+          android:name="com.google.android.geo.API_KEY"
+          android:value="AIzaSyAWIQCv7tzqa0MojVSQ_VkHlwpVjrOFFLM"
+        />
         <activity
             android:exported="true"
             android:name=".MainActivity"
@@ -28,10 +32,6 @@
             <meta-data
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
-              />
-              <meta-data
-                android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyAWIQCv7tzqa0MojVSQ_VkHlwpVjrOFFLM"
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
