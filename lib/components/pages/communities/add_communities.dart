@@ -1,4 +1,6 @@
-import 'package:eventy_front/objects/tag.dart';
+import 'package:eventy_front/components/pages/communities/community_view.dart';
+import 'package:eventy_front/components/pages/my_events/add_event.dart';
+import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -11,7 +13,9 @@ class AddCommunity extends StatefulWidget {
 }
 
 class _AddCommunityState extends State<AddCommunity> {
-  List<Tag> tags = [];
+  late Community community;
+  List<dynamic> tags = [];
+  List<String> tagsCommunity = [];
 
   @override
   void initState() {
@@ -21,8 +25,6 @@ class _AddCommunityState extends State<AddCommunity> {
           tags = value;
         }));
   }
-
-  List<String> tagsCommunity = [];
 
   final TextEditingController _communityNameController =
       TextEditingController();
@@ -140,7 +142,12 @@ class _AddCommunityState extends State<AddCommunity> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddEvent()));
+                      },
                       icon: Icon(Icons.add_circle_rounded),
                       label: Text("")),
                   /**************/
@@ -162,24 +169,6 @@ class _AddCommunityState extends State<AddCommunity> {
                     runSpacing: 3,
                     children: [
                       ...tags.map(buildTagFilterChip).toList()
-                      /*tags.forEach((tag) {
-                        FilterChip(
-                          label: Text(tag.name),
-                          selected: tagsCommunity.contains(tag.name),
-                          selectedColor: Colors.blueAccent,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              if (!selected) {
-                                tagsCommunity.add(tag.name.toString());
-                                print("\n" + tagsCommunity.toString());
-                              } else {
-                                tagsCommunity.remove(tag.name);
-                                print("\n" + tagsCommunity.toString());
-                              }
-                            });
-                          },
-                        );
-                      })*/
                     ],
                   )),
                   SizedBox(
@@ -193,7 +182,25 @@ class _AddCommunityState extends State<AddCommunity> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
-                      onPressed: () {},
+                      onPressed: () {
+                        community.images = [];
+                        community.logo = "";
+                        community.name = _communityNameController.toString();
+                        community.description =
+                            _descriptionCommunityController.toString();
+                        if (_visibilityValue == "Público") {
+                          community.private = false;
+                        } else {
+                          community.private = true;
+                        }
+                        community.tags = tagsCommunity;
+                        community.members = [];
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CommunityView(this.community)));
+                      },
                       icon: Icon(Icons.add),
                       label: Text("Crear comunidad")),
                   SizedBox(
@@ -217,14 +224,15 @@ class _AddCommunityState extends State<AddCommunity> {
           mainAxisSize: MainAxisSize.max,
           children: [
             RadioButton(
-                description: "Pública",
-                value: "Público",
-                groupValue: _visibilityValue,
-                onChanged: (value) {
-                  setState(() {
-                    _visibilityValue = value as String;
-                  });
-                }),
+              description: "Pública",
+              value: "Público",
+              groupValue: _visibilityValue,
+              onChanged: (value) {
+                setState(() {
+                  _visibilityValue = value as String;
+                });
+              },
+            ),
             RadioButton(
                 description: "Privada",
                 value: "Privado",
@@ -240,13 +248,13 @@ class _AddCommunityState extends State<AddCommunity> {
     );
   }
 
-  Widget buildTagFilterChip(Tag tag) => FilterChip(
+  Widget buildTagFilterChip(tag) => FilterChip(
         label: Text(tag.name),
         selected: tagsCommunity.contains(tag.name),
         selectedColor: Colors.blueAccent,
         onSelected: (bool selected) {
           setState(() {
-            if (selected) {
+            if (!selected) {
               tagsCommunity.add(tag.name.toString());
               print("\n" + tagsCommunity.toString());
             } else {

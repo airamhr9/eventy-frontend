@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:eventy_front/objects/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -7,8 +6,7 @@ import 'dart:convert';
 class TagsService {
   String url = "localhost:8000";
 
-  Future<List<Tag>> get() async {
-    //sustituir por obtener localizacion
+  Future<List<dynamic>> get() async {
     final query = {
       'userId': '0',
     };
@@ -17,8 +15,7 @@ class TagsService {
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
     final data = await json.decode(localhostResponse.body);
-    final list = data["items"] as List;
-    List<Tag> tags = list.map((tags) => Tag.fromJson(tags)).toList();
+    List tags = data['items'] as List;
     return tags;
   }
 }
