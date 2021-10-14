@@ -13,6 +13,7 @@ class MapPositionSelector extends StatefulWidget {
 class _MapPositionSelectorState extends State<MapPositionSelector> {
   Completer<GoogleMapController> _controller = Completer();
   LatLng selectedLocation = LatLng(37.42796133580664, 1.085749655962);
+  List<Marker> myMarker = [];
 
   static final initialPos = CameraPosition(
     target: LatLng(37.42796133580664, 1.085749655962),
@@ -27,7 +28,8 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
         automaticallyImplyLeading: true,
       ),
       body: GoogleMap(
-        mapType: MapType.hybrid,
+        markers: Set.from(myMarker),
+        mapType: MapType.normal,
         initialCameraPosition: initialPos,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
@@ -37,7 +39,10 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
         onTap: _onMapTapped,
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {}, label: Text("Seleccionar ubicación")),
+          onPressed: () {
+            Navigator.pop(context, selectedLocation);
+          },
+          label: Text("Seleccionar ubicación")),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -46,6 +51,9 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
     print(location);
     setState(() {
       selectedLocation = location;
+      myMarker = [];
+      myMarker.add(
+          Marker(markerId: MarkerId(location.toString()), position: location));
     });
   }
 
@@ -56,6 +64,9 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
     );
     setState(() {
       selectedLocation = coords;
+      myMarker = [];
+      myMarker
+          .add(Marker(markerId: MarkerId(coords.toString()), position: coords));
     });
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(newPos));

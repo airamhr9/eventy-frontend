@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
 class AddEvent extends StatefulWidget {
@@ -22,8 +23,12 @@ class _AddEventState extends State<AddEvent> {
   final TextEditingController _summaryController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _assistantsController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
+  LatLng? eventLocation;
+  String hasLocation = "Sin seleccionar";
+  IconData hasLocationIcon = Icons.place_rounded;
 
   @override
   Widget build(BuildContext context) {
@@ -160,16 +165,15 @@ class _AddEventState extends State<AddEvent> {
   }
 
   void showPlacePicker(BuildContext context) async {
-    Navigator.of(context)
+    LatLng? result = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => MapPositionSelector()));
-/*     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => PlacePicker(
-              "AIzaSyAWIQCv7tzqa0MojVSQ_VkHlwpVjrOFFLM",
-              displayLocation:
-                  LatLng(currentPosition.latitude, currentPosition.longitude),
-            ))); */
-
-    //print(result);
+    if (result != null) {
+      setState(() {
+        eventLocation = result;
+        hasLocation = "Seleccionada";
+        hasLocationIcon = Icons.done_rounded;
+      });
+    }
   }
 
   Widget buildMaxAssistants(BuildContext context) {
@@ -259,14 +263,14 @@ class _AddEventState extends State<AddEvent> {
         Row(
           children: [
             Icon(
-              Icons.place_rounded,
+              hasLocationIcon,
               color: Theme.of(context).primaryColor,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "Sin seleccionar",
+              hasLocation,
               style: TextStyle(fontSize: 18, color: Colors.black54),
             ),
             Spacer(),
@@ -280,6 +284,20 @@ class _AddEventState extends State<AddEvent> {
               },
             ),
           ],
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Container(
+          child: TextFormField(
+              controller: _addressController,
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_city_rounded),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none),
+                  filled: true,
+                  hintText: "Dirección")),
         )
       ],
     );
