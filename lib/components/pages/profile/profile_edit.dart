@@ -12,6 +12,7 @@ class ProfileEdit extends StatefulWidget {
 
 class _ProfileEditState extends State<ProfileEdit> {
   late File _image;
+  final TextEditingController _userName = TextEditingController();
 
   _imgFromGallery() async {
     ImagePicker picker = ImagePicker();
@@ -56,7 +57,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                               ),
                               border: Border.all(
                                 color: Colors.lightBlue,
-                                width: 3,
+                                width: 2,
                               ),
                               //borderRadius: BorderRadius.circular(12),
                               shape: BoxShape.circle,
@@ -76,7 +77,37 @@ class _ProfileEditState extends State<ProfileEdit> {
                           )
                         ],
                       )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    minLines: 1,
+                    controller: _userName,
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'Debes tener un nombre de usuario'
+                          : null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Nombre de Usuario"),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Divider(indent: 16),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
 
+                    "Editar preferencias",
+                    style: TextStyle(
+                        color: Colors.black54),
+                  ),
                   /* */
                 ],
               ))),
