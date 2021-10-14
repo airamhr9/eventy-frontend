@@ -51,6 +51,7 @@ class _AddEventState extends State<AddEvent> {
                 children: [
                   GestureDetector(
                       onTap: () {
+                        //
                         _imgFromGallery();
                       }, // handle your image tap here
                       child: Card(
