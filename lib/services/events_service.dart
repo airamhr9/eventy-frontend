@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:eventy_front/services/location_service.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

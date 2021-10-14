@@ -22,39 +22,24 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Seleccionar ubicación"),
-          automaticallyImplyLeading: true,
-        ),
-        body: Column(children: [
-          Expanded(
-            child: GoogleMap(
-              mapType: MapType.hybrid,
-              initialCameraPosition: initialPos,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                LocationService.determinePosition()
-                    .then((value) => goToUserPos(value));
-              },
-              onTap: _onMapTapped,
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            child: Material(
-              elevation: 5,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-                child: Column(
-                  children: [Text(selectedLocation.toString())],
-                ),
-              ),
-            ),
-          )
-        ]));
+      appBar: AppBar(
+        title: Text("Seleccionar ubicación"),
+        automaticallyImplyLeading: true,
+      ),
+      body: GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: initialPos,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          LocationService.determinePosition()
+              .then((value) => goToUserPos(value));
+        },
+        onTap: _onMapTapped,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {}, label: Text("Seleccionar ubicación")),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   _onMapTapped(LatLng location) {

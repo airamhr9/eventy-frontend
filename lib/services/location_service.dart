@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LocationService {
   static Future<LatLng> determinePosition() async {
@@ -31,12 +32,5 @@ class LocationService {
     Position geoPosition = await Geolocator.getCurrentPosition();
 
     return LatLng(geoPosition.latitude, geoPosition.longitude);
-  }
-
-  static Future<String> getAddressFromCoords(LatLng coords) async {
-    var googleGeocoding = GoogleGeocoding("Your-Key");
-    return googleGeocoding.geocoding
-        .getReverse(LatLon(coords.latitude, coords.longitude))
-        .toString();
   }
 }
