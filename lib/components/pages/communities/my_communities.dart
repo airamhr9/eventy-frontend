@@ -25,10 +25,10 @@ class _MyCommunitiesState extends State<MyCommunities> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.builder(
+        body: ListView.separated(
       itemCount: myCommunitiesList.length,
       itemBuilder: (context, position) {
-        return Card(
+        return Container(
             child: ListTile(
           title: Text(myCommunitiesList[position].name),
           subtitle: Row(
@@ -54,6 +54,12 @@ class _MyCommunitiesState extends State<MyCommunities> {
                         CommunityView(myCommunitiesList[position])));
           },
         ));
+      },
+      separatorBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Divider(),
+        );
       },
     ));
   }
