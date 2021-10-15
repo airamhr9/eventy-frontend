@@ -7,15 +7,13 @@ class TagsService {
   String url = "localhost:8000";
 
   Future<List<dynamic>> get() async {
-    final query = {
-      'userId': '0',
-    };
-    Uri url = Uri.http(this.url, '/recomend', query);
+    Uri url = Uri.http(this.url,'/tag');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
     final data = await json.decode(localhostResponse.body);
-    List tags = data['items'] as List;
+    final list = data["items"] as List;
+    List<Tag> tags = list.map((tag) => Tag.fromJson(tag)).toList();    r
     return tags;
   }
 }

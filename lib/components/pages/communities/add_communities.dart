@@ -14,8 +14,8 @@ class AddCommunity extends StatefulWidget {
 
 class _AddCommunityState extends State<AddCommunity> {
   late Community community;
-  List<dynamic> tags = [];
-  List<String> tagsCommunity = [];
+  List<Tag> tags = [];
+  List<Tag> tagsCommunity = [];
 
   @override
   void initState() {
@@ -248,17 +248,17 @@ class _AddCommunityState extends State<AddCommunity> {
     );
   }
 
-  Widget buildTagFilterChip(tag) => FilterChip(
+  Widget buildTagFilterChip(Tag tag) => FilterChip(
         label: Text(tag.name),
         selected: tagsCommunity.contains(tag.name),
         selectedColor: Colors.blueAccent,
         onSelected: (bool selected) {
           setState(() {
             if (!selected) {
-              tagsCommunity.add(tag.name.toString());
+              tagsCommunity.add(tag.id);
               print("\n" + tagsCommunity.toString());
             } else {
-              tagsCommunity.remove(tag.name);
+              tagsCommunity.remove(tag.id);
               print("\n" + tagsCommunity.toString());
             }
           });

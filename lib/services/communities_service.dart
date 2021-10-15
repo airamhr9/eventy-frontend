@@ -9,13 +9,13 @@ class CommunityService {
   String url = "";
 
   Future<List<Community>> get() async {
-    //sustituir por llamada a server
-    print("Here service");
-    final String response =
-        await rootBundle.loadString('mock_data/communities.json');
-    final data = await json.decode(response) as List;
-    List<Community> communities =
-        data.map((community) => Community.fromJson(community)).toList();
+    Uri url = Uri.http(this.url, '/community');
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    //print("RESPONSE " + localhostResponse.body.toString());
+    final data = await json.decode(localhostResponse.body);
+    final list = data["items"] as List;
+    List<Community> communities = list.map((community) => Event.fromJson(community)).toList();
     return communities;
   }
 }
