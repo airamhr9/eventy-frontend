@@ -24,8 +24,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: ListView.separated(
+    return ListView.separated(
       itemCount: myCommunitiesList.length,
       itemBuilder: (context, position) {
         return Container(
@@ -61,6 +60,6 @@ class _MyCommunitiesState extends State<MyCommunities> {
           child: Divider(),
         );
       },
-    ));
+    );
   }
 }
