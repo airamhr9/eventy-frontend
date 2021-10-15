@@ -1,9 +1,10 @@
-import 'package:eventy_front/components/pages/my_events/map_view.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent() : super();
@@ -19,12 +20,19 @@ class _AddEventState extends State<AddEvent> {
   final TextEditingController _summaryController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _assistantsController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
-  LatLng? eventLocation;
-  String hasLocation = "Sin seleccionar";
-  IconData hasLocationIcon = Icons.place_rounded;
+  late File _image;
+
+  _imgFromGallery() async {
+    ImagePicker picker = ImagePicker();
+    PickedFile? image =
+    await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = image as File;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,21 +49,26 @@ class _AddEventState extends State<AddEvent> {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                            style: BorderStyle.solid)),
-                    child: Container(
-                      height: 100,
-                      child: Center(
-                          child: Icon(Icons.photo_camera_rounded,
-                              color: Theme.of(context).primaryColor)),
-                    ),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        //
+                        _imgFromGallery();
+                      }, // handle your image tap here
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2,
+                                style: BorderStyle.solid)),
+                        child: Container(
+                          height: 100,
+                          child: Center(
+                              child: Icon(Icons.photo_camera_rounded,
+                                  color: Theme.of(context).primaryColor)),
+                        ),
+                      )),
                   SizedBox(
                     height: 20,
                   ),
@@ -147,8 +160,8 @@ class _AddEventState extends State<AddEvent> {
                   buildMaxAssistants(context),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity,
-                              50), // double.infinity is the width and 30 is the height
+                          minimumSize: Size(double.infinity, 50),
+                          // double.infinity is the width and 30 is the height
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
@@ -158,18 +171,6 @@ class _AddEventState extends State<AddEvent> {
                 ],
               ))))),
     );
-  }
-
-  void showPlacePicker(BuildContext context) async {
-    LatLng? result = await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MapPositionSelector()));
-    if (result != null) {
-      setState(() {
-        eventLocation = result;
-        hasLocation = "Seleccionada";
-        hasLocationIcon = Icons.done_rounded;
-      });
-    }
   }
 
   Widget buildMaxAssistants(BuildContext context) {
@@ -259,14 +260,14 @@ class _AddEventState extends State<AddEvent> {
         Row(
           children: [
             Icon(
-              hasLocationIcon,
+              Icons.place_rounded,
               color: Theme.of(context).primaryColor,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              hasLocation,
+              "Sin seleccionar",
               style: TextStyle(fontSize: 18, color: Colors.black54),
             ),
             Spacer(),
@@ -275,25 +276,9 @@ class _AddEventState extends State<AddEvent> {
                 "Cambiar",
                 style: TextStyle(fontSize: 18),
               ),
-              onPressed: () {
-                showPlacePicker(context);
-              },
+              onPressed: () {},
             ),
           ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Container(
-          child: TextFormField(
-              controller: _addressController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.location_city_rounded),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none),
-                  filled: true,
-                  hintText: "Dirección")),
         )
       ],
     );
