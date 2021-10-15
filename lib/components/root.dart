@@ -1,5 +1,6 @@
 import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
+import 'package:eventy_front/components/pages/search.dart';
 import 'package:eventy_front/navigation/custom_bottom_drawer.dart';
 import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
@@ -126,6 +127,9 @@ class _RootState extends State<Root> {
         }
       case EventsNavigation.NAV_SEARCH:
         {
+          onPressed = () {
+            (body as Search).searchState.openBottomDrawer();
+          };
           icon = Icon(Icons.search_rounded);
           label = Text("Buscar");
           break;

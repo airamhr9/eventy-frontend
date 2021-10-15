@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
-class MapPositionSelector extends StatefulWidget {
+class EventLocation extends StatefulWidget {
   final LatLng eventPos;
-  const MapPositionSelector(this.eventPos) : super();
+  const EventLocation(this.eventPos) : super();
 
   @override
-  _MapPositionSelectorState createState() => _MapPositionSelectorState();
+  _EventLocationState createState() => _EventLocationState();
 }
 
-class _MapPositionSelectorState extends State<MapPositionSelector> {
+class _EventLocationState extends State<EventLocation> {
   List<Marker> myMarker = [];
   late CameraPosition initialPos;
 
