@@ -1,6 +1,7 @@
 import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/objects/tag.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -22,7 +23,7 @@ class _AddCommunityState extends State<AddCommunity> {
     super.initState();
     TagsService().get().then((value) => setState(() {
           print("Here");
-          tags = value;
+          tags = value.cast();
         }));
   }
 
@@ -167,9 +168,7 @@ class _AddCommunityState extends State<AddCommunity> {
                       child: Wrap(
                     spacing: 5,
                     runSpacing: 3,
-                    children: [
-                      ...tags.map(buildTagFilterChip).toList()
-                    ],
+                    children: [...tags.map(buildTagFilterChip).toList()],
                   )),
                   SizedBox(
                     height: 20,
@@ -193,7 +192,7 @@ class _AddCommunityState extends State<AddCommunity> {
                         } else {
                           community.private = true;
                         }
-                        community.tags = tagsCommunity;
+                        community.tags = tagsCommunity.cast<String>();
                         community.members = [];
                         Navigator.push(
                             context,
@@ -255,10 +254,10 @@ class _AddCommunityState extends State<AddCommunity> {
         onSelected: (bool selected) {
           setState(() {
             if (!selected) {
-              tagsCommunity.add(tag.id);
+              tagsCommunity.add(tag);
               print("\n" + tagsCommunity.toString());
             } else {
-              tagsCommunity.remove(tag.id);
+              tagsCommunity.remove(tag);
               print("\n" + tagsCommunity.toString());
             }
           });
