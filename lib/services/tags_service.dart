@@ -6,15 +6,17 @@ import 'dart:convert';
 
 class TagsService {
   String url = "localhost:8000";
+  List<String> tags = [];
 
-  Future<List<dynamic>> get() async {
-    Uri url = Uri.http(this.url, '/tag');
+  Future<List<String>> get() async {
+    Uri url = Uri.http(this.url, 'tags');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
     final data = await json.decode(localhostResponse.body);
-    final list = data["items"] as List;
-    List<Tag> tags = list.map((tag) => Tag.fromJson(tag)).toList();
+    for (var tag in data) {
+      tags.add(tag);
+    }
     return tags;
   }
 }
