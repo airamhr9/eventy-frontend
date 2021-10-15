@@ -1,11 +1,7 @@
-import 'dart:collection';
-
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
-import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 

@@ -34,12 +34,23 @@ class _RootState extends State<Root> {
       appBar: AppBar(
         title: Text(
           title,
-          //style: TextStyle(color: darkBlue),
+          //style: TextStyle(color: Colors.black87),
         ),
         elevation: 0,
+        //backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
       ),
-      body: body,
+      body: Container(
+          color: Theme.of(context).primaryColor,
+          child: Material(
+              elevation: 0,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+              color: Color(0xFFFAFAFA),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: body,
+              ))),
       drawer: CustomBottomDrawer(),
       drawerEnableOpenDragGesture: false,
       bottomNavigationBar: BottomAppBar(
