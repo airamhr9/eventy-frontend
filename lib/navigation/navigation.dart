@@ -4,8 +4,7 @@ import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
 import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile/profile.dart';
-import 'package:eventy_front/components/pages/search.dart';
-import 'package:eventy_front/components/pages/profile.dart';
+
 import 'package:eventy_front/components/search/search.dart';
 import 'package:flutter/material.dart';
 
