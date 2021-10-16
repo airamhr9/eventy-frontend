@@ -11,16 +11,20 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-  late File _image;
-  final TextEditingController _userName = TextEditingController();
+   ImageProvider _img = NetworkImage(
+      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
+
+   ImagePicker picker = ImagePicker();
+
+   final TextEditingController _userName = TextEditingController();
 
   _imgFromGallery() async {
-    ImagePicker picker = ImagePicker();
-    PickedFile? image =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = image as File;
+      _img = FileImage(File(image!.path));
     });
   }
 
@@ -52,7 +56,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                               //color: const Color(0xff7c94b6),
                               image: const DecorationImage(
                                 image: NetworkImage(
-                                    'hhttps://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'),
+                                    ''),
                                 fit: BoxFit.cover,
                               ),
                               border: Border.all(
@@ -63,8 +67,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                               shape: BoxShape.circle,
                             ),
                             child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                              backgroundImage: _img
+                              ,
                               radius: 80,
                             ),
 
