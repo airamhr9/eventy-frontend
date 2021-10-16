@@ -39,12 +39,12 @@ class _MyCommunitiesState extends State<MyCommunities> {
             ],
           ),
           leading:
-              /*CircleAvatar(backgroundImage: 
+            CircleAvatar(backgroundImage: 
               AssetImage(myCommunitiesList[position].logo)
-            )*/
-              CircleAvatar(
+            ),
+            /*CircleAvatar(
             backgroundColor: Colors.purpleAccent,
-          ),
+            ),*/
           onTap: () {
             Navigator.push(
                 context,

@@ -4,7 +4,8 @@ class Event {
   String startDate; //Solo String temporalmente
   String finishDate; //Solo String temporalmente
   List<String> images;
-  String location; //Solo String temporalmente
+  double latitude; //Solo String temporalmente
+  double longitude; //Solo String temporalmente
   int maxParticipants;
   List<int> participants;
   String name;
@@ -20,7 +21,8 @@ class Event {
       this.startDate,
       this.finishDate,
       this.images,
-      this.location,
+      this.latitude,
+      this.longitude,
       this.maxParticipants,
       this.participants,
       this.name,
@@ -37,9 +39,12 @@ class Event {
       json['startDate'],
       json['finishDate'],
       (json['images'] as List).cast<String>(),
-      json['location'],
+      json['latitude'],
+      json['longitude'],
       json['maxParticipants'],
-      (json['participants'] as List).cast<int>(),
+      (json['participants'] != null)
+          ? (json['participants'] as List).cast<int>()
+          : [],
       json['name'],
       json['owner'],
       json['price'].toDouble(),
