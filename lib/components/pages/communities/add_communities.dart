@@ -1,7 +1,6 @@
 import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/objects/community.dart';
-import 'package:eventy_front/objects/tag.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -23,7 +22,7 @@ class _AddCommunityState extends State<AddCommunity> {
     super.initState();
     TagsService().get().then((value) => setState(() {
           print("Here");
-          tags = value.cast();
+          tags = value;
         }));
   }
 
@@ -49,6 +48,13 @@ class _AddCommunityState extends State<AddCommunity> {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    "Imágenes",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Card(
                     //Imágenes de la página principal de la comunidad
                     elevation: 0,
@@ -151,9 +157,6 @@ class _AddCommunityState extends State<AddCommunity> {
                       },
                       icon: Icon(Icons.add_circle_rounded),
                       label: Text("")),
-                  /**************/
-                  //ListView.builder(itemBuilder: itemBuilder),
-                  /**************/
                   SizedBox(
                     height: 20,
                   ),
@@ -209,8 +212,8 @@ class _AddCommunityState extends State<AddCommunity> {
                         } else {
                           community.private = true;
                         }
-                        community.tags = tagsCommunity.cast<String>();
-                        community.members = [];
+                        community.tags = tagsCommunity;
+                        community.members = [community.creator];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -263,21 +266,4 @@ class _AddCommunityState extends State<AddCommunity> {
       ],
     );
   }
-
-  Widget buildTagFilterChip(String tag) => FilterChip(
-        label: Text(tag),
-        selected: tagsCommunity.contains(tag),
-        selectedColor: Colors.blueAccent,
-        onSelected: (bool selected) {
-          setState(() {
-            if (!selected) {
-              tagsCommunity.add(tag);
-              print("\n" + tagsCommunity.toString());
-            } else {
-              tagsCommunity.remove(tag);
-              print("\n" + tagsCommunity.toString());
-            }
-          });
-        },
-      );
 }
