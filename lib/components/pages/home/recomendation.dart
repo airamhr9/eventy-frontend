@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -37,7 +38,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
           CarouselSlider(
             carouselController: _controller,
             options: CarouselOptions(
-                height: 250.0,
+                height: 240.0,
                 viewportFraction: 1,
                 enableInfiniteScroll: false,
                 onPageChanged: (index, reason) {
@@ -45,7 +46,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                     _current = index;
                   });
                 }),
-            items: placeholderImages.map((i) {
+            items: widget.event.images.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
@@ -55,7 +56,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
                           i,
-                          fit: BoxFit.fitHeight,
+                          fit: BoxFit.cover,
                         ),
                       ));
                 },
@@ -64,7 +65,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: placeholderImages.asMap().entries.map((entry) {
+            children: widget.event.images.asMap().entries.map((entry) {
               return GestureDetector(
                 onTap: () => _controller.animateToPage(entry.key),
                 child: Container(
@@ -150,7 +151,12 @@ class RecommendedEventState extends State<RecommendedEvent> {
                     Spacer(),
                     TextButton.icon(
                         onPressed: () {
-                          //Navigator.push(context, MaterialPageRoute(builder: (context) => EventLocation(LatLng(widget.event, longitude))))
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EventLocation(LatLng(
+                                      widget.event.latitude,
+                                      widget.event.longitude))));
                         },
                         label: Text("Ver en mapa"),
                         icon: Icon(Icons.place_rounded))
