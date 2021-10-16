@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:eventy_front/components/pages/my_events/map_view.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -20,14 +21,19 @@ class _AddEventState extends State<AddEvent> {
   final TextEditingController _summaryController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _assistantsController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
   late File _image;
+  LatLng? eventLocation;
+  String hasLocation = "Sin seleccionar";
+  IconData hasLocationIcon = Icons.place_rounded;
 
   _imgFromGallery() async {
     ImagePicker picker = ImagePicker();
     PickedFile? image =
-    await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
       _image = image as File;
@@ -173,6 +179,18 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
+  void showPlacePicker(BuildContext context) async {
+    LatLng? result = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MapPositionSelector()));
+    if (result != null) {
+      setState(() {
+        eventLocation = result;
+        hasLocation = "Seleccionada";
+        hasLocationIcon = Icons.done_rounded;
+      });
+    }
+  }
+
   Widget buildMaxAssistants(BuildContext context) {
     return (Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,14 +278,14 @@ class _AddEventState extends State<AddEvent> {
         Row(
           children: [
             Icon(
-              Icons.place_rounded,
+              hasLocationIcon,
               color: Theme.of(context).primaryColor,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "Sin seleccionar",
+              hasLocation,
               style: TextStyle(fontSize: 18, color: Colors.black54),
             ),
             Spacer(),
@@ -276,9 +294,25 @@ class _AddEventState extends State<AddEvent> {
                 "Cambiar",
                 style: TextStyle(fontSize: 18),
               ),
-              onPressed: () {},
+              onPressed: () {
+                showPlacePicker(context);
+              },
             ),
           ],
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Container(
+          child: TextFormField(
+              controller: _addressController,
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.location_city_rounded),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none),
+                  filled: true,
+                  hintText: "Dirección")),
         )
       ],
     );

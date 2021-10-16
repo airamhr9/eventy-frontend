@@ -14,11 +14,16 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
   Completer<GoogleMapController> _controller = Completer();
   LatLng selectedLocation = LatLng(37.42796133580664, 1.085749655962);
   List<Marker> myMarker = [];
+  late final initialPos;
 
-  static final initialPos = CameraPosition(
-    target: LatLng(37.42796133580664, 1.085749655962),
-    zoom: 14.4746,
-  );
+  @override
+  void initState() {
+    super.initState();
+    initialPos = CameraPosition(
+      target: selectedLocation,
+      zoom: 14.4746,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
