@@ -25,18 +25,21 @@ class _AddEventState extends State<AddEvent> {
 
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
-  late File _image;
+
   LatLng? eventLocation;
   String hasLocation = "Sin seleccionar";
   IconData hasLocationIcon = Icons.place_rounded;
 
+  ImageProvider _img = NetworkImage('');
+  ImagePicker picker = ImagePicker();
+
   _imgFromGallery() async {
-    ImagePicker picker = ImagePicker();
-    PickedFile? image =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    XFile? image =
+    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = image as File;
+      _img = FileImage(File(image!.path));
     });
   }
 
@@ -69,6 +72,9 @@ class _AddEventState extends State<AddEvent> {
                                 width: 2,
                                 style: BorderStyle.solid)),
                         child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(image: _img)
+                          ),
                           height: 100,
                           child: Center(
                               child: Icon(Icons.photo_camera_rounded,
