@@ -26,4 +26,17 @@ class EventService {
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
   }
+
+  Future<List<Event>> search(String text, List<String> tags) async {
+    final query = {'text': text, 'tags': tags};
+    Uri url = Uri.http(this.url, '/search', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    //print("RESPONSE " + localhostResponse.body.toString());
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data as List;
+    List<Event> events = list.map((event) => Event.fromJson(event)).toList();
+    return events;
+  }
 }

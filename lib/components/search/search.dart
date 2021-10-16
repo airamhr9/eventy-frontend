@@ -1,3 +1,6 @@
+import 'package:eventy_front/components/search/search_result.dart';
+import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +15,10 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   final TextEditingController _searchController = TextEditingController();
+  String searchText = "";
   List<String> filterTags = [];
+  List<Event> events = [];
+  bool searching = false;
 
   @override
   void initState() {
@@ -21,13 +27,28 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-      child: Column(
-        children: [SingleChildScrollView()],
-      ),
-    );
+    if (searching) {
+      if (events.length <= 0) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return ListView.separated(
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            return SearchResult(events[index]);
+          },
+          separatorBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Divider(),
+          ),
+        );
+      }
+    } else {
+      return Center(
+        child: Text("Busca eventos"),
+      );
+    }
   }
 
   void openBottomDrawer() {
@@ -50,12 +71,18 @@ class _SearchState extends State<Search> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search_rounded),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: "Concierto, quedada..."),
+                        prefixIcon: Icon(Icons.search_rounded),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Concierto, quedada...",
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          searchText = _searchController.text;
+                        });
+                      },
                     ),
                     SizedBox(
                       height: 15,
@@ -90,6 +117,13 @@ class _SearchState extends State<Search> {
                                             filterTags.remove(tag);
                                           }
                                         });
+                                        setState(() {
+                                          if (selected) {
+                                            filterTags.add(tag);
+                                          } else {
+                                            filterTags.remove(tag);
+                                          }
+                                        });
                                       },
                                     ))
                               ],
@@ -105,7 +139,18 @@ class _SearchState extends State<Search> {
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15))),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            events = [];
+                            searching = true;
+                          });
+                          EventService()
+                              .search(searchText, filterTags)
+                              .then((value) => setState(() {
+                                    events = value;
+                                  }));
+                          Navigator.pop(context);
+                        },
                         child: Text("Buscar"))
                   ],
                 ),

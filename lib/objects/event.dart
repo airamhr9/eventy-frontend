@@ -42,7 +42,9 @@ class Event {
       json['latitude'],
       json['longitude'],
       json['maxParticipants'],
-      (json['participants'] as List).cast<int>(),
+      (json['participants'] != null)
+          ? (json['participants'] as List).cast<int>()
+          : [],
       json['name'],
       json['owner'],
       json['price'].toDouble(),
