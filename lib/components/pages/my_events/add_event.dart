@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
+import 'package:eventy_front/services/events_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,14 +33,15 @@ class _AddEventState extends State<AddEvent> {
 
   ImageProvider _img = NetworkImage('');
   ImagePicker picker = ImagePicker();
+  FileImage? imageToSend;
 
   _imgFromGallery() async {
-
     XFile? image =
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
       _img = FileImage(File(image!.path));
+      imageToSend = FileImage(File(image.path));
     });
   }
 
@@ -73,8 +75,7 @@ class _AddEventState extends State<AddEvent> {
                                 style: BorderStyle.solid)),
                         child: Container(
                           decoration: BoxDecoration(
-                            image: DecorationImage(image: _img)
-                          ),
+                              image: DecorationImage(image: _img)),
                           height: 100,
                           child: Center(
                               child: Icon(Icons.photo_camera_rounded,
@@ -177,7 +178,16 @@ class _AddEventState extends State<AddEvent> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (imageToSend != null) {
+                          EventService().sendImage(imageToSend!).then((value) {
+                            String result =
+                                value ? "Envío correcto" : "Fallo en el envío";
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(result)));
+                          });
+                        }
+                      },
                       icon: Icon(Icons.add_rounded),
                       label: Text("Publicar evento"))
                 ],

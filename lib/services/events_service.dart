@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'package:eventy_front/services/location_service.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:eventy_front/objects/event.dart';
+import 'package:path/path.dart';
 
 class EventService {
-  //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  String url = "10.0.2.2:8000";
+  //String url = "localhost:8000";
 
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion
@@ -38,6 +40,17 @@ class EventService {
     final list = data as List;
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
+  }
+
+  Future<bool> sendImage(FileImage image) async {
+    final query = {'type': 'event', 'name': basename(image.file.path)};
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    final imageToSend =
+        await http.MultipartFile.fromPath('photo', image.file.path);
+    request.files.add(imageToSend);
+    var response = await request.send();
+    return response.statusCode == 200;
   }
 
   /*Future<List<String>> getParticipants(int eventId) async {
