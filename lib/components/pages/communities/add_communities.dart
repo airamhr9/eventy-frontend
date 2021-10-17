@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCommunity extends StatefulWidget {
   const AddCommunity() : super();
@@ -14,8 +19,37 @@ class AddCommunity extends StatefulWidget {
 
 class _AddCommunityState extends State<AddCommunity> {
   late Community community;
+
+  final TextEditingController _communityNameController =
+      TextEditingController();
+  final TextEditingController _descriptionCommunityController =
+      TextEditingController();
+  String _visibilityValue = "Público";
+
   List<String> tags = [];
   List<String> tagsCommunity = [];
+
+  ImageProvider _img = NetworkImage('');
+  ImageProvider _imgLogo = NetworkImage('');
+  ImagePicker picker = ImagePicker();
+
+  _imgFromGallery() async {
+    XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _img = FileImage(File(image!.path));
+    });
+  }
+
+  _imgLogoFromGallery() async {
+    XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _imgLogo = FileImage(File(image!.path));
+    });
+  }
 
   @override
   void initState() {
@@ -25,13 +59,6 @@ class _AddCommunityState extends State<AddCommunity> {
           tags = value;
         }));
   }
-
-  final TextEditingController _communityNameController =
-      TextEditingController();
-  final TextEditingController _descriptionCommunityController =
-      TextEditingController();
-
-  String _visibilityValue = "Público";
 
   @override
   Widget build(BuildContext context) {
@@ -55,22 +82,28 @@ class _AddCommunityState extends State<AddCommunity> {
                   SizedBox(
                     height: 5,
                   ),
-                  Card(
-                    //Imágenes de la página principal de la comunidad
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                            style: BorderStyle.solid)),
-                    child: Container(
-                      height: 150,
-                      child: Center(
-                          child: Icon(Icons.photo_camera_rounded,
-                              color: Theme.of(context).primaryColor)),
-                    ),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        _imgFromGallery();
+                      }, // handle your image tap here
+                      child: Card(
+                        //Imágenes de la página principal de la comunidad
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2,
+                                style: BorderStyle.solid)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(image: _img)),
+                          height: 150,
+                          child: Center(
+                              child: Icon(Icons.photo_camera_rounded,
+                                  color: Theme.of(context).primaryColor)),
+                        ),
+                      )),
                   SizedBox(
                     height: 20,
                   ),
@@ -99,23 +132,30 @@ class _AddCommunityState extends State<AddCommunity> {
                   SizedBox(
                     height: 5,
                   ),
-                  Card(
-                    //Logo
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                            width: 2,
-                            style: BorderStyle.solid)),
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      child: Center(
-                          child: Icon(Icons.photo_camera_rounded,
-                              color: Theme.of(context).primaryColor)),
-                    ),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        _imgLogoFromGallery();
+                      }, // handle your image tap here
+                      child: Card(
+                        //Logo
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2,
+                                style: BorderStyle.solid)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(image: _img),
+                          ),
+                          height: 100,
+                          width: 100,
+                          child: Center(
+                              child: Icon(Icons.photo_camera_rounded,
+                                  color: Theme.of(context).primaryColor)),
+                        ),
+                      )),
                   SizedBox(
                     height: 20,
                   ),
@@ -180,10 +220,8 @@ class _AddCommunityState extends State<AddCommunity> {
                               setState(() {
                                 if (selected) {
                                   tagsCommunity.add(tag);
-                                  print("\n" + tagsCommunity.toString());
                                 } else {
                                   tagsCommunity.remove(tag);
-                                  print("\n" + tagsCommunity.toString());
                                 }
                               });
                             },
@@ -194,6 +232,9 @@ class _AddCommunityState extends State<AddCommunity> {
                     height: 20,
                   ),
                   buildVisibilityRadioGroup(context),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity,
@@ -202,23 +243,33 @@ class _AddCommunityState extends State<AddCommunity> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
                       onPressed: () {
-                        community.images = [];
-                        community.logo = "";
-                        community.name = _communityNameController.toString();
-                        community.description =
-                            _descriptionCommunityController.toString();
-                        if (_visibilityValue == "Público") {
-                          community.private = false;
-                        } else {
-                          community.private = true;
-                        }
-                        community.tags = tagsCommunity;
-                        community.members = [community.creator];
-                        Navigator.push(
+                        buildCommunity();
+                        CommunityService().post(community);
+                        showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text(
+                                  "Comunidad creada con éxito",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.black87),
+                                ),
+                                content: Text(
+                                    "Ahora se le mostrará la pantalla principal de su comunidad."),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("Vale"),
+                                  )
+                                ],
+                              );
+                            });
+                        /*Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    CommunityView(this.community)));
+                                    CommunityView(this.community)));*/
                       },
                       icon: Icon(Icons.add),
                       label: Text("Crear comunidad")),
@@ -265,5 +316,23 @@ class _AddCommunityState extends State<AddCommunity> {
         )
       ],
     );
+  }
+
+  buildCommunity() {
+    bool isPrivate = false;
+    if (_visibilityValue == "Público") {
+      isPrivate = false;
+    } else {
+      isPrivate = true;
+    }
+    community = Community(
+        _imgLogo.toString(),
+        _descriptionCommunityController.toString(),
+        [_img.toString()],
+        [0, 1],
+        _communityNameController.toString(),
+        0,
+        isPrivate,
+        tagsCommunity);
   }
 }

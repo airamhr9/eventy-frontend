@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
+import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -135,11 +136,22 @@ class RecommendedEventState extends State<RecommendedEvent> {
                     Icons.people_rounded,
                     size: 28,
                   ),
-                  label: Text(
-                    (widget.event.maxParticipants == -1)
-                        ? "Consultar asistentes"
-                        : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
-                    style: TextStyle(fontSize: 16),
+                  label: TextButton(
+                    child: Text(
+                      (widget.event.maxParticipants == -1)
+                          ? "Consultar asistentes"
+                          : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => 
+                              Participants(widget.event)
+                          )
+                      );
+                    },
                   ),
                 ),
                 Row(

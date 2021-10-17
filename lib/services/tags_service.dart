@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TagsService {
-  String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
+  //String url = "10.0.2.2:8000";
+  String url = "localhost:8000";
 
   List<String> tags = [];
 
