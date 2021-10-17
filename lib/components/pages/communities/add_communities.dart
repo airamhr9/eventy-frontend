@@ -175,7 +175,7 @@ class _AddCommunityState extends State<AddCommunity> {
                         filled: true,
                         hintText: "Descripcion"),
                   ),
-                  SizedBox(
+                  /*SizedBox(
                     height: 20,
                   ),
                   Text(
@@ -196,7 +196,7 @@ class _AddCommunityState extends State<AddCommunity> {
                                 builder: (context) => AddEvent()));
                       },
                       icon: Icon(Icons.add_circle_rounded),
-                      label: Text("")),
+                      label: Text("")),*/
                   SizedBox(
                     height: 20,
                   ),

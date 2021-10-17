@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CommunityView extends StatefulWidget {
@@ -105,6 +106,59 @@ class _CommunitiesState extends State<CommunityView> {
                 child: Text(widget.community.description),
               ),
             ),
+            ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(
+                          250, 50), // 250 is the width and 100 is the height
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onPressed: () {
+                    if(widget.community.private == false){
+                      showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text(
+                                  "Te has unido con exito",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.black87),
+                                ),
+                                content: Icon(Icons.check_circle_outline_rounded),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("Vale"),
+                                  )
+                                ],
+                              );
+                            });
+                    } else {
+                      showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text(
+                                  "Solicitud enviada",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.black87),
+                                ),
+                                content: Text(
+                                    "Si su solicitud es aceptada le llegará una notificación"),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("Vale"),
+                                  )
+                                ],
+                              );
+                            });
+                    }
+                  },
+                  icon: Icon(Icons.add),
+                  label: Text("Unirse")),
           ],
         ),
       ),
