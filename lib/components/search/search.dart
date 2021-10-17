@@ -19,6 +19,7 @@ class _SearchState extends State<Search> {
   List<String> filterTags = [];
   List<Event> events = [];
   bool searching = false;
+  String searchHint = "Busca eventos";
 
   @override
   void initState() {
@@ -46,7 +47,11 @@ class _SearchState extends State<Search> {
       }
     } else {
       return Center(
-        child: Text("Busca eventos"),
+        child: Text(
+          searchHint,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
       );
     }
   }
@@ -148,6 +153,11 @@ class _SearchState extends State<Search> {
                               .search(searchText, filterTags)
                               .then((value) => setState(() {
                                     events = value;
+                                    if (events.length == 0) {
+                                      searching = false;
+                                      searchHint =
+                                          "No hay eventos que coincidan con los criterios de búsqueda";
+                                    }
                                   }));
                           Navigator.pop(context);
                         },
