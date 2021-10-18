@@ -53,4 +53,24 @@ class Event {
       (json['tags'] as List).cast<String>(),
     );
   }
+
+  Map toJson(Event event) {
+    Map result = {
+      'id': this.id,
+      'description': this.description,
+      'startDate': this.startDate,
+      'finishDate': this.finishDate,
+      'latitude': this.latitude,
+      'longitude': this.longitude,
+      'maxParticipants': this.maxParticipants,
+      'participants': this.participants,
+      'name': this.name,
+      'owner': this.ownerId,
+      'price': this.price,
+      'private': this.private,
+      'summary': this.summary,
+      'tags': this.tags
+    };
+    return result;
+  }
 }

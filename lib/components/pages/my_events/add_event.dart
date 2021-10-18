@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
+import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/services/events_service.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent() : super();
@@ -24,13 +27,19 @@ class _AddEventState extends State<AddEvent> {
   final TextEditingController _assistantsController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
+  List<String> tags = [];
+  List<String> tagsEvent = [];
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
+  DateTime startDate = DateTime.now();
+  DateTime finishDate = DateTime.now();
 
   LatLng? eventLocation;
   String hasLocation = "Sin seleccionar";
   IconData hasLocationIcon = Icons.place_rounded;
 
+  List<ImageProvider> imageProviders = [];
+  List<FileImage> imageFiles = [];
   ImageProvider _img = NetworkImage('');
   ImagePicker picker = ImagePicker();
   FileImage? imageToSend;
@@ -40,9 +49,20 @@ class _AddEventState extends State<AddEvent> {
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _img = FileImage(File(image!.path));
+      imageProviders.add(FileImage(File(image!.path)));
+      imageFiles.add(FileImage(File(image.path)));
+      _img = FileImage(File(image.path));
       imageToSend = FileImage(File(image.path));
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    TagsService().get().then((value) => setState(() {
+          print("Here");
+          tags = value;
+        }));
   }
 
   @override
@@ -74,14 +94,48 @@ class _AddEventState extends State<AddEvent> {
                                 width: 2,
                                 style: BorderStyle.solid)),
                         child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(image: _img)),
                           height: 100,
                           child: Center(
                               child: Icon(Icons.photo_camera_rounded,
                                   color: Theme.of(context).primaryColor)),
                         ),
                       )),
+                  SizedBox(height: 10),
+                  Container(
+                    child: Wrap(
+                      spacing: 15,
+                      runSpacing: 3,
+                      children: [
+                        ...imageProviders.map((e) => Column(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                        height: 65,
+                                        width: 105,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: e,
+                                                fit: BoxFit.fitWidth)))),
+                                SizedBox(
+                                  height: 30,
+                                  child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageProviders.remove(e);
+                                          imageFiles.remove(e);
+                                        });
+                                      },
+                                      child: Text(
+                                        "Eliminar",
+                                        style: TextStyle(color: Colors.red),
+                                      )),
+                                )
+                              ],
+                            ))
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -171,6 +225,38 @@ class _AddEventState extends State<AddEvent> {
                     ),
                   ),
                   buildMaxAssistants(context),
+                  Text(
+                    "Tags",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      child: Wrap(
+                    spacing: 5,
+                    runSpacing: 3,
+                    children: [
+                      ...tags.map((tag) => FilterChip(
+                            label: Text(tag),
+                            backgroundColor: Color(0xFFF1F1F1),
+                            selected: tagsEvent.contains(tag),
+                            selectedColor: Colors.lightBlue[100],
+                            onSelected: (bool selected) {
+                              setState(() {
+                                if (selected) {
+                                  tagsEvent.add(tag);
+                                } else {
+                                  tagsEvent.remove(tag);
+                                }
+                              });
+                            },
+                          ))
+                    ],
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50),
@@ -242,7 +328,7 @@ class _AddEventState extends State<AddEvent> {
                       borderSide: BorderSide.none),
                   filled: true,
                   hintText: "Asistentes")),
-        )
+        ),
       ],
     ));
   }
@@ -377,5 +463,26 @@ class _AddEventState extends State<AddEvent> {
         )
       ],
     );
+  }
+
+  void createEvent() {
+    if (_formKey.currentState!.validate()) {
+      final Event event = Event(
+          -1,
+          _descriptionController.text,
+          startDate.toIso8601String(),
+          finishDate.toIso8601String(),
+          imageFiles.map((e) => basename(e.file.path)).toList(),
+          eventLocation!.latitude,
+          eventLocation!.longitude,
+          (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
+          [],
+          _eventNameController.text,
+          1,
+          double.parse(_priceController.text),
+          (_visibilityValue == "Público") ? false : true,
+          _descriptionController.text,
+          tags);
+    }
   }
 }

@@ -63,35 +63,35 @@ class _ParticipantsState extends State<Participants> {
                         height: 20,
                       ),
                     ])),
-            Container(
-              padding:
-                  EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
-              height: MediaQuery.of(context).size.height - 186,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ...participantsList.map((participant) => ListTile(
-                          leading: Container(
-                            width: 45,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                  participant.profilePicture,
-                                )
-                            ),
-                          )
-                        ),
-                          title: Text(participant.userName),
-                        ))
-                  ],
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding:
+                    EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20))),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ...participantsList.map((participant) => ListTile(
+                            leading: Container(
+                                width: 45,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                        participant.profilePicture,
+                                      )),
+                                )),
+                            title: Text(participant.userName),
+                          ))
+                    ],
+                  ),
                 ),
               ),
             )
@@ -100,21 +100,43 @@ class _ParticipantsState extends State<Participants> {
   }
 
   Widget buildText(int maxParticipants) {
+    print(maxParticipants);
     int numberParticipants = widget.event.participants.length + 1;
     if (maxParticipants == -1) {
+      String asistentes =
+          (numberParticipants == 1) ? " asistente." : " asistentes.";
       return Text(
-        numberParticipants.toString() + " asistentes.",
+        numberParticipants.toString() + asistentes,
         style: TextStyle(
             fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
       );
     } else {
-      return Text(
-        numberParticipants.toString() +
-            "/" +
-            widget.event.maxParticipants.toString() +
-            " plazas ocupadas.",
-        style: TextStyle(
-            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
+      String plazasOcupadas =
+          (numberParticipants == 1) ? " plaza ocupada." : " plazas ocupadas.";
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            numberParticipants.toString() +
+                "/" +
+                widget.event.maxParticipants.toString() +
+                plazasOcupadas,
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: LinearProgressIndicator(
+                color: Colors.white,
+                value: numberParticipants / widget.event.maxParticipants,
+              ),
+            ),
+          )
+        ],
       );
     }
   }

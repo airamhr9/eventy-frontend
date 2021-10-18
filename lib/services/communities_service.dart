@@ -7,8 +7,8 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
 class CommunityService {
-  //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  String url = "10.0.2.2:8000";
+  //String url = "localhost:8000";
 
   Future<List<Community>> get() async {
     final query = {
@@ -28,11 +28,8 @@ class CommunityService {
     final body = json.encode(community);
     Uri url = Uri.http(this.url, '/communities');
     //final request = http.Request("POST", url);
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"}, 
-      body: body
-    );
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"}, body: body);
     return response.statusCode == 200;
   }
 
