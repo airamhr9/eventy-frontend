@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -53,14 +54,14 @@ class EventService {
     return response.statusCode == 200;
   }
 
-  /*Future<List<String>> getParticipants(int eventId) async {
-    final query = {'event': eventId };
-    Uri url = Uri.http(this.url, '/event', query);
+  Future<List<User>> getParticipants(int eventId) async {
+    final query = {'eventId': eventId};
+    Uri url = Uri.http(this.url, '/events', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    final list = data as List;
-    List<String> participantsList = list.cast();
+    final list = data['items'] as List;
+    List<User> participantsList = list.cast();
     return participantsList;
-  }*/
+  }
 }

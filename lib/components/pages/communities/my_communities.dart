@@ -12,6 +12,8 @@ class MyCommunities extends StatefulWidget {
 
 class _MyCommunitiesState extends State<MyCommunities> {
   List<Community> myCommunitiesList = [];
+  ImageProvider _imgLogo = NetworkImage(
+      'https://img2.freepng.es/20180522/zsa/kisspng-community-of-practice-organization-social-group-on-stakeholder-management-5b03c462e3c9d0.171099461526973538933.jpg');
 
   @override
   void initState() {
@@ -39,11 +41,9 @@ class _MyCommunitiesState extends State<MyCommunities> {
             ],
           ),
           leading:
-            /*CircleAvatar(backgroundImage: 
-              AssetImage(myCommunitiesList[position].logo)
-            ),*/
-            CircleAvatar(
-            backgroundColor: Colors.purpleAccent,
+            CircleAvatar(backgroundImage: 
+              //AssetImage(myCommunitiesList[position].logo)
+              AssetImage(_imgLogo.toString())
             ),
           onTap: () {
             Navigator.push(

@@ -1,4 +1,5 @@
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 
@@ -11,18 +12,17 @@ class Participants extends StatefulWidget {
 }
 
 class _ParticipantsState extends State<Participants> {
-  /*List<User> participantsList = [];
+  List<User> participantsList = [];
 
   @override
   void initState() {
     super.initState();
-    EventService()
-        .getParticipants(widget.event.id)
+    EventService().getParticipants(widget.event.id.toInt())
         .then((value) => setState(() {
               print("Here");
               participantsList = value;
             }));
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +76,12 @@ class _ParticipantsState extends State<Participants> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        /*...participantsList.map((participant) => ListTile(
-                                  title: Text(participant.toString()),
-                                ))*/
+                        ...participantsList.map((participant) => ListTile(
+                                  leading: CircleAvatar(
+                                    foregroundImage: AssetImage(participant.profilePicture),
+                                  ),
+                                  title: Text(participant.name),
+                                ))
                       ],
                     ),
                   ),
