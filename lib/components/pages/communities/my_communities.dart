@@ -12,8 +12,6 @@ class MyCommunities extends StatefulWidget {
 
 class _MyCommunitiesState extends State<MyCommunities> {
   List<Community> myCommunitiesList = [];
-  ImageProvider _imgLogo = NetworkImage(
-      'https://img2.freepng.es/20180522/zsa/kisspng-community-of-practice-organization-social-group-on-stakeholder-management-5b03c462e3c9d0.171099461526973538933.jpg');
 
   @override
   void initState() {
@@ -31,7 +29,13 @@ class _MyCommunitiesState extends State<MyCommunities> {
       itemBuilder: (context, position) {
         return Container(
             child: ListTile(
-          title: Text(myCommunitiesList[position].name),
+          title: Text(
+            myCommunitiesList[position].name,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: Colors.black87),
+          ),
           subtitle: Row(
             children: [
               Icon(Icons.people, size: 18),
@@ -41,9 +45,18 @@ class _MyCommunitiesState extends State<MyCommunities> {
             ],
           ),
           leading:
-            CircleAvatar(backgroundImage: 
-              //AssetImage(myCommunitiesList[position].logo)
-              AssetImage(_imgLogo.toString())
+            Container(
+              width: 45,
+              height: 45,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    myCommunitiesList[position].logo,
+                  )
+                ),
+              )
             ),
           onTap: () {
             Navigator.push(

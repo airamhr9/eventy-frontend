@@ -12,11 +12,6 @@ class CommunityView extends StatefulWidget {
 }
 
 class _CommunitiesState extends State<CommunityView> {
-  List<String> placeholderImages = [
-    "https://pokemongolive.com/img/posts/gobattleleague-season1.jpg",
-    "https://lh3.googleusercontent.com/3TSaKxXGo2wT0lu0AyNUBnkk6wkCC2AzOhJyy3JXIPm-AmZ1k9DSAroWeBUyePswCZSs5lVp3mPF7HzUpY9VPlyOV5eddITONINr3WSqLNLm=e365-w600",
-    "https://i.blogs.es/2e39a5/anniversaryposter2019/1366_2000.jpeg",
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +38,7 @@ class _CommunitiesState extends State<CommunityView> {
                 viewportFraction: 1,
                 enableInfiniteScroll: false,
               ),
-              items: placeholderImages.map((i) {
+              items: widget.community.images.map((i) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
@@ -53,7 +48,7 @@ class _CommunitiesState extends State<CommunityView> {
                           borderRadius: BorderRadius.circular(15),
                           child: Image.network(
                             i,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.fill,
                           ),
                         ));
                   },

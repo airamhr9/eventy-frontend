@@ -17,7 +17,8 @@ class _ParticipantsState extends State<Participants> {
   @override
   void initState() {
     super.initState();
-    EventService().getParticipants(widget.event.id.toInt())
+    EventService()
+        .getParticipants(widget.event.id.toString())
         .then((value) => setState(() {
               print("Here");
               participantsList = value;
@@ -27,66 +28,94 @@ class _ParticipantsState extends State<Participants> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Asistentes"),
-          automaticallyImplyLeading: true,
-        ),
-        body: (Container(
-            color: Color(0xFFFAFAFA),
-            width: double.infinity,
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 10,
+        backgroundColor: Colors.blue[500],
+        body: Column(
+          children: [
+            Container(
+                padding: EdgeInsets.only(top: 35, right: 20, left: 20),
+                width: double.infinity,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        widget.event.name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                            color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        widget.event.startDate,
+                        style: TextStyle(fontSize: 15, color: Colors.white70),
+                      ),
+                      SizedBox(
+                        height: 18,
+                      ),
+                      buildText(widget.event.maxParticipants),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ])),
+            Container(
+              padding:
+                  EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+              height: MediaQuery.of(context).size.height - 186,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ...participantsList.map((participant) => ListTile(
+                          leading: Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  participant.profilePicture,
+                                )
+                            ),
+                          )
+                        ),
+                          title: Text(participant.userName),
+                        ))
+                  ],
                 ),
-                Text(
-                  widget.event.name,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26,
-                      color: Colors.black87),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  widget.event.startDate,
-                  style: TextStyle(fontSize: 15, color: Colors.black54),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  widget.event.participants.length.toString() +
-                      "/" +
-                      widget.event.maxParticipants.toString() +
-                      " asistentes",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: Colors.black87),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...participantsList.map((participant) => ListTile(
-                                  leading: CircleAvatar(
-                                    foregroundImage: AssetImage(participant.profilePicture),
-                                  ),
-                                  title: Text(participant.name),
-                                ))
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ))));
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget buildText(int maxParticipants) {
+    int numberParticipants = widget.event.participants.length + 1;
+    if (maxParticipants == -1) {
+      return Text(
+        numberParticipants.toString() + " asistentes.",
+        style: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
+      );
+    } else {
+      return Text(
+        numberParticipants.toString() +
+            "/" +
+            widget.event.maxParticipants.toString() +
+            " plazas ocupadas.",
+        style: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
+      );
+    }
   }
 }

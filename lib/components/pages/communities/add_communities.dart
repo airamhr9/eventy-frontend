@@ -32,6 +32,8 @@ class _AddCommunityState extends State<AddCommunity> {
   ImageProvider _img = NetworkImage('');
   ImageProvider _imgLogo = NetworkImage('');
   ImagePicker picker = ImagePicker();
+  FileImage? imageToSend;
+  FileImage? imageLogoToSend;
 
   _imgFromGallery() async {
     XFile? image =
@@ -39,15 +41,17 @@ class _AddCommunityState extends State<AddCommunity> {
 
     setState(() {
       _img = FileImage(File(image!.path));
+      imageToSend = FileImage(File(image.path));
     });
   }
 
   _imgLogoFromGallery() async {
-    XFile? image =
+    XFile? imageLogo =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _imgLogo = FileImage(File(image!.path));
+      _imgLogo = FileImage(File(imageLogo!.path));
+      imageLogoToSend = FileImage(File(imageLogo.path));
     });
   }
 
@@ -261,15 +265,18 @@ class _AddCommunityState extends State<AddCommunity> {
                                 actions: [
                                   CupertinoDialogAction(
                                     child: Text("Vale"),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CommunityView(
+                                                      this.community)));
+                                    },
                                   )
                                 ],
                               );
                             });
-                        /*Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    CommunityView(this.community)));*/
                       },
                       icon: Icon(Icons.add),
                       label: Text("Crear comunidad")),
@@ -325,14 +332,33 @@ class _AddCommunityState extends State<AddCommunity> {
     } else {
       isPrivate = true;
     }
+    String logo = _imgLogo.toString();
+    String im = _img.toString();
     community = Community(
-        _imgLogo.toString(),
-        _descriptionCommunityController.toString(),
-        [_img.toString()],
-        [0, 1],
-        _communityNameController.toString(),
-        0,
+        -1,
+        logo
+            .substring(logo.lastIndexOf("/") + 1),
+        _descriptionCommunityController.text,
+        [im.substring(im.lastIndexOf("/") + 1)],
+        [2],
+        _communityNameController.text,
+        2,
         isPrivate,
         tagsCommunity);
+
+    if (imageToSend != null) {
+      CommunityService().sendImage(imageToSend!).then((value) {
+        String result = value ? "Envío correcto" : "Fallo en el envío";
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(result)));
+      });
+    }
+    if (imageLogoToSend != null) {
+      CommunityService().sendImage(imageLogoToSend!).then((value) {
+        String result = value ? "Envío correcto" : "Fallo en el envío";
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(result)));
+      });
+    }
   }
 }

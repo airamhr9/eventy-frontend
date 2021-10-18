@@ -9,8 +9,8 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:path/path.dart';
 
 class EventService {
-  String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
+  //String url = "10.0.2.2:8000";
+  String url = "localhost:8000";
 
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion
@@ -54,14 +54,14 @@ class EventService {
     return response.statusCode == 200;
   }
 
-  Future<List<User>> getParticipants(int eventId) async {
-    final query = {'eventId': eventId};
+  Future<List<User>> getParticipants(String eventId) async {
+    final query = {'participants': "0", 'id': eventId};
     Uri url = Uri.http(this.url, '/events', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    final list = data['items'] as List;
-    List<User> participantsList = list.cast();
+    final list = data as List;
+    List<User> participantsList = list.map((participant) => User.fromJson(participant)).toList();
     return participantsList;
   }
 }

@@ -1,5 +1,5 @@
 class Community {
-  //int id;
+  int id;
   String logo;
   String description;
   List<String> images;
@@ -11,7 +11,7 @@ class Community {
   //List<Event> events;
 
   Community(
-      //this.id,
+      this.id,
       this.logo,
       this.description,
       this.images,
@@ -25,7 +25,7 @@ class Community {
 
   factory Community.fromJson(Map<String, dynamic> json) {
     return Community(
-      //json['id'],
+      json['id'],
       json['logo'],
       json['description'],
       (json['images'] as List).cast<String>(),
@@ -37,4 +37,16 @@ class Community {
       //(json['events'] as List).cast<Event>(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'logo' : logo,
+        'description' : description,
+        'images' : images,
+        'members' : members,
+        'name': name,
+        'creator' : creator,
+        'private' : private,
+        'tags' : tags
+      };
 }

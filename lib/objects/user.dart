@@ -1,4 +1,5 @@
 import 'package:eventy_front/objects/community.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import 'event.dart';
@@ -9,9 +10,9 @@ class User {
   String email;
   String password;
   List<String> preferences;
-  String name;
-  String biography;
-  String birthday;
+  String userName;
+  String bio;
+  String birthdate;
   //List<Event> events;
   //List<Community> communities;
 
@@ -20,10 +21,10 @@ class User {
     this.profilePicture,
     this.email,
     this.preferences,
-    this.name,
+    this.userName,
     this.password,
-    this.biography,
-    this.birthday
+    this.bio,
+    this.birthdate
     //this.events,
     //this.communities,
   );
@@ -31,13 +32,13 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       json['id'],
-      json['profilePicture'],
+      json['image'],
       json['email'],
       (json['preferences'] as List).cast<String>(),
-      json['name'],
+      json['username'],
       json['password'],
-      json['biography'],
-      json['birthday']
+      json['bio'],
+      json['birthdate']
       //(json['events'] as List).cast<Event>(),
       //(json['communities'] as List).cast<Community>(),
     );
