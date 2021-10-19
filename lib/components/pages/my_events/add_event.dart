@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventy_front/components/pages/my_events/create_event.dart';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/services/events_service.dart';
@@ -31,8 +32,8 @@ class _AddEventState extends State<AddEvent> {
   List<String> tagsEvent = [];
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
-  DateTime startDate = DateTime.now();
-  DateTime finishDate = DateTime.now();
+  DateTime startDate = DateTime.now().add(Duration(days: 1));
+  DateTime finishDate = DateTime.now().add(Duration(days: 2));
 
   LatLng? eventLocation;
   String hasLocation = "Sin seleccionar";
@@ -77,207 +78,209 @@ class _AddEventState extends State<AddEvent> {
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(color: Colors.white),
               child: Form(
+                  key: _formKey,
                   child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        //
-                        _imgFromGallery();
-                      }, // handle your image tap here
-                      child: Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                                width: 2,
-                                style: BorderStyle.solid)),
-                        child: Container(
-                          height: 100,
-                          child: Center(
-                              child: Icon(Icons.photo_camera_rounded,
-                                  color: Theme.of(context).primaryColor)),
-                        ),
-                      )),
-                  SizedBox(height: 10),
-                  Container(
-                    child: Wrap(
-                      spacing: 15,
-                      runSpacing: 3,
-                      children: [
-                        ...imageProviders.map((e) => Column(
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Container(
-                                        height: 65,
-                                        width: 105,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: e,
-                                                fit: BoxFit.fitWidth)))),
-                                SizedBox(
-                                  height: 30,
-                                  child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          imageProviders.remove(e);
-                                          imageFiles.remove(e);
-                                        });
-                                      },
-                                      child: Text(
-                                        "Eliminar",
-                                        style: TextStyle(color: Colors.red),
-                                      )),
-                                )
-                              ],
-                            ))
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _eventNameController,
-                    validator: (value) {
-                      return (value!.isEmpty)
-                          ? 'El evento debe tener nombre'
-                          : null;
-                    },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        filled: true,
-                        hintText: "Nombre"),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildDatePickers("Fecha de inicio", context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildDatePickers("Fecha de final", context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildMapPicker(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    minLines: 1,
-                    controller: _summaryController,
-                    validator: (value) {
-                      return (value!.isEmpty)
-                          ? 'El evento debe tener resumen'
-                          : null;
-                    },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        filled: true,
-                        hintText: "Resumen"),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    minLines: 8,
-                    maxLines: 20,
-                    controller: _descriptionController,
-                    validator: (value) {
-                      return (value!.isEmpty)
-                          ? 'El evento debe tener descripcion'
-                          : null;
-                    },
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        filled: true,
-                        hintText: "Descripcion"),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildVisibilityRadioGroup(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: 180,
-                    child: TextFormField(
-                      maxLength: 10,
-                      controller: _priceController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.euro_rounded),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: "Precio"),
-                    ),
-                  ),
-                  buildMaxAssistants(context),
-                  Text(
-                    "Tags",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                      child: Wrap(
-                    spacing: 5,
-                    runSpacing: 3,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...tags.map((tag) => FilterChip(
-                            label: Text(tag),
-                            backgroundColor: Color(0xFFF1F1F1),
-                            selected: tagsEvent.contains(tag),
-                            selectedColor: Colors.lightBlue[100],
-                            onSelected: (bool selected) {
-                              setState(() {
-                                if (selected) {
-                                  tagsEvent.add(tag);
-                                } else {
-                                  tagsEvent.remove(tag);
-                                }
-                              });
-                            },
-                          ))
-                    ],
-                  )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          // double.infinity is the width and 30 is the height
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15))),
-                      onPressed: () {
-                        if (imageToSend != null) {
+                      GestureDetector(
+                          onTap: () {
+                            //
+                            _imgFromGallery();
+                          }, // handle your image tap here
+                          child: Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 2,
+                                    style: BorderStyle.solid)),
+                            child: Container(
+                              height: 100,
+                              child: Center(
+                                  child: Icon(Icons.photo_camera_rounded,
+                                      color: Theme.of(context).primaryColor)),
+                            ),
+                          )),
+                      SizedBox(height: 10),
+                      Container(
+                        child: Wrap(
+                          spacing: 15,
+                          runSpacing: 3,
+                          children: [
+                            ...imageProviders.map((e) => Column(
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Container(
+                                            height: 65,
+                                            width: 105,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: e,
+                                                    fit: BoxFit.fitWidth)))),
+                                    SizedBox(
+                                      height: 30,
+                                      child: TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              imageProviders.remove(e);
+                                              imageFiles.remove(e);
+                                            });
+                                          },
+                                          child: Text(
+                                            "Eliminar",
+                                            style: TextStyle(color: Colors.red),
+                                          )),
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: _eventNameController,
+                        validator: (value) {
+                          return (value!.isEmpty)
+                              ? 'El evento debe tener nombre'
+                              : null;
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none),
+                            filled: true,
+                            hintText: "Nombre"),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildDatePickers("Fecha de inicio", context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildDatePickers("Fecha de final", context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildMapPicker(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        minLines: 1,
+                        controller: _summaryController,
+                        validator: (value) {
+                          return (value!.isEmpty)
+                              ? 'El evento debe tener resumen'
+                              : null;
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none),
+                            filled: true,
+                            hintText: "Resumen"),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        minLines: 8,
+                        maxLines: 20,
+                        controller: _descriptionController,
+                        validator: (value) {
+                          return (value!.isEmpty)
+                              ? 'El evento debe tener descripcion'
+                              : null;
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none),
+                            filled: true,
+                            hintText: "Descripcion"),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildVisibilityRadioGroup(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: 180,
+                        child: TextFormField(
+                          maxLength: 10,
+                          controller: _priceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.euro_rounded),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none),
+                              filled: true,
+                              hintText: "Precio"),
+                        ),
+                      ),
+                      buildMaxAssistants(context),
+                      Text(
+                        "Tags",
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                          child: Wrap(
+                        spacing: 5,
+                        runSpacing: 3,
+                        children: [
+                          ...tags.map((tag) => FilterChip(
+                                label: Text(tag),
+                                backgroundColor: Color(0xFFF1F1F1),
+                                selected: tagsEvent.contains(tag),
+                                selectedColor: Colors.lightBlue[100],
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      tagsEvent.add(tag);
+                                    } else {
+                                      tagsEvent.remove(tag);
+                                    }
+                                  });
+                                },
+                              ))
+                        ],
+                      )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                              // double.infinity is the width and 30 is the height
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          onPressed: () {
+/*                         if (imageToSend != null) {
                           EventService().sendImage(imageToSend!).then((value) {
                             String result =
                                 value ? "Envío correcto" : "Fallo en el envío";
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(content: Text(result)));
                           });
-                        }
-                      },
-                      icon: Icon(Icons.add_rounded),
-                      label: Text("Publicar evento"))
-                ],
-              ))))),
+                        } */
+                            createEvent(context);
+                          },
+                          icon: Icon(Icons.add_rounded),
+                          label: Text("Publicar evento"))
+                    ],
+                  ))))),
     );
   }
 
@@ -320,6 +323,12 @@ class _AddEventState extends State<AddEvent> {
               enabled: hasMaxAssistants,
               maxLength: 10,
               controller: _assistantsController,
+              validator: (value) {
+                if (hasMaxAssistants)
+                  return (value!.isEmpty)
+                      ? "Asistentes no debe estar vacío"
+                      : null;
+              },
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person_rounded),
@@ -408,6 +417,11 @@ class _AddEventState extends State<AddEvent> {
         Container(
           child: TextFormField(
               controller: _addressController,
+              validator: (value) {
+                return (value!.isEmpty)
+                    ? "El evento debe tener dirección"
+                    : null;
+              },
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.location_city_rounded),
                   border: OutlineInputBorder(
@@ -465,8 +479,41 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  void createEvent() {
-    if (_formKey.currentState!.validate()) {
+  bool validateFields(BuildContext context) {
+    if (imageFiles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Debes seleccionar al menos una imagen")));
+      return false;
+    }
+    if (startDate.isAfter(finishDate)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content:
+              Text("La fecha de final no debe ser posterior a la de inicio")));
+      return false;
+    }
+    if (startDate.isBefore(DateTime.now()) ||
+        finishDate.isBefore(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Las fechas no pueden ser anteriores a la actual")));
+      return false;
+    }
+    if (eventLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Debes seleccionar una ubicación")));
+      return false;
+    }
+    return true;
+  }
+
+  void createEvent(BuildContext context) {
+    if (_formKey.currentState!.validate() && validateFields(context)) {
+      double precio = (_priceController.text.isEmpty)
+          ? 0
+          : double.parse(_priceController.text);
       final Event event = Event(
           -1,
           _descriptionController.text,
@@ -478,11 +525,16 @@ class _AddEventState extends State<AddEvent> {
           (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
           [],
           _eventNameController.text,
+          //Cambiar a obtener el usuario actual
           1,
-          double.parse(_priceController.text),
+          precio,
           (_visibilityValue == "Público") ? false : true,
           _descriptionController.text,
-          tags);
+          tagsEvent);
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return CreateEvent(event, imageFiles);
+      }));
     }
   }
 }

@@ -28,11 +28,15 @@ class _ParticipantsState extends State<Participants> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
         backgroundColor: Colors.blue[500],
         body: Column(
           children: [
             Container(
-                padding: EdgeInsets.only(top: 35, right: 20, left: 20),
+                padding: EdgeInsets.only(right: 20, left: 20),
                 width: double.infinity,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

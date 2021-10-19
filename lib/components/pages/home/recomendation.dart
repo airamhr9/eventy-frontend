@@ -17,11 +17,6 @@ class RecommendedEventState extends State<RecommendedEvent> {
   late String plazasLabel = "Ver a los asistentes";
   final CarouselController _controller = CarouselController();
   int _current = 0;
-  List<String> placeholderImages = [
-    "https://media-exp1.licdn.com/dms/image/C561BAQE-51J-8KkMZg/company-background_10000/0/1548357920228?e=2159024400&v=beta&t=D9EoYj6SBCp9zbnp8ZZdHpF27Kl29zabOtAvJw3qz4w",
-    "https://partfy.com/user_files/images/12814/96d27938569aab78a9b1f8c3f5f4b045_live-event-streaming.jpg",
-    "https://www1.chester.ac.uk/sites/default/files/styles/hero_mobile/public/Music-Production-and-Promotion_0.jpg?itok=AMRG5XBn"
-  ];
 
   @override
   void initState() {
@@ -131,27 +126,21 @@ class RecommendedEventState extends State<RecommendedEvent> {
                       .toList(),
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Participants(widget.event)));
+                  },
                   icon: Icon(
                     Icons.people_rounded,
                     size: 28,
                   ),
-                  label: TextButton(
-                    child: Text(
-                      (widget.event.maxParticipants == -1)
-                          ? "Consultar asistentes"
-                          : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => 
-                              Participants(widget.event)
-                          )
-                      );
-                    },
+                  label: Text(
+                    (widget.event.maxParticipants == -1)
+                        ? "Consultar asistentes"
+                        : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
                 Row(

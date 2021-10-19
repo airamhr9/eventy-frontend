@@ -9,8 +9,8 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:path/path.dart';
 
 class EventService {
-  String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
+  //String url = "10.0.2.2:8000";
+  String url = "localhost:8000";
 
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion
@@ -51,6 +51,30 @@ class EventService {
         await http.MultipartFile.fromPath('photo', image.file.path);
     request.files.add(imageToSend);
     var response = await request.send();
+    return response.statusCode == 200;
+  }
+
+  Future<bool> sendImages(List<FileImage> images) async {
+    final query = {
+      'type': 'event',
+    };
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    await Future.forEach(images, (img) async {
+      img as FileImage;
+      request.files.add(await http.MultipartFile.fromPath(
+          'photos', img.file.path,
+          filename: basename(img.file.path)));
+    });
+    var response = await request.send();
+    return response.statusCode == 200;
+  }
+
+  Future<bool> sendEvent(Event event) async {
+    Uri url = Uri.http(this.url, '/events');
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(event.toJson()));
     return response.statusCode == 200;
   }
 

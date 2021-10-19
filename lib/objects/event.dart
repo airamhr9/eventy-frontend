@@ -54,12 +54,13 @@ class Event {
     );
   }
 
-  Map toJson(Event event) {
+  Map toJson() {
     Map result = {
       'id': this.id,
       'description': this.description,
       'startDate': this.startDate,
       'finishDate': this.finishDate,
+      'images': this.images,
       'latitude': this.latitude,
       'longitude': this.longitude,
       'maxParticipants': this.maxParticipants,
