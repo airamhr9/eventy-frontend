@@ -151,7 +151,7 @@ class _AddCommunityState extends State<AddCommunity> {
                                 style: BorderStyle.solid)),
                         child: Container(
                           decoration: BoxDecoration(
-                            image: DecorationImage(image: _img),
+                            image: DecorationImage(image: _imgLogo),
                           ),
                           height: 100,
                           width: 100,
