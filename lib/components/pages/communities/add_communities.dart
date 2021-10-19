@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:eventy_front/components/pages/communities/community_view.dart';
-import 'package:eventy_front/components/pages/my_events/add_event.dart';
+import 'package:eventy_front/components/pages/communities/create_community.dart';
+//import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class AddCommunity extends StatefulWidget {
   const AddCommunity() : super();
@@ -19,7 +19,7 @@ class AddCommunity extends StatefulWidget {
 
 class _AddCommunityState extends State<AddCommunity> {
   late Community community;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _communityNameController =
       TextEditingController();
   final TextEditingController _descriptionCommunityController =
@@ -29,10 +29,10 @@ class _AddCommunityState extends State<AddCommunity> {
   List<String> tags = [];
   List<String> tagsCommunity = [];
 
-  ImageProvider _img = NetworkImage('');
-  ImageProvider _imgLogo = NetworkImage('');
+  ImageProvider imageLogo = NetworkImage('');
+  List<ImageProvider> imageProviders = [];
+  List<FileImage> imageFiles = [];
   ImagePicker picker = ImagePicker();
-  FileImage? imageToSend;
   FileImage? imageLogoToSend;
 
   _imgFromGallery() async {
@@ -40,18 +40,19 @@ class _AddCommunityState extends State<AddCommunity> {
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _img = FileImage(File(image!.path));
-      imageToSend = FileImage(File(image.path));
+      imageProviders.add(FileImage(File(image!.path)));
+      imageFiles.add(FileImage(File(image.path)));
     });
   }
 
   _imgLogoFromGallery() async {
-    XFile? imageLogo =
+    XFile? image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _imgLogo = FileImage(File(imageLogo!.path));
-      imageLogoToSend = FileImage(File(imageLogo.path));
+      imageLogo = FileImage(File(image!.path));
+      print("\n******************AQUI********************\n");
+      imageLogoToSend = FileImage(File(image.path));
     });
   }
 
@@ -91,7 +92,6 @@ class _AddCommunityState extends State<AddCommunity> {
                         _imgFromGallery();
                       }, // handle your image tap here
                       child: Card(
-                        //Imágenes de la página principal de la comunidad
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -100,14 +100,47 @@ class _AddCommunityState extends State<AddCommunity> {
                                 width: 2,
                                 style: BorderStyle.solid)),
                         child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(image: _img)),
-                          height: 150,
+                          height: 100,
                           child: Center(
                               child: Icon(Icons.photo_camera_rounded,
                                   color: Theme.of(context).primaryColor)),
                         ),
                       )),
+                  Container(
+                    child: Wrap(
+                      spacing: 15,
+                      runSpacing: 3,
+                      children: [
+                        ...imageProviders.map((e) => Column(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                        height: 65,
+                                        width: 105,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: e,
+                                                fit: BoxFit.fitWidth)))),
+                                SizedBox(
+                                  height: 30,
+                                  child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageProviders.remove(e);
+                                          imageFiles.remove(e);
+                                        });
+                                      },
+                                      child: Text(
+                                        "Eliminar",
+                                        style: TextStyle(color: Colors.red),
+                                      )),
+                                )
+                              ],
+                            ))
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -151,7 +184,7 @@ class _AddCommunityState extends State<AddCommunity> {
                                 style: BorderStyle.solid)),
                         child: Container(
                           decoration: BoxDecoration(
-                            image: DecorationImage(image: _imgLogo),
+                            image: DecorationImage(image: imageLogo),
                           ),
                           height: 100,
                           width: 100,
@@ -247,36 +280,7 @@ class _AddCommunityState extends State<AddCommunity> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
                       onPressed: () {
-                        buildCommunity();
-                        CommunityService().post(community);
-                        showCupertinoDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CupertinoAlertDialog(
-                                title: Text(
-                                  "Comunidad creada con éxito",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 20,
-                                      color: Colors.black87),
-                                ),
-                                content: Text(
-                                    "Ahora se le mostrará la pantalla principal de su comunidad."),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    child: Text("Vale"),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CommunityView(
-                                                      this.community)));
-                                    },
-                                  )
-                                ],
-                              );
-                            });
+                        createCommunity(context);
                       },
                       icon: Icon(Icons.add),
                       label: Text("Crear comunidad")),
@@ -286,6 +290,45 @@ class _AddCommunityState extends State<AddCommunity> {
                 ],
               ))))),
     );
+  }
+
+  bool validateFields(BuildContext context) {
+    if (imageFiles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Debes seleccionar al menos una imagen")));
+      return false;
+    }
+    if (imageLogoToSend == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("La comunidad debe tener un logo.")));
+      return false;
+    }
+    return true;
+  }
+
+  void createCommunity(BuildContext context) {
+    if (validateFields(context)) {
+      if (tagsCommunity.isEmpty) {
+        tagsCommunity.add("");
+      }
+      String logo = basename(imageLogoToSend!.file.path);
+      community = Community(
+          -1,
+          logo,
+          _descriptionCommunityController.text,
+          imageFiles.map((e) => basename(e.file.path)).toList(),
+          [0, 2],
+          _communityNameController.text,
+          0,
+          (_visibilityValue == "Público") ? false : true,
+          tagsCommunity);
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return CreateCommunity(community, imageFiles, imageLogoToSend!);
+      }));
+    }
   }
 
   Widget buildVisibilityRadioGroup(BuildContext context) {
@@ -323,42 +366,5 @@ class _AddCommunityState extends State<AddCommunity> {
         )
       ],
     );
-  }
-
-  buildCommunity() {
-    bool isPrivate = false;
-    if (_visibilityValue == "Público") {
-      isPrivate = false;
-    } else {
-      isPrivate = true;
-    }
-    String logo = _imgLogo.toString();
-    String im = _img.toString();
-    community = Community(
-        -1,
-        logo
-            .substring(logo.lastIndexOf("/") + 1),
-        _descriptionCommunityController.text,
-        [im.substring(im.lastIndexOf("/") + 1)],
-        [2],
-        _communityNameController.text,
-        2,
-        isPrivate,
-        tagsCommunity);
-
-    if (imageToSend != null) {
-      CommunityService().sendImage(imageToSend!).then((value) {
-        String result = value ? "Envío correcto" : "Fallo en el envío";
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(result)));
-      });
-    }
-    if (imageLogoToSend != null) {
-      CommunityService().sendImage(imageLogoToSend!).then((value) {
-        String result = value ? "Envío correcto" : "Fallo en el envío";
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(result)));
-      });
-    }
   }
 }

@@ -10,16 +10,8 @@ class Community {
   List<String> tags;
   //List<Event> events;
 
-  Community(
-      this.id,
-      this.logo,
-      this.description,
-      this.images,
-      this.members,
-      this.name,
-      this.creator,
-      this.private,
-      this.tags
+  Community(this.id, this.logo, this.description, this.images, this.members,
+      this.name, this.creator, this.private, this.tags
       //this.events
       );
 
@@ -40,13 +32,13 @@ class Community {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'logo' : logo,
-        'description' : description,
-        'images' : images,
-        'members' : members,
+        'logo': logo,
+        'description': description,
+        'images': images,
+        'members': members,
         'name': name,
-        'creator' : creator,
-        'private' : private,
-        'tags' : tags
+        'creator': creator,
+        'private': private,
+        'tags': tags
       };
 }

@@ -8,7 +8,6 @@ import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
 import 'package:eventy_front/navigation/navigation_model.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Root extends StatefulWidget {
@@ -126,7 +125,7 @@ class _RootState extends State<Root> {
       case EventsNavigation.NAV_HOME:
         {
           onPressed = () {
-            showCupertinoDialog(
+            showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return buildMessageAddEvent();
@@ -197,7 +196,7 @@ class _RootState extends State<Root> {
   }
 
   buildMessageAddEvent() {
-    return CupertinoAlertDialog(
+    return AlertDialog(
       title: Text(
         "Te has unido con éxito",
         style: TextStyle(
@@ -205,10 +204,14 @@ class _RootState extends State<Root> {
       ),
       content: Text("Evento añadido a: Mis eventos."),
       actions: [
-        CupertinoDialogAction(
-          child: Text("Vale"),
-          isDefaultAction: true,
-        )
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Vale",
+              style: TextStyle(color: Colors.lightBlue),
+            ))
       ],
     );
   }

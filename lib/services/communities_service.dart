@@ -7,8 +7,8 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
 class CommunityService {
-  //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  String url = "10.0.2.2:8000";
+  //String url = "localhost:8000";
 
   Future<List<Community>> get() async {
     final query = {
@@ -40,6 +40,22 @@ class CommunityService {
     final imageToSend =
         await http.MultipartFile.fromPath('photo', image.file.path);
     request.files.add(imageToSend);
+    var response = await request.send();
+    return response.statusCode == 200;
+  }
+
+  Future<bool> sendImages(List<FileImage> images) async {
+    final query = {
+      'type': 'community',
+    };
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    await Future.forEach(images, (img) async {
+      img as FileImage;
+      request.files.add(await http.MultipartFile.fromPath(
+          'photos', img.file.path,
+          filename: basename(img.file.path)));
+    });
     var response = await request.send();
     return response.statusCode == 200;
   }
