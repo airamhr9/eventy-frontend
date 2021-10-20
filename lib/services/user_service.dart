@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eventy_front/objects/login_response.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +9,7 @@ class UserService {
   String url = "10.0.2.2:8000";
   //String url = "localhost:8000";
 
-  Future<LoginResponse> login(String username, String password) async {
+
   List<String> tags = [];
 
 Future<List<String>> getUserPreferences(String res, String userId)async{
@@ -25,7 +27,7 @@ Future<List<String>> getUserPreferences(String res, String userId)async{
 }
 
 
-  Future<bool> login(String username, String password) async {
+  Future<LoginResponse> login(String username, String password) async {
     final query = {'username': username, 'password': password};
     Uri url = Uri.http(this.url, '/login', query);
 
