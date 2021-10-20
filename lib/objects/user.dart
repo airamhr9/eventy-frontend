@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'event.dart';
 
 class User {
-  int id;
+  String id;
   String profilePicture;
   String email;
   String password;

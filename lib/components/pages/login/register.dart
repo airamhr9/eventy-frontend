@@ -1,6 +1,5 @@
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/user_service.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -189,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     if (dateSelected != "Sin seleccionar") {
                       if (_formKey.currentState!.validate()) {
                         final user = User(
-                            -1,
+                            "",
                             "",
                             _emailController.text,
                             [],

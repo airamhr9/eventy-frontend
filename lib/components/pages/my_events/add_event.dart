@@ -42,7 +42,6 @@ class _AddEventState extends State<AddEvent> {
 
   List<ImageProvider> imageProviders = [];
   List<FileImage> imageFiles = [];
-  ImageProvider _img = NetworkImage('');
   ImagePicker picker = ImagePicker();
   FileImage? imageToSend;
 
@@ -53,7 +52,6 @@ class _AddEventState extends State<AddEvent> {
     setState(() {
       imageProviders.add(FileImage(File(image!.path)));
       imageFiles.add(FileImage(File(image.path)));
-      _img = FileImage(File(image.path));
       imageToSend = FileImage(File(image.path));
     });
   }
@@ -527,8 +525,8 @@ class _AddEventState extends State<AddEvent> {
           [],
           _eventNameController.text,
           //Cambiar a obtener el usuario actual
-          int.parse(
-              await MySharedPreferences.instance.getStringValue("userId")),
+
+          await MySharedPreferences.instance.getStringValue("userId"),
           precio,
           (_visibilityValue == "Público") ? false : true,
           _descriptionController.text,

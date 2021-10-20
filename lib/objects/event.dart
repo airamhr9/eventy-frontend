@@ -9,7 +9,7 @@ class Event {
   int maxParticipants;
   List<int> participants;
   String name;
-  int ownerId;
+  String ownerId;
   double price;
   bool private;
   String summary;
