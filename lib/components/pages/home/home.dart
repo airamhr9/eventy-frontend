@@ -14,6 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Color> colors = [Colors.black, Colors.red, Colors.blue, Colors.green];
   List<Event> events = [];
+  late Event currentEvent;
 
   @override
   void initState() {
@@ -21,6 +22,7 @@ class _HomeState extends State<Home> {
     EventService().get().then((value) => setState(() {
           print("Here");
           events = value;
+          currentEvent = events.first;
         }));
   }
 
@@ -35,9 +37,18 @@ class _HomeState extends State<Home> {
             builder: (BuildContext context, int index) {
               return RecommendedEvent(events[index]);
             },
+            onScrollEvent: _handleCallbackEvent,
           )
         : Center(
             child: CircularProgressIndicator(),
           );
+  }
+
+  void _handleCallbackEvent(ScrollEventType type, {int? currentIndex}) {
+    if (currentIndex != null) {
+      setState(() {
+        currentEvent = events[currentIndex];
+      });
+    }
   }
 }
