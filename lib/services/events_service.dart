@@ -90,4 +90,12 @@ class EventService {
         list.map((participant) => User.fromJson(participant)).toList();
     return participantsList;
   }
+
+  Future<bool> sendNewParticipant(String eventId, String userId) async {
+    final query = {'eventId': eventId, 'userId': userId};
+    Uri url = Uri.http(this.url, '/joinEvent', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
+  }
 }

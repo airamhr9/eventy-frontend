@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:eventy_front/services/tags_service.dart';
+
+
 
 class ProfileEdit extends StatefulWidget {
   const ProfileEdit() : super();
@@ -17,6 +20,9 @@ class _ProfileEditState extends State<ProfileEdit> {
    ImagePicker picker = ImagePicker();
 
    final TextEditingController _userName = TextEditingController();
+   final TextEditingController _bio = TextEditingController();
+   List<String> tags = [];
+   List<String> tagsCommunity = [];
 
   _imgFromGallery() async {
 
@@ -27,6 +33,16 @@ class _ProfileEditState extends State<ProfileEdit> {
       _img = FileImage(File(image!.path));
     });
   }
+@override
+void initState() {
+
+    super.initState();
+    TagsService().get().then((value) => setState(() {
+      print("Here");
+      tags = value;
+    }));
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +116,25 @@ class _ProfileEditState extends State<ProfileEdit> {
                         hintText: "Nombre de Usuario"),
                   ),
                   SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    minLines: 1,
+                    controller: _bio,
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'Introduce una biografía'
+                          : null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Biografía"),
+                  ),
+
+                  SizedBox(
                     height: 5,
                   ),
                   Divider(indent: 16),
@@ -112,7 +147,31 @@ class _ProfileEditState extends State<ProfileEdit> {
                     style: TextStyle(
                         color: Colors.black54),
                   ),
-                  /* */
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      child: Wrap(
+                        spacing: 5,
+                        runSpacing: 3,
+                        children: [
+                          ...tags.map((tag) => FilterChip(
+                            label: Text(tag),
+                            selected: tagsCommunity.contains(tag),
+                            selectedColor: Colors.lightBlue[100],
+                            onSelected: (bool selected) {
+                              setState(() {
+                                if (selected) {
+                                  tagsCommunity.add(tag);
+                                } else {
+                                  tagsCommunity.remove(tag);
+                                }
+                              });
+                            },
+                          ))
+                        ],
+                      )),
+
                 ],
               ))),
         )));
