@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,7 +17,7 @@ class EventService {
     //sustituir por obtener localizacion
     LatLng position = await LocationService.determinePosition();
     final query = {
-      'userId': '0',
+      'userId': await MySharedPreferences.instance.getStringValue("userId"),
       'latitude': position.latitude.toString(),
       'longitude': position.longitude.toString()
     };
