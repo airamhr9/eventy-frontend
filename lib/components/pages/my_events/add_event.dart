@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eventy_front/components/pages/my_events/create_event.dart';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
@@ -509,7 +510,7 @@ class _AddEventState extends State<AddEvent> {
     return true;
   }
 
-  void createEvent(BuildContext context) {
+  void createEvent(BuildContext context) async {
     if (_formKey.currentState!.validate() && validateFields(context)) {
       double precio = (_priceController.text.isEmpty)
           ? 0
@@ -526,7 +527,8 @@ class _AddEventState extends State<AddEvent> {
           [],
           _eventNameController.text,
           //Cambiar a obtener el usuario actual
-          1,
+          int.parse(
+              await MySharedPreferences.instance.getStringValue("userId")),
           precio,
           (_visibilityValue == "Público") ? false : true,
           _descriptionController.text,
