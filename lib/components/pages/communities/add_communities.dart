@@ -48,11 +48,14 @@ class _AddCommunityState extends State<AddCommunity> {
   _imgLogoFromGallery() async {
     XFile? image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-
+    String path = "";
+    if(image != null){
+      path = image.path;
+    }
     setState(() {
-      imageLogo = FileImage(File(image!.path));
+      imageLogo = FileImage(File(path));
       print("\n******************AQUI********************\n");
-      imageLogoToSend = FileImage(File(image.path));
+      imageLogoToSend = FileImage(File(path));
     });
   }
 

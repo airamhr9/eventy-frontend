@@ -1,4 +1,8 @@
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:eventy_front/services/tags_service.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile() : super();
@@ -8,6 +12,30 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  List<String> tags = [];
+  List<String> usertags = [];
+ String userId = "";
+
+  @override
+  void initState() {
+
+    super.initState();
+
+
+    MySharedPreferences.instance
+        .getStringValue("userId")
+        .then((value) => setState(() {
+      userId = value;
+    }));
+
+    UserService().getUserPreferences("",userId).then((value) => setState(() {
+      print("Here");
+      tags = value;
+    }));
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return (SingleChildScrollView(child: BuildProfile()));
@@ -63,6 +91,30 @@ class _ProfileState extends State<Profile> {
             "Mis preferencias",
             style: TextStyle(color: Colors.black54),
           ),
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+              child: Wrap(
+                spacing: 5,
+                runSpacing: 3,
+                children: [
+                  ...tags.map((tag) => FilterChip(
+                    label: Text(tag),
+                    selected: usertags.contains(tag),
+                    selectedColor: Colors.lightBlue[100],
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (selected) {
+                          usertags.add(tag);
+                        } else {
+                          usertags.remove(tag);
+                        }
+                      });
+                    },
+                  ))
+                ],
+              )),
           /*Wrap(
           children: List<Widget>.generate(
             options.length,
