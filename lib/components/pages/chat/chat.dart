@@ -11,7 +11,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  final messageController = TextEditingController();
+  final _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,32 @@ class _ChatState extends State<Chat> {
             Container(
                 color: Colors.blue,
                 width: double.infinity,
-                height: 70,
+                height: 60,
+                padding: EdgeInsets.all(8),
                 child: Row(
-                  children: [],
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                            contentPadding:
+                                EdgeInsets.only(bottom: 30, left: 15),
+                            fillColor: Colors.white70,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide.none),
+                            filled: true,
+                            hintText: "Enviar mensaje"),
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.send_rounded,
+                          color: Colors.white,
+                        ))
+                  ],
                 ))
           ],
         ),
