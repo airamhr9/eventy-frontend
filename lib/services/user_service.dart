@@ -9,23 +9,21 @@ class UserService {
   String url = "10.0.2.2:8000";
   //String url = "localhost:8000";
 
-
   List<String> tags = [];
 
-Future<List<String>> getUserPreferences(String res, String userId)async{
-  print("Llamando a server");
-  final query = {'res': res, 'userId': userId};
-  Uri url = Uri.http(this.url, '/userPreferences', query);
-  final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-  final localhostResponse = await http.get(url, headers: headers);
-  print("RESPONSE " + localhostResponse.body.toString());
-  final data = await json.decode(localhostResponse.body);
-  for (var tag in data) {
-    tags.add(tag);
+  Future<List<String>> getUserPreferences(String res, String userId) async {
+    print("Llamando a server");
+    final query = {'res': res, 'userId': userId};
+    Uri url = Uri.http(this.url, '/userPreferences', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    print("RESPONSE " + localhostResponse.body.toString());
+    final data = await json.decode(localhostResponse.body);
+    for (var tag in data) {
+      tags.add(tag);
+    }
+    return tags;
   }
-  return tags;
-}
-
 
   Future<LoginResponse> login(String username, String password) async {
     final query = {'username': username, 'password': password};
@@ -39,7 +37,7 @@ Future<List<String>> getUserPreferences(String res, String userId)async{
     }
   }
 
-  void register(User user) async {
+  Future<String> register(User user) async {
     final query = {
       'username': user.userName,
       'password': user.password,
@@ -50,6 +48,6 @@ Future<List<String>> getUserPreferences(String res, String userId)async{
     final response = await http.post(
       url,
     );
-    print(response.body);
+    return response.body;
   }
 }

@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 class AddEvent extends StatefulWidget {
@@ -33,6 +34,9 @@ class _AddEventState extends State<AddEvent> {
   List<String> tagsEvent = [];
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
+
+  String startDateLabel = "Sin seleccionar";
+  String finishDateLabel = "Sin seleccionar";
   DateTime startDate = DateTime.now().add(Duration(days: 1));
   DateTime finishDate = DateTime.now().add(Duration(days: 2));
 
@@ -157,11 +161,11 @@ class _AddEventState extends State<AddEvent> {
                       SizedBox(
                         height: 20,
                       ),
-                      buildDatePickers("Fecha de inicio", context),
+                      buildDatePickers("Fecha de inicio", true, context),
                       SizedBox(
                         height: 20,
                       ),
-                      buildDatePickers("Fecha de final", context),
+                      buildDatePickers("Fecha de final", false, context),
                       SizedBox(
                         height: 20,
                       ),
@@ -433,7 +437,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget buildDatePickers(String title, BuildContext context) {
+  Widget buildDatePickers(String title, bool isStart, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -451,7 +455,7 @@ class _AddEventState extends State<AddEvent> {
               width: 10,
             ),
             Text(
-              "Sin seleccionar",
+              (isStart) ? startDateLabel : finishDateLabel,
               style: TextStyle(fontSize: 18, color: Colors.black54),
             ),
             Spacer(),
@@ -461,6 +465,7 @@ class _AddEventState extends State<AddEvent> {
                 style: TextStyle(fontSize: 18),
               ),
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 DatePicker.showDateTimePicker(context,
                     showTitleActions: true,
                     minTime: DateTime.now(),
@@ -469,6 +474,17 @@ class _AddEventState extends State<AddEvent> {
                   print('change $date');
                 }, onConfirm: (date) {
                   print('confirm $date');
+                  setState(() {
+                    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+                    final String formatted = formatter.format(date);
+                    if (isStart) {
+                      startDate = date;
+                      startDateLabel = formatted;
+                    } else {
+                      finishDate = date;
+                      finishDateLabel = formatted;
+                    }
+                  });
                 }, currentTime: DateTime.now(), locale: LocaleType.es);
               },
             ),
@@ -529,7 +545,7 @@ class _AddEventState extends State<AddEvent> {
           await MySharedPreferences.instance.getStringValue("userId"),
           precio,
           (_visibilityValue == "Público") ? false : true,
-          _descriptionController.text,
+          _summaryController.text,
           tagsEvent);
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {

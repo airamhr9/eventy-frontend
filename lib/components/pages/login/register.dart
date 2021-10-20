@@ -1,4 +1,7 @@
+import 'package:eventy_front/components/root.dart';
+import 'package:eventy_front/navigation/navigation.dart';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -27,7 +30,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -43,9 +45,11 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
-              Spacer(),
+              SizedBox(
+                height: 60,
+              ),
               Container(
                 color: Colors.transparent,
                 padding: EdgeInsets.only(left: 5),
@@ -125,7 +129,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           ? "La contraseña no debe estar vacía"
                           : (value != _confirmPasswordController.text)
                               ? "Las contraseñas no coinciden"
-                              : null;
+                              : (value.length < 6)
+                                  ? "La contraseña debe tener al menos 6 caracteres"
+                                  : null;
                     },
                     controller: _passwordController,
                     obscureText: hidePassword,
@@ -196,7 +202,16 @@ class _RegisterPageState extends State<RegisterPage> {
                             _passwordController.text,
                             "",
                             dateToSend);
-                        UserService().register(user);
+                        UserService().register(user).then((resp) {
+                          if (resp.toString().startsWith("Error")) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(resp),
+                              backgroundColor: Colors.red,
+                            ));
+                          } else {
+                            login();
+                          }
+                        });
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -210,7 +225,6 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(
                 height: 15,
               ),
-              Spacer()
             ],
           ),
         ),
@@ -266,5 +280,27 @@ class _RegisterPageState extends State<RegisterPage> {
         )
       ],
     );
+  }
+
+  void login() {
+    UserService()
+        .login(_usernameController.text, _passwordController.text)
+        .then((value) {
+      if (value.success) {
+        MySharedPreferences.instance.setStringValue("userId", value.id);
+        MySharedPreferences.instance.setBooleanValue("isLoggedIn", true);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Root(
+                      selectedPage: EventsNavigation.NAV_HOME,
+                    )));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(value.error),
+          backgroundColor: Colors.red,
+        ));
+      }
+    });
   }
 }
