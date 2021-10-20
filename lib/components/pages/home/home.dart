@@ -1,14 +1,17 @@
 import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktoklikescroller/tiktoklikescroller.dart';
 
 class Home extends StatefulWidget {
-  const Home() : super();
+  final _HomeState homeState = _HomeState();
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeState createState() {
+    return homeState;
+  }
 }
 
 class _HomeState extends State<Home> {
@@ -50,5 +53,38 @@ class _HomeState extends State<Home> {
         currentEvent = events[currentIndex];
       });
     }
+  }
+
+  addMemberToEvent() {
+    EventService().sendNewParticipant(
+        currentEvent.id.toString(), "G1edlrx1jnguSaFfTJctxJoFNPA2");
+  }
+
+  buildMessageAddEvent() {
+    addMemberToEvent();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Te has unido con éxito",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            content: Text("Evento añadido a: Mis eventos."),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Vale",
+                    style: TextStyle(color: Colors.lightBlue),
+                  ))
+            ],
+          );
+        });
   }
 }
