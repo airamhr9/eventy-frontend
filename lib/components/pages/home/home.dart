@@ -1,6 +1,8 @@
 import 'package:eventy_front/components/pages/home/recomendation.dart';
+import 'package:eventy_front/components/pages/login/login.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktoklikescroller/tiktoklikescroller.dart';
@@ -56,35 +58,69 @@ class _HomeState extends State<Home> {
   }
 
   addMemberToEvent() {
-    EventService().sendNewParticipant(
-        currentEvent.id.toString(), "G1edlrx1jnguSaFfTJctxJoFNPA2");
+    EventService().sendNewParticipant(currentEvent.id.toString(), "0");
   }
 
-  buildMessageAddEvent() {
-    addMemberToEvent();
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "Te has unido con éxito",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
-            ),
-            content: Text("Evento añadido a: Mis eventos."),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Vale",
-                    style: TextStyle(color: Colors.lightBlue),
-                  ))
-            ],
-          );
-        });
+  buildMessageAddEvent() async {
+    String userId = await MySharedPreferences.instance.getStringValue("userId");
+    bool userIsParticpant = false;
+    for (String userIdInList in currentEvent.participants) {
+      if (userId == userIdInList) {
+        userIsParticpant = true;
+      }
+    }
+    if (userIsParticpant == true) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Ya estas en este evento",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black87),
+              ),
+              content: Text(
+                  "Puedes encontrar el evento en la pantalla: Mis eventos."),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Vale",
+                      style: TextStyle(color: Colors.lightBlue),
+                    ))
+              ],
+            );
+          });
+    } else {
+      addMemberToEvent();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Te has unido con éxito",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black87),
+              ),
+              content: Text("Evento añadido a: Mis eventos."),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Vale",
+                      style: TextStyle(color: Colors.lightBlue),
+                    ))
+              ],
+            );
+          });
+    }
   }
 }

@@ -7,7 +7,7 @@ class Event {
   double latitude; //Solo String temporalmente
   double longitude; //Solo String temporalmente
   int maxParticipants;
-  List<int> participants;
+  List<String> participants;
   String name;
   String ownerId;
   double price;
@@ -43,7 +43,7 @@ class Event {
       json['longitude'],
       json['maxParticipants'],
       (json['participants'] != null)
-          ? (json['participants'] as List).cast<int>()
+          ? (json['participants'] as List).cast<String>()
           : [],
       json['name'],
       json['owner'],

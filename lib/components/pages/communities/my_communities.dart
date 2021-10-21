@@ -32,9 +32,9 @@ class _MyCommunitiesState extends State<MyCommunities> {
           title: Text(
             myCommunitiesList[position].name,
             style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              color: Colors.black87),
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: Colors.black87),
           ),
           subtitle: Row(
             children: [
@@ -44,20 +44,17 @@ class _MyCommunitiesState extends State<MyCommunities> {
                   " miembros")
             ],
           ),
-          leading:
-            Container(
+          leading: Container(
               width: 45,
               height: 45,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    myCommunitiesList[position].logo,
-                  )
-                ),
-              )
-            ),
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      myCommunitiesList[position].logo,
+                    )),
+              )),
           onTap: () {
             Navigator.push(
                 context,

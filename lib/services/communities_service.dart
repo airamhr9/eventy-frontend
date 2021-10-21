@@ -12,7 +12,7 @@ class CommunityService {
 
   Future<List<Community>> get() async {
     final query = {
-      'user': '0',
+      'user': 'YT2EEXyEd9XKDb2nKkIMP5UELqw2',
     };
     Uri url = Uri.http(this.url, '/communities', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};

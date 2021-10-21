@@ -3,9 +3,9 @@ class Community {
   String logo;
   String description;
   List<String> images;
-  List<int> members;
+  List<String> members;
   String name;
-  int creator;
+  String creator;
   bool private;
   List<String> tags;
   //List<Event> events;
@@ -21,7 +21,7 @@ class Community {
       json['logo'],
       json['description'],
       (json['images'] as List).cast<String>(),
-      (json['members'] as List).cast<int>(),
+      (json['members'] as List).cast<String>(),
       json['name'],
       json['creator'],
       json['private'],
