@@ -203,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             "",
                             dateToSend);
                         UserService().register(user).then((resp) {
-                          if (resp.toString().startsWith("Error")) {
+                          if (resp.toString() == _usernameController.text) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(resp),
                               backgroundColor: Colors.red,
@@ -260,6 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(fontSize: 18),
               ),
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 DatePicker.showDatePicker(context,
                     showTitleActions: true,
                     minTime: DateTime(1900),

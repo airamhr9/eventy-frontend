@@ -55,11 +55,12 @@ class _ChatState extends State<Chat> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.send_rounded,
-                          color: Colors.white,
-                        ))
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.send_rounded,
+                      ),
+                      color: Colors.white,
+                    )
                   ],
                 ))
           ],
