@@ -1,5 +1,8 @@
+import 'package:eventy_front/components/pages/chat/my_message.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/objects/message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class Chat extends StatefulWidget {
   final Community community;
@@ -30,7 +33,35 @@ class _ChatState extends State<Chat> {
         child: Column(
           children: [
             Expanded(
-              child: Text("mensajes"),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListView(
+                  reverse: true,
+                  children: [
+                    MyMessage(Message(1, "texto coritto de mensaje",
+                        DateTime.now().subtract(Duration(days: 1)), "1")),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    MyMessage(Message(
+                        1,
+                        "texto más largo  de mensaje puede considerarse un texto larguito en realidad eh ocupa bastante el champion",
+                        DateTime.now().subtract(Duration(days: 1)),
+                        "2")),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    MyMessage(Message(
+                        1,
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+                        DateTime.now().subtract(Duration(days: 1)),
+                        "3")),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Container(
                 color: Colors.blue,
