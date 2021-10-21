@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -78,66 +80,7 @@ class _CommunitiesState extends State<CommunityView>
                           ]))),
                 ),
               ))),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.add),
-        label: Text("Unirse"),
-        onPressed: () {
-          if (widget.community.private == false) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(
-                      "Te has unido con exito",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.black87),
-                    ),
-                    actionsPadding: EdgeInsets.only(left: 10),
-                    actionsAlignment: MainAxisAlignment.start,
-                    actions: [
-                      TextButton(
-                          child: Text(
-                            "Aceptar",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          onPressed: () => Navigator.pop(
-                                context,
-                              ))
-                    ],
-                  );
-                });
-          } else {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      title: Text(
-                        "Solicitud enviada",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            color: Colors.black87),
-                      ),
-                      content: Text(
-                          "Si su solicitud es aceptada le llegará una notificación"),
-                      actionsPadding: EdgeInsets.only(left: 10),
-                      actionsAlignment: MainAxisAlignment.start,
-                      actions: [
-                        TextButton(
-                            child: Text(
-                              "Aceptar",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            onPressed: () => Navigator.pop(
-                                  context,
-                                ))
-                      ]);
-                });
-          }
-        },
-      ),
+      floatingActionButton: buildAddToCommunityButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -203,5 +146,58 @@ class _CommunitiesState extends State<CommunityView>
 
   Widget buildTabEventos() {
     return Center(child: Text("Eventos"));
+  }
+
+  addMemberToCommunity() async {
+    String userId = await MySharedPreferences.instance.getStringValue('userId');
+    CommunityService().sendNewMember(widget.community.id.toString(), userId);
+  }
+
+  bool isMember = false;
+  Future<bool> checkUser() async {
+    String userId = await MySharedPreferences.instance.getStringValue("userId");
+    for (String userIdInCommunity in widget.community.members) {
+      if (userId == userIdInCommunity) {
+        return isMember = true;
+      }
+    }
+    return isMember;
+  }
+
+  buildAddToCommunityButton() {
+    if (isMember == true) {
+      return FloatingActionButton.extended(
+        icon: Icon(Icons.add),
+        label: Text("Unirse"),
+        onPressed: () {
+          addMemberToCommunity();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(
+                    "Te has unido con exito",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Colors.black87),
+                  ),
+                  actionsPadding: EdgeInsets.only(left: 10),
+                  actionsAlignment: MainAxisAlignment.start,
+                  actions: [
+                    TextButton(
+                        child: Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        onPressed: () => Navigator.pop(
+                              context,
+                            ))
+                  ],
+                );
+              });
+        },
+      );
+    } else {}
   }
 }
