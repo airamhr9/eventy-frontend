@@ -1,5 +1,6 @@
 import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/material.dart';
 
@@ -12,14 +13,12 @@ class MyCommunities extends StatefulWidget {
 
 class _MyCommunitiesState extends State<MyCommunities> {
   List<Community> myCommunitiesList = [];
+  String userId = "";
 
   @override
   void initState() {
     super.initState();
-    CommunityService().get().then((value) => setState(() {
-          print("Here");
-          myCommunitiesList = value;
-        }));
+    getUserAndCommunities();
   }
 
   @override
@@ -71,5 +70,15 @@ class _MyCommunitiesState extends State<MyCommunities> {
         );
       },
     );
+  }
+
+  getUserAndCommunities() async {
+    userId = await MySharedPreferences.instance.getStringValue("userId");
+    await CommunityService().get(userId).then((value) => setState(() {
+          print("Here");
+          print(userId);
+          myCommunitiesList = value;
+          print(myCommunitiesList.length);
+        }));
   }
 }

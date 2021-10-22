@@ -1,14 +1,9 @@
 import 'dart:io';
-import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/components/pages/communities/create_community.dart';
-import 'package:eventy_front/components/pages/login/login.dart';
 //import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/objects/community.dart';
-import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
-import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
-import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';

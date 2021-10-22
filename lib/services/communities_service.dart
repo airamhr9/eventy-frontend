@@ -10,15 +10,14 @@ class CommunityService {
   String url = "10.0.2.2:8000";
   //String url = "localhost:8000";
 
-  Future<List<Community>> get() async {
-    final query = {
-      'user': 'YT2EEXyEd9XKDb2nKkIMP5UELqw2',
-    };
+  Future<List<Community>> get(String userId) async {
+    final query = {'user': userId};
     Uri url = Uri.http(this.url, '/communities', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
+    print(data);
     List<Community> communities =
         list.map((community) => Community.fromJson(community)).toList();
     return communities;
