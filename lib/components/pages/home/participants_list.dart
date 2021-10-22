@@ -105,7 +105,7 @@ class _ParticipantsState extends State<Participants> {
 
   Widget buildText(int maxParticipants) {
     print(maxParticipants);
-    int numberParticipants = widget.event.participants.length + 1;
+    int numberParticipants = widget.event.participants.length;
     if (maxParticipants == -1) {
       String asistentes =
           (numberParticipants == 1) ? " asistente." : " asistentes.";

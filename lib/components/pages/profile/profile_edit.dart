@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:eventy_front/services/tags_service.dart';
@@ -14,13 +17,17 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-   ImageProvider _img = NetworkImage(
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
+
 
    ImagePicker picker = ImagePicker();
+   ImageProvider _img = NetworkImage(
+       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
 
+   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
    final TextEditingController _userName = TextEditingController();
    final TextEditingController _bio = TextEditingController();
+
+
    List<String> tags = [];
    List<String> tagsCommunity = [];
 
@@ -171,9 +178,58 @@ void initState() {
                           ))
                         ],
                       )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50),
+                          // double.infinity is the width and 30 is the height
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                      onPressed: () {
+                        updateUser(context);
+                      },
+                      icon: Icon(Icons.save_rounded),
+                      label: Text("Guardar cambios"))
 
                 ],
               ))),
         )));
   }
+
+  bool validateFields(BuildContext context){
+    return true;
+  }
+
+/*Future<User> getUser()async{
+
+    return user;
+}*/
+
+
+  void updateUser(BuildContext context) async{
+    if(_formKey.currentState!.validate() && validateFields(context)){
+      String userId = await MySharedPreferences.instance.getStringValue("userId");
+      print("Id: " + userId);
+      User user = UserService().getUser(userId) as User;
+
+      final User finalUser = User(
+       userId,
+        user.profilePicture,
+        user.email,
+        user.preferences,
+        user.userName,
+        user.password,
+        user.bio,
+        user.birthdate);
+
+      print("user obtenido " + user.toString());
+      print("user creado" + finalUser.toString());
+
+
+    }
+  }
+
 }

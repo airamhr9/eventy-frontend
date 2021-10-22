@@ -20,6 +20,7 @@ class CommunityService {
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
+    print(data);
     List<Community> communities =
         list.map((community) => Community.fromJson(community)).toList();
     print(communities);
