@@ -10,9 +10,9 @@ class CommunityService {
   String url = "10.0.2.2:8000";
   //String url = "localhost:8000";
 
-  Future<List<Community>> get() async {
+  Future<List<Community>> get(String userId) async {
     final query = {
-      'user': await MySharedPreferences.instance.getStringValue("userId"),
+      'user': userId,
     };
     Uri url = Uri.http(this.url, '/communities', query);
     print(url);
