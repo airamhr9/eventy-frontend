@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:eventy_front/services/tags_service.dart';
 
-
-
 class ProfileEdit extends StatefulWidget {
   const ProfileEdit() : super();
 
@@ -17,22 +15,18 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
+  ImagePicker picker = ImagePicker();
+  ImageProvider _img = NetworkImage(
+      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _userName = TextEditingController();
+  final TextEditingController _bio = TextEditingController();
 
-   ImagePicker picker = ImagePicker();
-   ImageProvider _img = NetworkImage(
-       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
-
-   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-   final TextEditingController _userName = TextEditingController();
-   final TextEditingController _bio = TextEditingController();
-
-
-   List<String> tags = [];
-   List<String> tagsCommunity = [];
+  List<String> tags = [];
+  List<String> tagsCommunity = [];
 
   _imgFromGallery() async {
-
     XFile? image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
@@ -40,16 +34,15 @@ class _ProfileEditState extends State<ProfileEdit> {
       _img = FileImage(File(image!.path));
     });
   }
-@override
-void initState() {
 
+  @override
+  void initState() {
     super.initState();
     TagsService().get().then((value) => setState(() {
-      print("Here");
-      tags = value;
-    }));
-}
-
+          print("Here");
+          tags = value;
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +71,7 @@ void initState() {
                             decoration: BoxDecoration(
                               //color: const Color(0xff7c94b6),
                               image: const DecorationImage(
-                                image: NetworkImage(
-                                    ''),
+                                image: NetworkImage(''),
                                 fit: BoxFit.cover,
                               ),
                               border: Border.all(
@@ -90,13 +82,10 @@ void initState() {
                               shape: BoxShape.circle,
                             ),
                             child: CircleAvatar(
-                              backgroundImage: _img
-                              ,
+                              backgroundImage: _img,
                               radius: 80,
                             ),
-
                           ),
-
                           Icon(
                             Icons.add_photo_alternate_outlined,
                             size: 35,
@@ -140,7 +129,6 @@ void initState() {
                         filled: true,
                         hintText: "Biografía"),
                   ),
-
                   SizedBox(
                     height: 5,
                   ),
@@ -149,20 +137,18 @@ void initState() {
                     height: 5,
                   ),
                   Text(
-
                     "Editar preferencias",
-                    style: TextStyle(
-                        color: Colors.black54),
+                    style: TextStyle(color: Colors.black54),
                   ),
                   SizedBox(
                     height: 5,
                   ),
                   Container(
                       child: Wrap(
-                        spacing: 5,
-                        runSpacing: 3,
-                        children: [
-                          ...tags.map((tag) => FilterChip(
+                    spacing: 5,
+                    runSpacing: 3,
+                    children: [
+                      ...tags.map((tag) => FilterChip(
                             label: Text(tag),
                             selected: tagsCommunity.contains(tag),
                             selectedColor: Colors.lightBlue[100],
@@ -176,8 +162,8 @@ void initState() {
                               });
                             },
                           ))
-                        ],
-                      )),
+                    ],
+                  )),
                   SizedBox(
                     height: 20,
                   ),
@@ -193,13 +179,12 @@ void initState() {
                       },
                       icon: Icon(Icons.save_rounded),
                       label: Text("Guardar cambios"))
-
                 ],
               ))),
         )));
   }
 
-  bool validateFields(BuildContext context){
+  bool validateFields(BuildContext context) {
     return true;
   }
 
@@ -208,28 +193,26 @@ void initState() {
     return user;
 }*/
 
-
-  void updateUser(BuildContext context) async{
-    if(_formKey.currentState!.validate() && validateFields(context)){
-      String userId = await MySharedPreferences.instance.getStringValue("userId");
+  void updateUser(BuildContext context) async {
+    if (_formKey.currentState!.validate() && validateFields(context)) {
+      String userId =
+          await MySharedPreferences.instance.getStringValue("userId");
       print("Id: " + userId);
       User user = UserService().getUser(userId) as User;
 
       final User finalUser = User(
-       userId,
-        user.profilePicture,
-        user.email,
-        user.preferences,
-        user.userName,
-        user.password,
-        user.bio,
-        user.birthdate);
+          userId,
+          user.profilePicture,
+          user.email,
+          user.preferences,
+          user.userName,
+          user.password,
+          user.bio,
+          user.birthdate,
+          user.profilePictureName);
 
       print("user obtenido " + user.toString());
       print("user creado" + finalUser.toString());
-
-
     }
   }
-
 }

@@ -201,7 +201,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             _usernameController.text,
                             _passwordController.text,
                             "",
-                            dateToSend);
+                            dateToSend,
+                            "userImg.jpg");
                         UserService().register(user).then((resp) {
                           if (resp.toString() != _usernameController.text) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

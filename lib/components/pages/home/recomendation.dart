@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:flutter/material.dart';
@@ -125,23 +126,50 @@ class RecommendedEventState extends State<RecommendedEvent> {
                           ))
                       .toList(),
                 ),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Participants(widget.event)));
-                  },
-                  icon: Icon(
-                    Icons.people_rounded,
-                    size: 28,
-                  ),
-                  label: Text(
-                    (widget.event.maxParticipants == -1)
-                        ? "Consultar asistentes"
-                        : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Participants(widget.event)));
+                      },
+                      icon: Icon(
+                        Icons.people_rounded,
+                        size: 28,
+                      ),
+                      label: Text(
+                        (widget.event.maxParticipants == -1)
+                            ? "Consultar asistentes"
+                            : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          elevation: 0),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatEvent(widget.event)));
+                      },
+                      icon: Icon(
+                        Icons.chat_rounded,
+                        size: 19,
+                      ),
+                      label: Text(
+                        "Chat",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [

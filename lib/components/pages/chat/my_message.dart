@@ -35,7 +35,17 @@ class MyMessage extends StatelessWidget {
               )
             ],
           ),
-        )
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Container(
+          padding: EdgeInsets.only(bottom: 5),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(message.image),
+            radius: 15,
+          ),
+        ),
       ],
     );
   }

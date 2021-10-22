@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eventy_front/components/pages/chat/chat.dart';
+import 'package:eventy_front/components/pages/chat/chat_community.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
@@ -40,7 +40,7 @@ class _CommunitiesState extends State<CommunityView>
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Chat(widget.community)));
+                        builder: (context) => ChatCommunity(widget.community)));
               },
               icon: Icon(Icons.chat))
         ],

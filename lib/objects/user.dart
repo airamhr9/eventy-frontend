@@ -13,11 +13,20 @@ class User {
   String userName;
   String bio;
   String birthdate;
+  String? profilePictureName;
   //List<Event> events;
   //List<Community> communities;
 
-  User(this.id, this.profilePicture, this.email, this.preferences,
-      this.userName, this.password, this.bio, this.birthdate
+  User(
+      this.id,
+      this.profilePicture,
+      this.email,
+      this.preferences,
+      this.userName,
+      this.password,
+      this.bio,
+      this.birthdate,
+      this.profilePictureName
       //this.events,
       //this.communities,
       );
@@ -31,7 +40,8 @@ class User {
         json['username'],
         json['password'],
         json['bio'],
-        json['birthdate']
+        json['birthdate'],
+        json['imageName']
         //(json['events'] as List).cast<Event>(),
         //(json['communities'] as List).cast<Community>(),
         );
@@ -47,6 +57,7 @@ class User {
       'password': this.password,
       'bio': this.bio,
       'birthdate': this.birthdate,
+      'imageName': this.profilePictureName
     };
     return result;
   }

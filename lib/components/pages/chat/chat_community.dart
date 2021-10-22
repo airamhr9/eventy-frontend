@@ -2,24 +2,30 @@ import 'package:eventy_front/components/pages/chat/my_message.dart';
 import 'package:eventy_front/components/pages/chat/other_message.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/message.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/chat_service.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:great_list_view/great_list_view.dart';
 
-class Chat extends StatefulWidget {
+class ChatCommunity extends StatefulWidget {
   final Community community;
 
-  const Chat(this.community) : super();
+  const ChatCommunity(this.community) : super();
 
   @override
-  _ChatState createState() => _ChatState();
+  _ChatCommunityState createState() => _ChatCommunityState();
 }
 
-class _ChatState extends State<Chat> {
+class _ChatCommunityState extends State<ChatCommunity>
+    with TickerProviderStateMixin {
+  final key = GlobalKey<AnimatedListState>();
   final _messageController = TextEditingController();
   List<Message> messages = [];
   String userId = "";
+  late User user;
 
   @override
   void initState() {
@@ -28,10 +34,17 @@ class _ChatState extends State<Chat> {
         .getStringValue("userId")
         .then((value) => setState(() {
               userId = value;
+              UserService().getUser(userId).then((value) {
+                user = value;
+              });
             }));
     ChatService().getCommunityMessages(widget.community.id).then((value) {
       setState(() {
-        messages = value;
+        messages.addAll(value);
+        messages = messages.reversed.toList();
+        for (int i = 0; i < messages.length; i++) {
+          key.currentState!.insertItem(i);
+        }
       });
     });
   }
@@ -54,8 +67,25 @@ class _ChatState extends State<Chat> {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListView.separated(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+                child: AnimatedList(
+                  reverse: true,
+                  key: key,
+                  itemBuilder: (context, index, animation) {
+                    return SlideTransition(
+                        position: animation.drive(
+                            Tween(begin: Offset(0, 2), end: Offset(0.0, 0.0))),
+                        child: Column(children: [
+                          (messages[index].userId == userId)
+                              ? MyMessage(messages[index])
+                              : OtherMessage(messages[index]),
+                          SizedBox(
+                            height: 5,
+                          )
+                        ]));
+                  },
+                ),
+/*                 child: ListView.separated(
                     reverse: true,
                     itemBuilder: (context, index) {
                       return (messages[index].userId == userId)
@@ -67,43 +97,7 @@ class _ChatState extends State<Chat> {
                         height: 5,
                       );
                     },
-                    itemCount: messages.length),
-/*                 child: ListView(
-                  reverse: true,
-                  children: [
-                    MyMessage(Message(1, "texto coritto de mensaje",
-                        DateTime.now().subtract(Duration(days: 1)), "1")),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    OtherMessage(Message(1, "texto coritto de mensaje",
-                        DateTime.now().subtract(Duration(days: 1)), "1")),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    MyMessage(Message(
-                        1,
-                        "texto más largo  de mensaje puede considerarse un texto larguito en realidad eh ocupa bastante el champion",
-                        DateTime.now().subtract(Duration(days: 1)),
-                        "2")),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    OtherMessage(Message(
-                        1,
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                        DateTime.now().subtract(Duration(days: 1)),
-                        "3")),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    MyMessage(Message(
-                        1,
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                        DateTime.now().subtract(Duration(days: 1)),
-                        "3")),
-                  ],
-                ), */
+                    itemCount: messages.length), */
               ),
             ),
             SizedBox(
@@ -122,7 +116,7 @@ class _ChatState extends State<Chat> {
                         controller: _messageController,
                         decoration: InputDecoration(
                             contentPadding:
-                                EdgeInsets.only(bottom: 30, left: 15),
+                                EdgeInsets.only(bottom: 25, left: 15),
                             fillColor: Colors.white70,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -132,7 +126,28 @@ class _ChatState extends State<Chat> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        String messageText = _messageController.text.trim();
+                        if (messageText.isNotEmpty) {
+                          Message newMessage = Message("", messageText,
+                              DateTime.now(), userId, user.profilePicture);
+                          _messageController.clear();
+                          setState(() {
+                            key.currentState!.insertItem(0,
+                                duration: const Duration(milliseconds: 200));
+                            messages.insert(0, newMessage);
+                          });
+                          Message messageToSend = Message(
+                              newMessage.id,
+                              newMessage.text,
+                              newMessage.dateTime,
+                              newMessage.userId,
+                              user.profilePictureName!);
+                          ChatService().sendMessageCommunity(
+                              messageToSend, widget.community.id);
+                          print("JODER OSTIA;");
+                        }
+                      },
                       icon: Icon(
                         Icons.send_rounded,
                       ),
