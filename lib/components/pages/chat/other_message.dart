@@ -2,9 +2,9 @@ import 'package:eventy_front/objects/message.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MyMessage extends StatelessWidget {
+class OtherMessage extends StatelessWidget {
   final Message message;
-  const MyMessage(this.message) : super();
+  const OtherMessage(this.message) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -12,15 +12,13 @@ class MyMessage extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Spacer(),
         Container(
           constraints: BoxConstraints(minWidth: 50, maxWidth: 300),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(15), color: Colors.grey),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 message.text,
@@ -35,7 +33,8 @@ class MyMessage extends StatelessWidget {
               )
             ],
           ),
-        )
+        ),
+        Spacer(),
       ],
     );
   }

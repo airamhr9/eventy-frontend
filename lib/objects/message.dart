@@ -1,5 +1,5 @@
 class Message {
-  int id;
+  String id;
   String text;
   DateTime dateTime;
   String userId;

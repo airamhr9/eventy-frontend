@@ -21,6 +21,7 @@ class EventService {
       'latitude': position.latitude.toString(),
       'longitude': position.longitude.toString()
     };
+    print(query['userId']);
     Uri url = Uri.http(this.url, '/recomend', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);

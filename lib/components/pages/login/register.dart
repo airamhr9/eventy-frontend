@@ -195,7 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (_formKey.currentState!.validate()) {
                         final user = User(
                             "",
-                            "",
+                            "userImg.jpg",
                             _emailController.text,
                             [],
                             _usernameController.text,
@@ -203,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             "",
                             dateToSend);
                         UserService().register(user).then((resp) {
-                          if (resp.toString() == _usernameController.text) {
+                          if (resp.toString() != _usernameController.text) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(resp),
                               backgroundColor: Colors.red,

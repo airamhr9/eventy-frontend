@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/objects/community.dart';
-import 'package:flutter/services.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:path/path.dart';
@@ -12,15 +12,17 @@ class CommunityService {
 
   Future<List<Community>> get() async {
     final query = {
-      'user': 'YT2EEXyEd9XKDb2nKkIMP5UELqw2',
+      'user': await MySharedPreferences.instance.getStringValue("userId"),
     };
     Uri url = Uri.http(this.url, '/communities', query);
+    print(url);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
     List<Community> communities =
         list.map((community) => Community.fromJson(community)).toList();
+    print(communities);
     return communities;
   }
 

@@ -19,6 +19,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
     CommunityService().get().then((value) => setState(() {
           print("Here");
           myCommunitiesList = value;
+          print(value);
         }));
   }
 
