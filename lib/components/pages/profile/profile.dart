@@ -14,23 +14,26 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   List<String> tags = [];
-  List<String> usertags = [];
+
  String userId = "";
+
+  void getUserId() async{
+    userId = await MySharedPreferences.instance.getStringValue("userId");
+  }
 
   @override
   void initState() {
-
     super.initState();
-
-
-    MySharedPreferences.instance
+    /*MySharedPreferences.instance
         .getStringValue("userId")
         .then((value) => setState(() {
       userId = value;
-    }));
-
-    UserService().getUserPreferences("",userId).then((value) => setState(() {
-      print("Here");
+      print(userId);
+    }));*/
+    getUserId();
+    UserService().getUserPreferences(userId, "").then((value) => setState(() {
+      print("Here " + userId );
+      print(userId);
       tags = value;
     }));
   }
@@ -101,16 +104,9 @@ class _ProfileState extends State<Profile> {
                 children: [
                   ...tags.map((tag) => FilterChip(
                     label: Text(tag),
-                    selected: usertags.contains(tag),
-                    selectedColor: Colors.lightBlue[100],
+
                     onSelected: (bool selected) {
-                      setState(() {
-                        if (selected) {
-                          usertags.add(tag);
-                        } else {
-                          usertags.remove(tag);
-                        }
-                      });
+
                     },
                   ))
                 ],
