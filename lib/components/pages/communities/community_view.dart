@@ -5,6 +5,7 @@ import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class CommunityView extends StatefulWidget {
   final Community community;
@@ -63,6 +64,13 @@ class _CommunitiesState extends State<CommunityView>
                           SliverToBoxAdapter(child: buildTop()),
                           SliverToBoxAdapter(
                             child: TabBar(
+                              indicator: MaterialIndicator(
+                                color: Theme.of(context).primaryColor,
+                                horizontalPadding: 70,
+                                topLeftRadius: 20,
+                                topRightRadius: 20,
+                                paintingStyle: PaintingStyle.fill,
+                              ),
                               labelColor: Colors.black87,
                               controller: _tabController,
                               isScrollable: false,

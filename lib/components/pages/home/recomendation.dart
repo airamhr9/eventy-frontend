@@ -5,6 +5,7 @@ import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class RecommendedEvent extends StatefulWidget {
   final Event event;
@@ -18,10 +19,13 @@ class RecommendedEventState extends State<RecommendedEvent> {
   late String plazasLabel = "Ver a los asistentes";
   final CarouselController _controller = CarouselController();
   int _current = 0;
+  late String date;
 
   @override
   void initState() {
     super.initState();
+    date = DateFormat("dd/MM/yyyy HH:mm")
+        .format(DateTime.parse(widget.event.startDate));
   }
 
   @override
@@ -100,7 +104,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                   height: 5,
                 ),
                 Text(
-                  widget.event.startDate,
+                  date,
                   style: TextStyle(fontSize: 15, color: Colors.black54),
                 ),
                 SizedBox(

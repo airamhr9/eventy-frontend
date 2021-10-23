@@ -1,7 +1,9 @@
+import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class SearchResult extends StatefulWidget {
   final Event event;
@@ -12,6 +14,15 @@ class SearchResult extends StatefulWidget {
 }
 
 class _SearchResultState extends State<SearchResult> {
+  late String date;
+
+  @override
+  void initState() {
+    super.initState();
+    date = DateFormat("dd/MM/yyyy HH:mm")
+        .format(DateTime.parse(widget.event.startDate));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,9 +50,35 @@ class _SearchResultState extends State<SearchResult> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text(
-                    widget.event.startDate,
-                    style: TextStyle(fontSize: 15, color: Colors.black54),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        this.date,
+                        style: TextStyle(fontSize: 15, color: Colors.black54),
+                      ),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChatEvent(widget.event)));
+                        },
+                        icon: Icon(
+                          Icons.chat_rounded,
+                          size: 18,
+                        ),
+                        label: Text(
+                          "Chat",
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 5,

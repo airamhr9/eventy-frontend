@@ -32,6 +32,21 @@ class EventService {
     return events;
   }
 
+  Future<List<Event>> getHistory() async {
+    //sustituir por obtener localizacion
+    final query = {
+      'id': await MySharedPreferences.instance.getStringValue("userId"),
+      'olderEvents': "true"
+    };
+    Uri url = Uri.http(this.url, '/users', query);
+    final localhostResponse = await http.get(url);
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data as List;
+    List<Event> events = list.map((event) => Event.fromJson(event)).toList();
+    return events;
+  }
+
   Future<List<Event>> search(String text, List<String> tags) async {
     final query = {'text': text, 'tags': tags};
     Uri url = Uri.http(this.url, '/search', query);

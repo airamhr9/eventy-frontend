@@ -129,8 +129,12 @@ class _ChatEventState extends State<ChatEvent> with TickerProviderStateMixin {
                       onPressed: () {
                         String messageText = _messageController.text.trim();
                         if (messageText.isNotEmpty) {
-                          Message newMessage = Message("", messageText,
-                              DateTime.now(), userId, user.profilePicture);
+                          Message newMessage = Message(
+                              "",
+                              messageText,
+                              DateTime.now(),
+                              user.userName,
+                              user.profilePicture);
                           _messageController.clear();
                           setState(() {
                             key.currentState!.insertItem(0,

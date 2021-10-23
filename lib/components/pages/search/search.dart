@@ -1,4 +1,4 @@
-import 'package:eventy_front/components/search/search_result.dart';
+import 'package:eventy_front/components/pages/search/search_result.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
@@ -20,11 +20,6 @@ class _SearchState extends State<Search> {
   List<Event> events = [];
   bool searching = false;
   String searchHint = "Busca eventos";
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

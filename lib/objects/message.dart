@@ -7,8 +7,8 @@ class Message {
   Message(this.id, this.text, this.dateTime, this.userId, this.image);
 
   factory Message.fromJson(Map json) {
-    return Message(json['id'], json['text'], DateTime.parse(json["time"]),
-        json['user'], json['images']);
+    return Message(json['id'].toString(), json['text'],
+        DateTime.parse(json["time"]), json['user'], json['images']);
   }
 
   Map toJson() {
