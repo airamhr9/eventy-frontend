@@ -40,11 +40,11 @@ class _AddCommunityState extends State<AddCommunity> {
     String path = "";
     if (image != null) {
       path = image.path;
+      setState(() {
+        imageProviders.add(FileImage(File(path)));
+        imageFiles.add(FileImage(File(path)));
+      });
     }
-    setState(() {
-      imageProviders.add(FileImage(File(path)));
-      imageFiles.add(FileImage(File(path)));
-    });
   }
 
   _imgLogoFromGallery() async {
@@ -53,11 +53,11 @@ class _AddCommunityState extends State<AddCommunity> {
     String path = "";
     if (image != null) {
       path = image.path;
+      setState(() {
+        imageLogo = FileImage(File(path));
+        imageLogoToSend = FileImage(File(path));
+      });
     }
-    setState(() {
-      imageLogo = FileImage(File(path));
-      imageLogoToSend = FileImage(File(path));
-    });
   }
 
   @override

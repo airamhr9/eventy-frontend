@@ -18,65 +18,69 @@ class _MyCommunitiesState extends State<MyCommunities> {
   @override
   void initState() {
     super.initState();
-    getUserAndCommunities();
+    CommunityService().get().then((value) => setState(() {
+          myCommunitiesList = value;
+          print(myCommunitiesList.length);
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: myCommunitiesList.length,
-      itemBuilder: (context, position) {
-        return Container(
-            child: ListTile(
-          title: Text(
-            myCommunitiesList[position].name,
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.black87),
-          ),
-          subtitle: Row(
-            children: [
-              Icon(Icons.people, size: 18),
-              Text("  " +
-                  myCommunitiesList[position].members.length.toString() +
-                  " miembros")
-            ],
-          ),
-          leading: Container(
-              width: 45,
-              height: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      myCommunitiesList[position].logo,
+    return myCommunitiesList.length > 0
+        ? ListView.separated(
+            itemCount: myCommunitiesList.length,
+            itemBuilder: (context, position) {
+              return Container(
+                  child: ListTile(
+                title: Text(
+                  myCommunitiesList[position].name,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.black87),
+                ),
+                subtitle: Row(
+                  children: [
+                    Icon(Icons.people, size: 18),
+                    Text("  " +
+                        myCommunitiesList[position].members.length.toString() +
+                        " miembros")
+                  ],
+                ),
+                leading: Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            myCommunitiesList[position].logo,
+                          )),
                     )),
-              )),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CommunityView(myCommunitiesList[position])));
-          },
-        ));
-      },
-      separatorBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Divider(),
-        );
-      },
-    );
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CommunityView(myCommunitiesList[position])));
+                },
+              ));
+            },
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Divider(),
+              );
+            },
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 
-  getUserAndCommunities() async {
-    userId = await MySharedPreferences.instance.getStringValue("userId");
-    await CommunityService().get(userId).then((value) => setState(() {
-          print("Here");
-          print(userId);
+  getCommunities() async {
+    await CommunityService().get().then((value) => setState(() {
           myCommunitiesList = value;
           print(myCommunitiesList.length);
         }));

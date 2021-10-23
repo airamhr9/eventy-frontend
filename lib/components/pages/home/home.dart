@@ -57,8 +57,9 @@ class _HomeState extends State<Home> {
     }
   }
 
-  addMemberToEvent() {
-    EventService().sendNewParticipant(currentEvent.id.toString(), "0");
+  addMemberToEvent() async {
+    EventService().sendNewParticipant(currentEvent.id.toString(),
+        await MySharedPreferences.instance.getStringValue("userId"));
   }
 
   buildMessageAddEvent() async {
