@@ -14,7 +14,7 @@ class UserService {
   Future<List<String>> getUserPreferences(
       String userId, String preferences) async {
     print("Llamando a server" + userId);
-    final query = {'id': userId, 'preferences': preferences};
+    final query = { 'id': userId, 'preferences': preferences};
     Uri url = Uri.http(this.url, '/users', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);

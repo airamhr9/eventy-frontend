@@ -1,3 +1,4 @@
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +17,27 @@ class _ProfileState extends State<Profile> {
   List<String> tags = [];
 
  String userId = "";
+late User user;
 
-  void getUserId() async{
-    userId = await MySharedPreferences.instance.getStringValue("userId");
-  }
 
   @override
   void initState() {
     super.initState();
-    /*MySharedPreferences.instance
+    MySharedPreferences.instance
         .getStringValue("userId")
         .then((value) => setState(() {
       userId = value;
-      print(userId);
-    }));*/
-    getUserId();
-    UserService().getUserPreferences(userId, "").then((value) => setState(() {
-      print("Here " + userId );
-      print(userId);
-      tags = value;
+      print("id"+ userId);
+      UserService().getUser(userId).then((value) {
+        user = value;
+      });
+      UserService().getUserPreferences(userId,"" ).then((value) => setState(() {
+        print("Here " + userId );
+        tags = value;
+      }));
     }));
+
+
   }
 
 
@@ -52,14 +54,14 @@ class _ProfileState extends State<Profile> {
           Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                 user.profilePicture),
               radius: 80,
             ),
             SizedBox(
               height: 10,
             ),
             Text(
-              "Usuario",
+             user.userName,
               style: TextStyle(
                 color: Colors.black87,
                 fontWeight: FontWeight.bold,
@@ -70,16 +72,13 @@ class _ProfileState extends State<Profile> {
               height: 5,
             ),
             Text(
-              "Mi estado bla bla bla bla bla",
+              user.bio,
               style: TextStyle(color: Colors.black54),
             ),
             SizedBox(
               height: 5,
             ),
-            Text(
-              "Valencia, España",
-              style: TextStyle(color: Colors.black38),
-            ),
+
             /* TextButton.icon(onPressed:
               (){}, icon:  Icon(
                   Icons.edit_rounded

@@ -15,9 +15,37 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
+
+
+
+  void initState() {
+    super.initState();
+    MySharedPreferences.instance
+        .getStringValue("userId")
+        .then((value) =>
+        setState(() {
+          userId = value;
+          print("id" + userId);
+          UserService().getUser(userId).then((value) {
+            user = value;
+          });
+          TagsService().get().then((value) => setState(() {
+            tags = value;
+          }));
+          UserService().getUserPreferences(userId, "").then((value) => setState((){
+            tagsCommunity = value;
+            print(tagsCommunity);
+          }));
+
+        }));
+
+
+
+
+  }
+
   ImagePicker picker = ImagePicker();
-  ImageProvider _img = NetworkImage(
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
+  late ImageProvider _img;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _userName = TextEditingController();
@@ -26,24 +54,44 @@ class _ProfileEditState extends State<ProfileEdit> {
   List<String> tags = [];
   List<String> tagsCommunity = [];
 
+
   _imgFromGallery() async {
     XFile? image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-
     setState(() {
       _img = FileImage(File(image!.path));
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    TagsService().get().then((value) => setState(() {
-          print("Here");
-          tags = value;
-        }));
-  }
+  String userId = "";
+  late User user;
 
+
+
+
+
+    void updateUser(BuildContext context) async {
+    // if (_formKey.currentState!.validate() && validateFields(context)) {
+    String userId =
+    await MySharedPreferences.instance.getStringValue("userId");
+    print("Id: " + userId);
+
+
+    final User finalUser = User(
+    userId,
+    user.profilePicture,
+    user.email,
+    user.preferences,
+    user.userName,
+    user.password,
+    user.bio,
+    user.birthdate,
+    user.profilePictureName);
+
+    print("user obtenido " + user.toString());
+    print("user creado" + finalUser.toString());
+    // }
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +117,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              //color: const Color(0xff7c94b6),
-                              image: const DecorationImage(
-                                image: NetworkImage(''),
-                                fit: BoxFit.cover,
-                              ),
+                              color: const Color(0xff7c94b6),
+
                               border: Border.all(
                                 color: Colors.lightBlue,
                                 width: 2,
@@ -82,7 +127,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                               shape: BoxShape.circle,
                             ),
                             child: CircleAvatar(
-                              backgroundImage: _img,
+                              backgroundImage: _img = NetworkImage(user.profilePicture),
                               radius: 80,
                             ),
                           ),
@@ -175,7 +220,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15))),
                       onPressed: () {
-                        updateUser(context);
+                       updateUser(context);
                       },
                       icon: Icon(Icons.save_rounded),
                       label: Text("Guardar cambios"))
@@ -193,26 +238,5 @@ class _ProfileEditState extends State<ProfileEdit> {
     return user;
 }*/
 
-  void updateUser(BuildContext context) async {
-    if (_formKey.currentState!.validate() && validateFields(context)) {
-      String userId =
-          await MySharedPreferences.instance.getStringValue("userId");
-      print("Id: " + userId);
-      User user = UserService().getUser(userId) as User;
 
-      final User finalUser = User(
-          userId,
-          user.profilePicture,
-          user.email,
-          user.preferences,
-          user.userName,
-          user.password,
-          user.bio,
-          user.birthdate,
-          user.profilePictureName);
-
-      print("user obtenido " + user.toString());
-      print("user creado" + finalUser.toString());
-    }
-  }
 }
