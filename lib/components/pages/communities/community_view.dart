@@ -129,19 +129,27 @@ class _CommunitiesState extends State<CommunityView>
             children: [
               Spacer(),
               Icon(Icons.people, size: 24),
-              Text(
-                  "  " +
-                      widget.community.members.length.toString() +
-                      " miembros",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18)),
+              buildTextMembers(),
               Spacer()
             ],
           ),
         ),
       ],
     );
+  }
+
+  buildTextMembers() {
+    if (widget.community.members.length > 1) {
+      return Text(
+          "  " + widget.community.members.length.toString() + " miembros",
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+    } else {
+      return Text(
+          "  " + widget.community.members.length.toString() + " miembro",
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+    }
   }
 
   Widget buildTabDetalles() {
@@ -175,7 +183,8 @@ class _CommunitiesState extends State<CommunityView>
         icon: Icon(Icons.add),
         label: Text("Unirse"),
         onPressed: () {
-          CommunityService().sendNewMember(widget.community.id.toString(), userId);
+          CommunityService()
+              .sendNewMember(widget.community.id.toString(), userId);
           showDialog(
               context: context,
               builder: (BuildContext context) {

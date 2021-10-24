@@ -41,9 +41,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
                 subtitle: Row(
                   children: [
                     Icon(Icons.people, size: 18),
-                    Text("  " +
-                        myCommunitiesList[position].members.length.toString() +
-                        " miembros")
+                    buildTextMembers(myCommunitiesList[position].members.length)
                   ],
                 ),
                 leading: Container(
@@ -76,6 +74,16 @@ class _MyCommunitiesState extends State<MyCommunities> {
         : Center(
             child: CircularProgressIndicator(),
           );
+  }
+
+  buildTextMembers(int numMembers) {
+    if (numMembers > 1) {
+      return Text(
+          "  " + numMembers.toString() + " miembros",);
+    } else {
+      return Text(
+          "  " + numMembers.toString() + " miembro",);
+    }
   }
 
   getCommunities() async {

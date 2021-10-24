@@ -32,16 +32,18 @@ class _CreateCommunityState extends State<CreateCommunity> {
         requestCompleted = true;
       });
     });
-    communityService.sendImages(widget.images).then((value) {
-      if (!value) {
+    for (FileImage img in widget.images) {
+      communityService.sendImage(img).then((value) {
+        if (!value) {
+          setState(() {
+            error = true;
+          });
+        }
         setState(() {
-          error = true;
+          imageCompleted = true;
         });
-      }
-      setState(() {
-        imageCompleted = true;
       });
-    });
+    }
     communityService.sendImage(widget.logo).then((value) {
       if (!value) {
         setState(() {
