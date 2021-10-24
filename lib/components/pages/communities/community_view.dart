@@ -22,6 +22,7 @@ class _CommunitiesState extends State<CommunityView>
     Tab(text: 'Eventos'),
     Tab(text: 'Detalles'),
   ];
+  String userId = "";
 
   @override
   void initState() {
@@ -156,14 +157,9 @@ class _CommunitiesState extends State<CommunityView>
     return Center(child: Text("Eventos"));
   }
 
-  addMemberToCommunity() async {
-    String userId = await MySharedPreferences.instance.getStringValue('userId');
-    CommunityService().sendNewMember(widget.community.id.toString(), userId);
-  }
-
   bool isMember = false;
   Future<bool> checkUser() async {
-    String userId = await MySharedPreferences.instance.getStringValue("userId");
+    userId = await MySharedPreferences.instance.getStringValue("userId");
     for (String userIdInCommunity in widget.community.members) {
       if (userId == userIdInCommunity) {
         return isMember = true;
@@ -173,12 +169,13 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildAddToCommunityButton() {
-    if (isMember == true) {
+    checkUser();
+    if (isMember == false) {
       return FloatingActionButton.extended(
         icon: Icon(Icons.add),
         label: Text("Unirse"),
         onPressed: () {
-          addMemberToCommunity();
+          CommunityService().sendNewMember(widget.community.id.toString(), userId);
           showDialog(
               context: context,
               builder: (BuildContext context) {

@@ -65,7 +65,7 @@ class CommunityService {
 
   Future<bool> sendNewMember(String communityId, String userId) async {
     final query = {'communityId': communityId, 'userId': userId};
-    Uri url = Uri.http(this.url, '/community', query);
+    Uri url = Uri.http(this.url, '/joinCommunity', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;

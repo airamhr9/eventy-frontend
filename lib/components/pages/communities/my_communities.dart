@@ -1,6 +1,5 @@
 import 'package:eventy_front/components/pages/communities/community_view.dart';
 import 'package:eventy_front/objects/community.dart';
-import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/material.dart';
 
