@@ -4,6 +4,9 @@ import 'package:eventy_front/objects/login_response.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:path/path.dart';
+import 'package:flutter/material.dart';
+
 
 class UserService {
   String url = "10.0.2.2:8000";
@@ -53,10 +56,13 @@ class UserService {
     return response.body;
   }
 
-  Future<String> updateUser(String userId, String body) async {
-    final query = {"id": userId, 'body': body};
-    Uri url = Uri.http(this.url, '/users', query);
-    final response = await http.put(url);
+  Future<String> updateUser( User user) async {
+    //final query = {'body': };
+    Uri url = Uri.http(this.url, '/users');
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.put(url, headers: headers
+        ,body: json.encode(user.toJson()));
+    print(response.body);
     return response.body;
   }
 
@@ -68,4 +74,16 @@ class UserService {
     final data = await json.decode(response.body);
     return User.fromJson(data);
   }
+
+  Future<bool> sendImage(FileImage image) async {
+    final query = {'type': 'user', 'name': basename(image.file.path)};
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    final imageToSend =
+    await http.MultipartFile.fromPath('photo', image.file.path);
+    request.files.add(imageToSend);
+    var response = await request.send();
+    return response.statusCode == 200;
+  }
+
 }

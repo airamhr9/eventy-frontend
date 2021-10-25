@@ -17,7 +17,8 @@ class _ProfileState extends State<Profile> {
   List<String> tags = [];
 
  String userId = "";
-late User user;
+  User user = User("-1","https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fusers%2FuserImg.jpg?alt=media&token=9a12a294-94c9-4e76-8eae-86a17054bbe0"
+      ,"",[],"CARGANDO","","","","userImage.jpg");
 
 
   @override
@@ -25,20 +26,23 @@ late User user;
     super.initState();
     MySharedPreferences.instance
         .getStringValue("userId")
-        .then((value) => setState(() {
+        .then((value) { setState(() {
       userId = value;
+    });
+
       print("id"+ userId);
-      UserService().getUser(userId).then((value) {
+      UserService().getUser(userId).then((value) => setState(() {
         user = value;
-      });
+      }));
+
       UserService().getUserPreferences(userId,"" ).then((value) => setState(() {
         print("Here " + userId );
         tags = value;
       }));
-    }));
+    });
+    }
 
 
-  }
 
 
   @override
