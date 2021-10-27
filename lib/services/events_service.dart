@@ -10,8 +10,8 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:path/path.dart';
 
 class EventService {
-  String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
+  //String url = "10.0.2.2:8000";
+  String url = "localhost:8000";
 
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion

@@ -7,17 +7,16 @@ import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
-
 class UserService {
-  String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
+  //String url = "10.0.2.2:8000";
+  String url = "localhost:8000";
 
   List<String> tags = [];
 
   Future<List<String>> getUserPreferences(
       String userId, String preferences) async {
     print("Llamando a server" + userId);
-    final query = { 'id': userId, 'preferences': preferences};
+    final query = {'id': userId, 'preferences': preferences};
     Uri url = Uri.http(this.url, '/users', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
@@ -56,12 +55,12 @@ class UserService {
     return response.body;
   }
 
-  Future<String> updateUser( User user) async {
+  Future<String> updateUser(User user) async {
     //final query = {'body': };
     Uri url = Uri.http(this.url, '/users');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    final response = await http.put(url, headers: headers
-        ,body: json.encode(user.toJson()));
+    final response =
+        await http.put(url, headers: headers, body: json.encode(user.toJson()));
     print(response.body);
     return response.body;
   }
@@ -80,10 +79,9 @@ class UserService {
     Uri url = Uri.http(this.url, '/images', query);
     final request = http.MultipartRequest("POST", url);
     final imageToSend =
-    await http.MultipartFile.fromPath('photo', image.file.path);
+        await http.MultipartFile.fromPath('photo', image.file.path);
     request.files.add(imageToSend);
     var response = await request.send();
     return response.statusCode == 200;
   }
-
 }

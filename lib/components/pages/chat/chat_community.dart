@@ -145,7 +145,6 @@ class _ChatCommunityState extends State<ChatCommunity>
                               user.profilePictureName!);
                           ChatService().sendMessageCommunity(
                               messageToSend, widget.community.id);
-                          print("JODER OSTIA;");
                         }
                       },
                       icon: Icon(

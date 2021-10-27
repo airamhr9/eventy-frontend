@@ -39,7 +39,7 @@ dependencies:
   shared_preferences: ^2.0.8
   intl: ^0.17.0
   great_list_view: ^0.1.1
-  email_validator: '^2.0.1'
+  email_validator: ^2.0.1
   tab_indicator_styler: ^2.0.0
 
 dev_dependencies:
