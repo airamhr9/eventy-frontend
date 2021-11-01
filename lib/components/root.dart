@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
@@ -9,7 +7,6 @@ import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
 import 'package:eventy_front/navigation/navigation_model.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
-import 'package:eventy_front/objects/event.dart';
 import 'package:flutter/material.dart';
 
 class Root extends StatefulWidget {
@@ -43,6 +40,15 @@ class _RootState extends State<Root> {
           //style: TextStyle(color: Colors.black87),
         ),
         elevation: 0,
+        actions: (currentSelectedIndex == EventsNavigation.NAV_HOME)
+            ? [
+                IconButton(
+                    onPressed: () {
+                      (body as Home).homeState.saveEvent();
+                    },
+                    icon: Icon(Icons.bookmark_add_rounded))
+              ]
+            : [],
         //backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
       ),

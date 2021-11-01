@@ -62,6 +62,14 @@ class _HomeState extends State<Home> {
         await MySharedPreferences.instance.getStringValue("userId"));
   }
 
+  saveEvent() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Evento guardado"),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 1),
+    ));
+  }
+
   buildMessageAddEvent() async {
     String userId = await MySharedPreferences.instance.getStringValue("userId");
     bool userIsParticpant = false;
