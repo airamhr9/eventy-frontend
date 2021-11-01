@@ -17,17 +17,17 @@ class Community {
 
   factory Community.fromJson(Map<String, dynamic> json) {
     return Community(
-      json['id'],
-      json['logo'],
-      json['description'],
-      (json['images'] as List).cast<String>(),
-      (json['members'] as List).cast<String>(),
-      json['name'],
-      json['creator'],
-      json['private'],
-      (json['tags'] as List).cast<String>(),
-      //(json['events'] as List).cast<Event>(),
-    );
+        json['id'],
+        json['logo'],
+        json['description'],
+        (json['images'] as List).cast<String>(),
+        (json['members'] as List).cast<String>(),
+        json['name'],
+        json['creator'],
+        json['private'],
+        (json['tags'] == null) ? [] : (json['tags'] as List).cast<String>()
+        //(json['events'] as List).cast<Event>(),
+        );
   }
 
   Map<String, dynamic> toJson() => {
