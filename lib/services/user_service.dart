@@ -8,8 +8,8 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
 class UserService {
-  //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  String url = "10.0.2.2:8000";
+  //String url = "localhost:8000";
 
   List<String> tags = [];
 

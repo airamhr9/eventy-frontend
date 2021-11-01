@@ -1,5 +1,8 @@
+import 'package:eventy_front/components/pages/search/community_search_result.dart';
 import 'package:eventy_front/components/pages/search/search_result.dart';
+import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
@@ -18,27 +21,59 @@ class _SearchState extends State<Search> {
   String searchText = "";
   List<String> filterTags = [];
   List<Event> events = [];
+  List<Community> communities = [];
   bool searching = false;
   String searchHint = "Busca eventos";
+  List<bool> _selectedSearch = [true, false];
+  List<Widget> _toggleButtons = [
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Text("Eventos"),
+    ),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Text("Comunidades"),
+    )
+  ];
+  bool searchEvents = true;
 
   @override
   Widget build(BuildContext context) {
     if (searching) {
-      if (events.length <= 0) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+      if (searchEvents) {
+        if (events.length <= 0) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return ListView.separated(
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              return SearchResult(events[index]);
+            },
+            separatorBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Divider(),
+            ),
+          );
+        }
       } else {
-        return ListView.separated(
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            return SearchResult(events[index]);
-          },
-          separatorBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Divider(),
-          ),
-        );
+        if (communities.length <= 0) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return ListView.separated(
+            itemCount: communities.length,
+            itemBuilder: (context, index) {
+              return CommunitySearchResult(communities[index]);
+            },
+            separatorBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Divider(),
+            ),
+          );
+        }
       }
     } else {
       return Center(
@@ -63,11 +98,38 @@ class _SearchState extends State<Search> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
               return Container(
-                height: 490,
+                height: 550,
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ToggleButtons(
+                            children: _toggleButtons,
+                            isSelected: _selectedSearch,
+                            onPressed: (index) {
+                              setModalState(() {
+                                _selectedSearch = [false, false];
+                                _selectedSearch[index] = true;
+                              });
+                              setState(() {
+                                searching = false;
+                                searchEvents = !searchEvents;
+                                if (!searchEvents)
+                                  searchHint = "Busca comunidades";
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(15),
+                            selectedColor: Colors.white,
+                            fillColor: Theme.of(context).primaryColor,
+                          ),
+                        ]),
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
@@ -142,18 +204,32 @@ class _SearchState extends State<Search> {
                         onPressed: () {
                           setState(() {
                             events = [];
+                            communities = [];
                             searching = true;
                           });
-                          EventService()
-                              .search(searchText, filterTags)
-                              .then((value) => setState(() {
-                                    events = value;
-                                    if (events.length == 0) {
-                                      searching = false;
-                                      searchHint =
-                                          "No hay eventos que coincidan con los criterios de búsqueda";
-                                    }
-                                  }));
+                          if (searchEvents) {
+                            EventService()
+                                .search(searchText, filterTags)
+                                .then((value) => setState(() {
+                                      events = value;
+                                      if (events.length == 0) {
+                                        searching = false;
+                                        searchHint =
+                                            "No hay eventos que coincidan con los criterios de búsqueda";
+                                      }
+                                    }));
+                          } else {
+                            CommunityService()
+                                .search(searchText, filterTags)
+                                .then((value) => setState(() {
+                                      communities = value;
+                                      if (communities.length == 0) {
+                                        searching = false;
+                                        searchHint =
+                                            "No hay comunidades que coincidan con los criterios de búsqueda";
+                                      }
+                                    }));
+                          }
                           Navigator.pop(context);
                         },
                         child: Text("Buscar"))

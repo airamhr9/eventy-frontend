@@ -7,8 +7,8 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
 class CommunityService {
-  //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  String url = "10.0.2.2:8000";
+  //String url = "localhost:8000";
 
   Future<List<Community>> get() async {
     final query = {
@@ -45,6 +45,20 @@ class CommunityService {
     request.files.add(imageToSend);
     var response = await request.send();
     return response.statusCode == 200;
+  }
+
+  Future<List<Community>> search(String text, List<String> tags) async {
+    final query = {'text': text, 'tags': tags};
+    Uri url = Uri.http(this.url, '/searchComm', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    //print("RESPONSE " + localhostResponse.body.toString());
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data as List;
+    List<Community> communities =
+        list.map((event) => Community.fromJson(event)).toList();
+    return communities;
   }
 
   Future<bool> sendImages(List<FileImage> images) async {
