@@ -63,11 +63,21 @@ class _HomeState extends State<Home> {
   }
 
   saveEvent() {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Evento guardado"),
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 1),
-    ));
+    try {
+      if (events.length > 0) {
+        EventService().saveEvent(currentEvent.id).then((value) {
+          if (value) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Evento guardado"),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 1),
+            ));
+          }
+        });
+      }
+    } catch (lateInitializationError) {
+      print("No object yet");
+    }
   }
 
   buildMessageAddEvent() async {

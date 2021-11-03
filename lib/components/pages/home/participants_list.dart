@@ -2,6 +2,7 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Participants extends StatefulWidget {
   final Event event;
@@ -56,7 +57,8 @@ class _ParticipantsState extends State<Participants> {
                         height: 5,
                       ),
                       Text(
-                        widget.event.startDate,
+                        DateFormat("dd/MM/yyyy HH:mm")
+                            .format(DateTime.parse(widget.event.startDate)),
                         style: TextStyle(fontSize: 15, color: Colors.white70),
                       ),
                       SizedBox(

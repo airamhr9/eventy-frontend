@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_community.dart';
+import 'package:eventy_front/components/pages/communities/post.dart';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +21,7 @@ class _CommunitiesState extends State<CommunityView>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final List<Widget> myTabs = [
+    Tab(text: 'Muro'),
     Tab(text: 'Eventos'),
     Tab(text: 'Detalles'),
   ];
@@ -27,7 +30,7 @@ class _CommunitiesState extends State<CommunityView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -67,7 +70,7 @@ class _CommunitiesState extends State<CommunityView>
                             child: TabBar(
                               indicator: MaterialIndicator(
                                 color: Theme.of(context).primaryColor,
-                                horizontalPadding: 70,
+                                horizontalPadding: 40,
                                 topLeftRadius: 20,
                                 topRightRadius: 20,
                                 paintingStyle: PaintingStyle.fill,
@@ -84,6 +87,7 @@ class _CommunitiesState extends State<CommunityView>
                           child: TabBarView(
                               controller: _tabController,
                               children: [
+                            buildTabMuro(),
                             buildTabEventos(),
                             buildTabDetalles()
                           ]))),
@@ -163,6 +167,37 @@ class _CommunitiesState extends State<CommunityView>
 
   Widget buildTabEventos() {
     return Center(child: Text("Eventos"));
+  }
+
+  Widget buildTabMuro() {
+    List<PostObject> posts = [
+      PostObject(
+          "id",
+          "Título del post",
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          "2016-10-20T00:00:00.000",
+          "Juan Antonio",
+          123, []),
+      PostObject(
+          "id",
+          "Título del post pero ahora mucho más largo vamos a ver qué tal aunque debe ser más largo aparentemente joder",
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
+          "2012-10-20T00:00:00.000",
+          "Juan Antonio",
+          123, [
+        "https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fevents%2Ferasmus.png?alt=media&token=8a744c36-4656-4d38-aee7-306e980b3d79"
+      ])
+    ];
+
+    return ListView.separated(
+      itemBuilder: (BuildContext context, int index) {
+        return Post(posts[index]);
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider();
+      },
+      itemCount: posts.length,
+    );
   }
 
   bool isMember = false;

@@ -47,6 +47,20 @@ class EventService {
     return events;
   }
 
+  Future<List<Event>> getSeeLaterEvents() async {
+    //sustituir por obtener localizacion
+    final query = {
+      'userId': await MySharedPreferences.instance.getStringValue("userId"),
+    };
+    Uri url = Uri.http(this.url, '/seeItLater', query);
+    final localhostResponse = await http.get(url);
+    final data = await json.decode(localhostResponse.body);
+    print("SEE LATER DATA" + data.toString());
+    final list = data as List;
+    List<Event> events = list.map((event) => Event.fromJson(event)).toList();
+    return events;
+  }
+
   Future<List<Event>> search(String text, List<String> tags) async {
     final query = {'text': text, 'tags': tags};
     Uri url = Uri.http(this.url, '/search', query);
@@ -92,6 +106,15 @@ class EventService {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url,
         headers: headers, body: jsonEncode(event.toJson()));
+    return response.statusCode == 200;
+  }
+
+  Future<bool> saveEvent(int eventId) async {
+    var userId = await MySharedPreferences.instance.getStringValue("userId");
+    final query = {'userId': userId, 'eventId': eventId.toString()};
+    Uri url = Uri.http(this.url, '/seeItLater', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url, headers: headers);
     return response.statusCode == 200;
   }
 

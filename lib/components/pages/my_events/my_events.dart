@@ -14,21 +14,31 @@ class MyEvents extends StatefulWidget {
 class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   List<Event> eventHistory = [];
   bool hasResponse = false;
+  List<Event> seeLater = [];
+  bool seeLaterResponse = false;
 
   late TabController _tabController;
   final List<Widget> myTabs = [
+    Tab(text: 'Próximamente'),
     Tab(text: 'Historial'),
-    Tab(text: 'Eventos actuales'),
+    Tab(text: 'Ver más tarde'),
   ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    EventService().getHistory().then((value) {
+    _tabController = TabController(length: 3, vsync: this);
+    final eventsService = EventService();
+    eventsService.getHistory().then((value) {
       setState(() {
         eventHistory = value;
         hasResponse = true;
+      });
+    });
+    eventsService.getSeeLaterEvents().then((value) {
+      setState(() {
+        seeLater = value;
+        seeLaterResponse = true;
       });
     });
   }
@@ -42,7 +52,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
               child: TabBar(
                 indicator: MaterialIndicator(
                   color: Theme.of(context).primaryColor,
-                  horizontalPadding: 80,
+                  horizontalPadding: 40,
                   topLeftRadius: 20,
                   topRightRadius: 20,
                   paintingStyle: PaintingStyle.fill,
@@ -56,9 +66,11 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
           ];
         },
         body: Container(
-            child: TabBarView(
-                controller: _tabController,
-                children: [buildTabHistory(), buildTabCurrent()])));
+            child: TabBarView(controller: _tabController, children: [
+          buildTabCurrent(),
+          buildTabHistory(),
+          buildTabSeeLater()
+        ])));
 /*     return (!hasResponse)
         ? Center(
             child: CircularProgressIndicator(),
@@ -97,6 +109,27 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
               )
             : Center(
                 child: Text("No has asistido a ningún evento"),
+              );
+  }
+
+  Widget buildTabSeeLater() {
+    return (!seeLaterResponse)
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : (seeLaterResponse && seeLater.length > 0)
+            ? ListView.separated(
+                itemCount: seeLater.length,
+                itemBuilder: (context, index) {
+                  return EventCard(seeLater[index]);
+                },
+                separatorBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Divider(),
+                ),
+              )
+            : Center(
+                child: Text("No has guardado ningún evento"),
               );
   }
 
