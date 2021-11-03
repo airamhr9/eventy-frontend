@@ -59,7 +59,8 @@ class _CommunitiesState extends State<CommunityView>
                   topLeft: Radius.circular(25), topRight: Radius.circular(25)),
               color: Color(0xFFFAFAFA),
               child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding:
+                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
                 child: Container(
                   padding: EdgeInsets.only(top: 5),
                   child: NestedScrollView(
@@ -147,12 +148,12 @@ class _CommunitiesState extends State<CommunityView>
       return Text(
           "  " + widget.community.members.length.toString() + " miembros",
           textAlign: TextAlign.center,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18));
     } else {
       return Text(
           "  " + widget.community.members.length.toString() + " miembro",
           textAlign: TextAlign.center,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18));
     }
   }
 
