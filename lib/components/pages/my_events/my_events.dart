@@ -28,18 +28,23 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    _fetchEvents();
+  }
+
+  Future _fetchEvents() async {
     final eventsService = EventService();
-    eventsService.getHistory().then((value) {
-      setState(() {
-        eventHistory = value;
-        hasResponse = true;
-      });
+
+    final results = await Future.wait(
+        [eventsService.getHistory(), eventsService.getSeeLaterEvents()]);
+
+    setState(() {
+      eventHistory = results[0];
+      hasResponse = true;
     });
-    eventsService.getSeeLaterEvents().then((value) {
-      setState(() {
-        seeLater = value;
-        seeLaterResponse = true;
-      });
+    setState(() {
+      seeLater = results[1];
+      seeLaterResponse = true;
     });
   }
 

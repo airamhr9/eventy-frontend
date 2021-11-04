@@ -1,17 +1,12 @@
-import 'package:eventy_front/components/pages/chat/my_message.dart';
-import 'package:eventy_front/components/pages/chat/other_message.dart';
 import 'package:eventy_front/components/pages/communities/post_comment.dart';
-import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
-import 'package:eventy_front/services/chat_service.dart';
 import 'package:eventy_front/services/muro_service.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:great_list_view/great_list_view.dart';
 import 'package:intl/intl.dart';
 
 class PostDetails extends StatefulWidget {
