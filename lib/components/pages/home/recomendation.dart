@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/home/participants_list.dart';
+import 'package:eventy_front/components/pages/my_events/event_view.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -174,6 +175,27 @@ class RecommendedEventState extends State<RecommendedEvent> {
                       ),
                     ),
                   ],
+                ),
+                ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          elevation: 0),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EventView(widget.event)));
+                      },
+                      icon: Icon(
+                        Icons.description,
+                        size: 19,
+                      ),
+                      label: Text(
+                        "Detalles",
+                        style: TextStyle(fontSize: 16),
+                      ),
                 ),
                 Row(
                   children: [

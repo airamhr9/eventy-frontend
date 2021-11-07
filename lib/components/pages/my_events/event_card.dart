@@ -107,10 +107,6 @@ class _EventCardState extends State<EventCard> {
                     label: Text("Ver en mapa"),
                     icon: Icon(Icons.place_rounded)),
                 Spacer(),
-                TextButton.icon(
-                    onPressed: () {},
-                    label: Text("Detalles"),
-                    icon: Icon(Icons.add_rounded)),
               ],
             )
           ],
