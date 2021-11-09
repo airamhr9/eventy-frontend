@@ -64,9 +64,12 @@ class EventService {
   Future<List<Event>> search(
       String text, List<String> tags, Map<String, dynamic> filters) async {
     final query = {'text': text, 'tags': tags};
-    filters.keys.forEach((element) {
-      query[element] = filters[element].toString();
-    });
+    if (filters.keys.length > 0){
+      query['enabled'] = true.toString();
+      filters.keys.forEach((element) {
+        query[element] = filters[element].toString();
+      });
+    }
     print(query);
     Uri url = Uri.http(this.url, '/search', query);
     print("URL ${url}");
