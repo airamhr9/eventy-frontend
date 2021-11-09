@@ -22,6 +22,10 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
     Tab(text: 'Amigos'),
     Tab(text: 'Solicitudes'),
   ];
+  bool searching = false;
+  bool hasResults = false;
+  List<User> fromFriends = [];
+  List<User> fromDatabase = [];
 
   @override
   void initState() {
@@ -46,6 +50,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -60,53 +65,249 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           child: NestedScrollView(
-              headerSliverBuilder: (context, boolean) {
-                return [
-                  SliverToBoxAdapter(
-                      child: Column(
-                    children: [
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search_rounded),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none),
-                          filled: true,
-                          hintText: "Buscar usuarios",
-                        ),
-                        onChanged: (text) {
+            headerSliverBuilder: (context, boolean) {
+              return [
+                SliverToBoxAdapter(
+                    child: Column(
+                  children: [
+                    TextField(
+                      controller: _searchController,
+                      onSubmitted: (value) => searchFriends(value),
+                      decoration: InputDecoration(
+                        suffixIcon: (_searchController.text.length > 0)
+                            ? IconButton(
+                                icon: Icon(Icons.close_rounded),
+                                onPressed: () => setState(() {
+                                  _searchController.text = "";
+                                  searching = false;
+                                }),
+                              )
+                            : null,
+                        prefixIcon: Icon(Icons.search_rounded),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Buscar usuarios",
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          searchText = _searchController.text;
+                        });
+                        if (text == "") {
                           setState(() {
-                            searchText = _searchController.text;
+                            searching = false;
                           });
-                        },
-                      ),
-                      TabBar(
-                        indicator: MaterialIndicator(
-                          color: Theme.of(context).primaryColor,
-                          horizontalPadding: 50,
-                          topLeftRadius: 20,
-                          topRightRadius: 20,
-                          paintingStyle: PaintingStyle.fill,
-                        ),
-                        labelColor: Colors.black87,
-                        controller: _tabController,
-                        isScrollable: false,
-                        tabs: myTabs,
-                      ),
-                      SizedBox(
-                        height: 10,
+                        }
+                      },
+                    ),
+                    (!searching)
+                        ? TabBar(
+                            indicator: MaterialIndicator(
+                              color: Theme.of(context).primaryColor,
+                              horizontalPadding: 50,
+                              topLeftRadius: 20,
+                              topRightRadius: 20,
+                              paintingStyle: PaintingStyle.fill,
+                            ),
+                            labelColor: Colors.black87,
+                            controller: _tabController,
+                            isScrollable: false,
+                            tabs: myTabs,
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                )),
+              ];
+            },
+            body: (!searching)
+                ? Container(
+                    child: TabBarView(controller: _tabController, children: [
+                    buildTabFriends(),
+                    buildTabRequests(),
+                  ]))
+                : (!hasResults)
+                    ? Center(
+                        child: CircularProgressIndicator(),
                       )
-                    ],
-                  )),
-                ];
-              },
-              body: Container(
-                  child: TabBarView(controller: _tabController, children: [
-                buildTabFriends(),
-                buildTabRequests(),
-              ]))),
+                    : ListView(
+                        shrinkWrap: true,
+                        children: [
+                          (fromFriends.length > 0)
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(
+                                          "Tus amigos",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black54),
+                                        ),
+                                      ),
+                                      ...fromFriends.map((user) => ListTile(
+                                            leading: Container(
+                                                width: 45,
+                                                height: 45,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(
+                                                        user.profilePicture,
+                                                      )),
+                                                )),
+                                            title: Text(user.userName),
+                                          ))
+                                    ])
+                              : SizedBox(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          (fromDatabase.length > 0)
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(
+                                          "Todos",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black54),
+                                        ),
+                                      ),
+                                      ...fromDatabase.map((user) => ListTile(
+                                            onTap: () => showRequestSheet(user),
+                                            leading: Container(
+                                                width: 45,
+                                                height: 45,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(
+                                                        user.profilePicture,
+                                                      )),
+                                                )),
+                                            title: Text(user.userName),
+                                          ))
+                                    ])
+                              : SizedBox()
+                        ],
+                      ),
+          ),
         ));
+  }
+
+  void showRequestSheet(User user) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        ),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+                height: 250,
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      user.profilePicture,
+                                    )),
+                              )),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            user.userName,
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            user.bio,
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16),
+                          ),
+                        ]),
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          elevation: 0,
+                          minimumSize: Size(double.infinity, 40),
+                        ),
+                        onPressed: () {
+                          UserService().handleFriendRequest(
+                              widget.userId, user.userName, "REQUEST");
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Solicitud de amistad enviada"),
+                            backgroundColor: Colors.green,
+                          ));
+                        },
+                        icon: Icon(Icons.add_rounded),
+                        label: Text("Enviar solicitud de amistad")),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ));
+          });
+        });
+  }
+
+  void searchFriends(String text) async {
+    if (text.trim() == "") {
+      return;
+    }
+    setState(() {
+      searching = true;
+      hasResults = false;
+    });
+
+    final fromFriendsAux =
+        friends.where((friend) => friend.userName.contains(text)).toList();
+    List<User> fromDatabaseAux = await UserService().search(text);
+    final setFriends = Set.from(fromFriendsAux);
+    final setDatabase = Set.from(fromDatabaseAux);
+    List<User> common = List.from(setFriends.difference(setDatabase));
+    common.forEach((elem) => {
+          fromDatabaseAux.removeWhere((user) => user.userName == elem.userName)
+        });
+    fromDatabaseAux.removeWhere((user) => user.id == widget.userId);
+
+    setState(() {
+      fromFriends = fromFriendsAux;
+      fromDatabase = fromDatabaseAux;
+      hasResults = true;
+    });
   }
 
   Widget buildTabFriends() {
@@ -143,7 +344,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : (friends.length <= 0)
+        : (requests.length <= 0)
             ? Center(
                 child: Text("No tienes peticiones de amistad"),
               )

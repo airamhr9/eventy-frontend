@@ -41,6 +41,18 @@ class UserService {
     }
   }
 
+  Future<List<User>> search(String text) async {
+    final query = {'search': text};
+    Uri url = Uri.http(this.url, '/searchUsers', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data as List;
+    List<User> users = list.map((user) => User.fromJson(user)).toList();
+    return users;
+  }
+
   Future<String> register(User user) async {
     final query = {
       'username': user.userName,
