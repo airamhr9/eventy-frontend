@@ -4,7 +4,6 @@ import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
-import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,48 +22,55 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   String userId = "";
   late String date;
   bool isMember = false;
+  bool waitComplete = false;
 
   @override
   void initState() {
     super.initState();
-    checkUser();
+    waitToCheck();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.event.name),
-        elevation: 0,
-        actions: [
-          buildButtonsSaveEnventAndPoint(),
-        ],
-        automaticallyImplyLeading: true,
-      ),
-      body: Container(
-          color: Theme.of(context).primaryColor,
-          child: Material(
+    return waitComplete == true
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(widget.event.name),
               elevation: 0,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-              color: Color(0xFFFAFAFA),
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
-                child: Container(
-                  padding: EdgeInsets.only(top: 5),
-                  child: NestedScrollView(
-                      headerSliverBuilder: (context, boolean) {
-                        return [SliverToBoxAdapter(child: buildTop())];
-                      },
-                      body: Container()),
-                ),
-              ))),
-      floatingActionButton: buildAddToEventButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+              actions: [
+                buildButtonsSaveEnventAndPoint(),
+              ],
+              automaticallyImplyLeading: true,
+            ),
+            body: Container(
+                color: Theme.of(context).primaryColor,
+                child: Material(
+                    elevation: 0,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25)),
+                    color: Color(0xFFFAFAFA),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 15.0),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 5),
+                        child: NestedScrollView(
+                            headerSliverBuilder: (context, boolean) {
+                              return [SliverToBoxAdapter(child: buildTop())];
+                            },
+                            body: Container()),
+                      ),
+                    ))),
+            floatingActionButton: buildFlotaingButton(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 
   Widget buildTop() {
@@ -101,31 +107,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                buildTextParticipants(),
-                Spacer(),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      elevation: 0),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatEvent(widget.event)));
-                  },
-                  icon: Icon(
-                    Icons.chat_rounded,
-                    size: 19,
-                  ),
-                  label: Text(
-                    "Chat",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ]),
+              Row(children: [Spacer(), buildTextParticipants(), Spacer()]),
               SizedBox(
                 height: 20,
               ),
@@ -225,10 +207,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         Row(
           children: [
             Text(
-              "VALENCIA, ESPAÑA",
-              style: TextStyle(fontSize: 15, color: Colors.black54),
+              "VALENCIA, ESPAÑA  ",
+              style: TextStyle(fontSize: 15),
             ),
-            Spacer(),
             TextButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -245,7 +226,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildButtonsSaveEnventAndPoint() {
+  buildButtonsSaveEnventAndPoint() {
     if (isMember == true) {
       return Row(
         children: [
@@ -282,19 +263,26 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildAddToEventButton() {
-    return Visibility(
-      child: FloatingActionButton.extended(
+  buildFlotaingButton() {
+    if (isMember == true) {
+      return FloatingActionButton.extended(
+        icon: Icon(Icons.chat_rounded),
+        label: Text("Chat"),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ChatEvent(widget.event)));
+        },
+      );
+    } else {
+      return FloatingActionButton.extended(
         icon: Icon(Icons.person_add),
         label: Text("Unirse"),
         onPressed: () {
           showEventDialog();
-
           dialogAddToEvent();
         },
-      ),
-      visible: !isMember,
-    );
+      );
+    }
   }
 
   dialogAddToEvent() {
@@ -325,14 +313,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  Future<bool> checkUser() async {
+  waitToCheck() async {
     userId = await MySharedPreferences.instance.getStringValue("userId");
-    for (String userIdInEvent in widget.event.participants) {
-      if (userId == userIdInEvent) {
-        return isMember = true;
-      }
-    }
-    return isMember;
+    checkUser(userId);
+    return waitComplete = true;
+  }
+
+  checkUser(String userId) {
+    isMember = widget.event.participants.contains(userId);
   }
 
   void showEventDialog() {
@@ -342,14 +330,12 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(25.0))),
-
               child: Container(
-                  padding:  const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   margin: const EdgeInsets.all(10.0),
                   alignment: Alignment.topLeft,
                   width: 150,
                   height: 249,
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -397,14 +383,12 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                             "Quizás",
                             style: TextStyle(color: Colors.lightBlue),
                           )),
-
                       const Divider(
                         //height: 20,
                         thickness: 1,
                         indent: 1,
                         endIndent: 1,
                       ),
-
                       TextButton.icon(
                           icon: Icon(Icons.cancel_rounded,
                               color: Colors.redAccent),
@@ -419,6 +403,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   )));
         });
   }
+
   addMemberToEvent(String confirmed) async {
     EventService().sendNewParticipant(widget.event.id.toString(),
         await MySharedPreferences.instance.getStringValue("userId"), confirmed);
