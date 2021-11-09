@@ -33,6 +33,7 @@ class _SearchState extends State<Search> {
   bool uniqueDay = false;
   DateTime minDate = DateTime.now();
   DateTime maxDate = DateTime.now();
+  bool _priceRange = false;
   RangeValues _priceRangeValues = RangeValues(0, 100);
   TextEditingController minDateController = TextEditingController();
   TextEditingController maxDateController = TextEditingController();
@@ -201,13 +202,6 @@ class _SearchState extends State<Search> {
                                                     filterTags.remove(tag);
                                                   }
                                                 });
-                                                setState(() {
-                                                  if (selected) {
-                                                    filterTags.add(tag);
-                                                  } else {
-                                                    filterTags.remove(tag);
-                                                  }
-                                                });
                                               },
                                             ))
                                       ],
@@ -236,104 +230,110 @@ class _SearchState extends State<Search> {
                                           uniqueDay = value!;
                                         });
                                       }),
-                                  Visibility(
-                                    visible: !uniqueDay,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextField(
-                                              readOnly: true,
-                                              onTap: () {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                DatePicker.showDateTimePicker(
-                                                    context,
-                                                    showTitleActions: true,
-                                                    minTime: DateTime.now(),
-                                                    maxTime: DateTime.now().add(
-                                                        Duration(days: 730)),
-                                                    onChanged: (date) {
-                                                  print('change $date');
-                                                }, onConfirm: (date) {
-                                                  print('confirm $date');
-                                                  setState(() {
-                                                    final DateFormat formatter =
-                                                        DateFormat(
-                                                            'dd/MM/yyyy');
-                                                    final String formatted =
-                                                        formatter.format(date);
-                                                    minDate = date;
-                                                    minDateController.text =
-                                                        formatted;
-                                                  });
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                            readOnly: true,
+                                            onTap: () {
+                                              FocusScope.of(context).unfocus();
+                                              DatePicker.showDateTimePicker(
+                                                  context,
+                                                  showTitleActions: true,
+                                                  minTime: DateTime.now(),
+                                                  maxTime: DateTime.now()
+                                                      .add(Duration(days: 730)),
+                                                  onChanged: (date) {
+                                                print('change $date');
+                                              }, onConfirm: (date) {
+                                                print('confirm $date');
+                                                setState(() {
+                                                  final DateFormat formatter =
+                                                      DateFormat('dd/MM/yyyy');
+                                                  final String formatted =
+                                                      formatter.format(date);
+                                                  minDate = date;
+                                                  minDateController.text =
+                                                      formatted;
                                                 });
-                                              },
-                                              decoration: InputDecoration(
-                                                  prefixIcon: Icon(Icons
-                                                      .calendar_today_rounded),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide:
-                                                          BorderSide.none),
-                                                  filled: true,
-                                                  hintText: "Mínima"),
-                                              controller: minDateController),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                              readOnly: true,
-                                              onTap: () {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                DatePicker.showDateTimePicker(
-                                                    context,
-                                                    showTitleActions: true,
-                                                    minTime: DateTime.now(),
-                                                    maxTime: DateTime.now().add(
-                                                        Duration(days: 730)),
-                                                    onChanged: (date) {
-                                                  print('change $date');
-                                                }, onConfirm: (date) {
-                                                  print('confirm $date');
-                                                  setState(() {
-                                                    final DateFormat formatter =
-                                                        DateFormat(
-                                                            'dd/MM/yyyy');
-                                                    final String formatted =
-                                                        formatter.format(date);
-                                                    maxDate = date;
-                                                    maxDateController.text =
-                                                        formatted;
-                                                  });
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                                prefixIcon: Icon(Icons
+                                                    .calendar_today_rounded),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    borderSide:
+                                                        BorderSide.none),
+                                                filled: true,
+                                                hintText: "Mínima"),
+                                            controller: minDateController),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                            readOnly: true,
+                                            onTap: () {
+                                              FocusScope.of(context).unfocus();
+                                              DatePicker.showDateTimePicker(
+                                                  context,
+                                                  showTitleActions: true,
+                                                  minTime: DateTime.now(),
+                                                  maxTime: DateTime.now()
+                                                      .add(Duration(days: 730)),
+                                                  onChanged: (date) {
+                                                print('change $date');
+                                              }, onConfirm: (date) {
+                                                print('confirm $date');
+                                                setState(() {
+                                                  final DateFormat formatter =
+                                                      DateFormat('dd/MM/yyyy');
+                                                  final String formatted =
+                                                      formatter.format(date);
+                                                  maxDate = date;
+                                                  maxDateController.text =
+                                                      formatted;
                                                 });
-                                              },
-                                              decoration: InputDecoration(
-                                                  prefixIcon: Icon(Icons
-                                                      .calendar_today_rounded),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide:
-                                                          BorderSide.none),
-                                                  filled: true,
-                                                  hintText: "Máxima"),
-                                              controller: maxDateController),
-                                        )
-                                      ],
-                                    ),
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                                prefixIcon: Icon(Icons
+                                                    .calendar_today_rounded),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    borderSide:
+                                                        BorderSide.none),
+                                                filled: true,
+                                                hintText: "Máxima"),
+                                            controller: maxDateController),
+                                      )
+                                    ],
                                   ),
                                   SizedBox(
                                     height: 20,
                                   ),
-                                  Text(
-                                    "Rango de precios",
-                                    style: TextStyle(color: Colors.black54),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Rango de precios",
+                                        style: TextStyle(color: Colors.black54),
+                                      ),
+                                      Checkbox(
+                                          value: _priceRange,
+                                          onChanged: (value) {
+                                            setModalState(() {
+                                              _priceRange = value!;
+                                            });
+                                          })
+                                    ],
                                   ),
                                   RangeSlider(
                                       values: _priceRangeValues,
@@ -348,11 +348,13 @@ class _SearchState extends State<Search> {
                                             .round()
                                             .toString(),
                                       ),
-                                      onChanged: (values) {
-                                        setModalState(() {
-                                          _priceRangeValues = values;
-                                        });
-                                      }),
+                                      onChanged: (_priceRange)
+                                          ? (values) {
+                                              setModalState(() {
+                                                _priceRangeValues = values;
+                                              });
+                                            }
+                                          : null),
                                   buildMapPicker(context, setModalState)
                                 ],
                               ),
@@ -365,37 +367,7 @@ class _SearchState extends State<Search> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(15))),
-                                onPressed: () {
-                                  setState(() {
-                                    events = [];
-                                    communities = [];
-                                    searching = true;
-                                  });
-                                  if (searchEvents) {
-                                    EventService()
-                                        .search(searchText, filterTags)
-                                        .then((value) => setState(() {
-                                              events = value;
-                                              if (events.length == 0) {
-                                                searching = false;
-                                                searchHint =
-                                                    "No hay eventos que coincidan con los criterios de búsqueda";
-                                              }
-                                            }));
-                                  } else {
-                                    CommunityService()
-                                        .search(searchText, filterTags)
-                                        .then((value) => setState(() {
-                                              communities = value;
-                                              if (communities.length == 0) {
-                                                searching = false;
-                                                searchHint =
-                                                    "No hay comunidades que coincidan con los criterios de búsqueda";
-                                              }
-                                            }));
-                                  }
-                                  Navigator.pop(context);
-                                },
+                                onPressed: search,
                                 child: Text("Buscar")),
                             SizedBox(
                               height: 20,
@@ -410,6 +382,57 @@ class _SearchState extends State<Search> {
             },
           );
         });
+  }
+
+  void search() {
+    setState(() {
+      events = [];
+      communities = [];
+      searching = true;
+    });
+    Map<String, dynamic> filters = {};
+    if (searchEvents) {
+      if (advancedFilters) {
+        if (uniqueDay) {
+          filters['unique'] = true;
+        }
+        if (minDateController.text != "") {
+          filters['sDate'] = minDate.toIso8601String();
+        }
+        if (maxDateController.text != "") {
+          filters['fDate'] = maxDate.toIso8601String();
+        }
+        if (_priceRange) {
+          filters['minPrice'] = _priceRangeValues.start;
+          filters['maxPrice'] = _priceRangeValues.end;
+        }
+        if (eventLocation != null) {
+          filters['loc'] = [eventLocation!.latitude, eventLocation!.longitude];
+        }
+      }
+      EventService()
+          .search(searchText, filterTags, filters)
+          .then((value) => setState(() {
+                events = value;
+                if (events.length == 0) {
+                  searching = false;
+                  searchHint =
+                      "No hay eventos que coincidan con los criterios de búsqueda";
+                }
+              }));
+    } else {
+      CommunityService()
+          .search(searchText, filterTags)
+          .then((value) => setState(() {
+                communities = value;
+                if (communities.length == 0) {
+                  searching = false;
+                  searchHint =
+                      "No hay comunidades que coincidan con los criterios de búsqueda";
+                }
+              }));
+    }
+    Navigator.pop(context);
   }
 
   Widget buildMapPicker(BuildContext context, StateSetter setModalState) {

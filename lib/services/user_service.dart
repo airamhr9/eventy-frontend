@@ -84,4 +84,34 @@ class UserService {
     var response = await request.send();
     return response.statusCode == 200;
   }
+
+  Future<List<List<User>>> getFriends(String userId) async {
+    final query = {'user': userId};
+    Uri url = Uri.http(this.url, '/friends', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    final friendsAndRequests = (data as List);
+    print(friendsAndRequests);
+    List<User> friendsList = (friendsAndRequests[0] as List)
+        .map((participant) => User.fromJson(participant))
+        .toList();
+    List<User> requestsList = (friendsAndRequests[1] as List)
+        .map((participant) => User.fromJson(participant))
+        .toList();
+    return [friendsList, requestsList];
+  }
+
+  Future<bool> handleFriendRequest(
+      String userId, String requestUserName, String response) async {
+    final query = {
+      'op': response,
+      'userId1': userId,
+      'username2': requestUserName
+    };
+    Uri url = Uri.http(this.url, '/friends', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.post(url, headers: headers);
+    return localhostResponse.statusCode == 200;
+  }
 }

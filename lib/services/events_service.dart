@@ -61,9 +61,15 @@ class EventService {
     return events;
   }
 
-  Future<List<Event>> search(String text, List<String> tags) async {
+  Future<List<Event>> search(
+      String text, List<String> tags, Map<String, dynamic> filters) async {
     final query = {'text': text, 'tags': tags};
+    filters.keys.forEach((element) {
+      query[element] = filters[element].toString();
+    });
+    print(query);
     Uri url = Uri.http(this.url, '/search', query);
+    print("URL ${url}");
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
@@ -124,7 +130,9 @@ class EventService {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    final list = data as List;
+    final list = (data as List)[0] as List;
+    print(list);
+    //final list = dataMap.keys;
     List<User> participantsList =
         list.map((participant) => User.fromJson(participant)).toList();
     return participantsList;
