@@ -288,7 +288,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         icon: Icon(Icons.person_add),
         label: Text("Unirse"),
         onPressed: () {
-          EventService().sendNewParticipant(widget.event.id.toString(), userId);
+          showEventDialog();
+
           dialogAddToEvent();
         },
       ),
@@ -332,5 +333,94 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       }
     }
     return isMember;
+  }
+
+  void showEventDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
+
+              child: Container(
+                  padding:  const EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.topLeft,
+                  width: 150,
+                  height: 249,
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Unirse al evento",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Opciones de asistencia",
+                        style: TextStyle(fontSize: 15, color: Colors.black87),
+                      ),
+                      TextButton.icon(
+                          icon: Icon(
+                            Icons.check,
+                            color: Colors.greenAccent,
+                          ),
+                          onPressed: () {
+                            addMemberToEvent("true");
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Iré Seguro",
+                            style: TextStyle(color: Colors.lightBlue),
+                          )),
+                      const Divider(
+                        //height: 20,
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+                      TextButton.icon(
+                          icon: Icon(Icons.av_timer_rounded,
+                              color: Colors.orangeAccent),
+                          onPressed: () {
+                            addMemberToEvent("false");
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Quizás",
+                            style: TextStyle(color: Colors.lightBlue),
+                          )),
+
+                      const Divider(
+                        //height: 20,
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+
+                      TextButton.icon(
+                          icon: Icon(Icons.cancel_rounded,
+                              color: Colors.redAccent),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Cancelar",
+                            style: TextStyle(color: Colors.lightBlue),
+                          ))
+                    ],
+                  )));
+        });
+  }
+  addMemberToEvent(String confirmed) async {
+    EventService().sendNewParticipant(widget.event.id.toString(),
+        await MySharedPreferences.instance.getStringValue("userId"), confirmed);
   }
 }

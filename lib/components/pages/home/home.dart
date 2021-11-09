@@ -57,9 +57,9 @@ class _HomeState extends State<Home> {
     }
   }
 
-  addMemberToEvent() async {
+  addMemberToEvent(String confirmed) async {
     EventService().sendNewParticipant(currentEvent.id.toString(),
-        await MySharedPreferences.instance.getStringValue("userId"));
+        await MySharedPreferences.instance.getStringValue("userId"), confirmed);
   }
 
   saveEvent() {
@@ -115,31 +115,92 @@ class _HomeState extends State<Home> {
             );
           });
     } else {
-      addMemberToEvent();
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                "Te has unido con éxito",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colors.black87),
-              ),
-              content: Text("Evento añadido a: Mis eventos."),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      "Vale",
-                      style: TextStyle(color: Colors.lightBlue),
-                    ))
-              ],
-            );
-          });
+      showJoinEventDialog();
     }
+  }
+
+  void showJoinEventDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
+
+              child: Container(
+                  padding:  const EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.topLeft,
+                  width: 150,
+                  height: 249,
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Unirse al evento",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Opciones de asistencia",
+                        style: TextStyle(fontSize: 15, color: Colors.black87),
+                      ),
+                      TextButton.icon(
+                          icon: Icon(
+                            Icons.check,
+                            color: Colors.greenAccent,
+                          ),
+                          onPressed: () {
+                            addMemberToEvent("true");
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Iré Seguro",
+                            style: TextStyle(color: Colors.lightBlue),
+                          )),
+                      const Divider(
+                        //height: 20,
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+                      TextButton.icon(
+                          icon: Icon(Icons.av_timer_rounded,
+                              color: Colors.orangeAccent),
+                          onPressed: () {
+                            addMemberToEvent("false");
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Quizás",
+                            style: TextStyle(color: Colors.lightBlue),
+                          )),
+
+                      const Divider(
+                        //height: 20,
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+
+                      TextButton.icon(
+                          icon: Icon(Icons.cancel_rounded,
+                              color: Colors.redAccent),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          label: Text(
+                            "Cancelar",
+                            style: TextStyle(color: Colors.lightBlue),
+                          ))
+                    ],
+                  )));
+        });
   }
 }
