@@ -403,11 +403,12 @@ class _SearchState extends State<Search> {
           filters['fDate'] = maxDate.toIso8601String();
         }
         if (_priceRange) {
-          filters['minPrice'] = _priceRangeValues.start;
-          filters['maxPrice'] = _priceRangeValues.end;
+          filters['priceMin'] = _priceRangeValues.start;
+          filters['price'] = _priceRangeValues.end;
         }
         if (eventLocation != null) {
-          filters['loc'] = [eventLocation!.latitude, eventLocation!.longitude];
+          filters['lat'] = eventLocation!.latitude;
+          filters['lon'] = eventLocation!.longitude;
         }
       }
       EventService()
