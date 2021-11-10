@@ -210,13 +210,17 @@ class _SearchState extends State<Search> {
                                     return Center(
                                         child: CircularProgressIndicator());
                                 }),
-                            TextButton(
-                                onPressed: () {
-                                  setModalState(() {
-                                    advancedFilters = !advancedFilters;
-                                  });
-                                },
-                                child: Text("Filtros avanzados")),
+                            (searchEvents)
+                                ? TextButton(
+                                    onPressed: () {
+                                      setModalState(() {
+                                        advancedFilters = !advancedFilters;
+                                      });
+                                    },
+                                    child: Text("Filtros avanzados"))
+                                : SizedBox(
+                                    height: 15,
+                                  ),
                             Visibility(
                               visible: advancedFilters,
                               child: Column(
@@ -408,7 +412,7 @@ class _SearchState extends State<Search> {
         }
         if (eventLocation != null) {
           filters['lat'] = eventLocation!.latitude;
-          filters['lon'] = eventLocation!.longitude;
+          filters['long'] = eventLocation!.longitude;
         }
       }
       EventService()

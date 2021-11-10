@@ -54,48 +54,53 @@ class _ProfileState extends State<Profile> {
 
   Container buildProfile() {
     return Container(
-        alignment: Alignment.center,
+        width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(user.profilePicture),
-              radius: 80,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              user.userName,
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                user.bio,
-                style: TextStyle(color: Colors.black54),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
+          Container(
+            width: double.infinity,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(user.profilePicture),
+                    radius: 80,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    user.userName,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      user.bio,
+                      style: TextStyle(color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
 
-            /* TextButton.icon(onPressed:
-              (){}, icon:  Icon(
-                  Icons.edit_rounded
-              ), label: Text(
-                  "Editar"
-                  
-              )),*/
-          ]),
+                  /* TextButton.icon(onPressed:
+                (){}, icon:  Icon(
+                    Icons.edit_rounded
+                ), label: Text(
+                    "Editar"
+                    
+                )),*/
+                ]),
+          ),
           SizedBox(
             height: 10,
           ),

@@ -129,8 +129,13 @@ class _ChatEventState extends State<ChatEvent> with TickerProviderStateMixin {
                       onPressed: () {
                         String messageText = _messageController.text.trim();
                         if (messageText.isNotEmpty) {
-                          Message newMessage = Message("", messageText,
-                              DateTime.now(), userId, user.profilePicture);
+                          Message newMessage = Message(
+                              "",
+                              messageText,
+                              DateTime.now(),
+                              user.id,
+                              user.userName,
+                              user.profilePicture);
                           _messageController.clear();
                           setState(() {
                             key.currentState!.insertItem(0,
@@ -142,6 +147,7 @@ class _ChatEventState extends State<ChatEvent> with TickerProviderStateMixin {
                               newMessage.text,
                               newMessage.dateTime,
                               newMessage.userId,
+                              newMessage.userName,
                               user.profilePictureName!);
                           ChatService()
                               .sendMessageEvent(messageToSend, widget.event.id);
