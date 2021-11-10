@@ -126,14 +126,12 @@ class _HomeState extends State<Home> {
           return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(25.0))),
-
               child: Container(
-                  padding:  const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   margin: const EdgeInsets.all(10.0),
                   alignment: Alignment.topLeft,
                   width: 150,
                   height: 249,
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -181,14 +179,12 @@ class _HomeState extends State<Home> {
                             "Quizás",
                             style: TextStyle(color: Colors.lightBlue),
                           )),
-
                       const Divider(
                         //height: 20,
                         thickness: 1,
                         indent: 1,
                         endIndent: 1,
                       ),
-
                       TextButton.icon(
                           icon: Icon(Icons.cancel_rounded,
                               color: Colors.redAccent),

@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
@@ -12,22 +14,22 @@ import 'package:intl/intl.dart';
 
 class EventView extends StatefulWidget {
   final Event event;
-  const EventView(this.event) : super();
+  final String userId;
+  const EventView(this.event, this.userId) : super();
 
   @override
   _EventView createState() => _EventView();
 }
 
 class _EventView extends State<EventView> with TickerProviderStateMixin {
-  String userId = "";
   late String date;
   bool isMember = false;
   bool waitComplete = false;
 
   @override
   void initState() {
-    super.initState();
     waitToCheck();
+    super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
   }
@@ -243,7 +245,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   }
                 });
               },
-              icon: Icon(Icons.favorite_rounded))
+              icon: Icon(Icons.bookmark_add_rounded))
         ],
       );
     } else {
@@ -259,7 +261,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               }
             });
           },
-          icon: Icon(Icons.favorite_rounded));
+          icon: Icon(Icons.bookmark_add_rounded));
     }
   }
 
@@ -279,7 +281,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         label: Text("Unirse"),
         onPressed: () {
           showEventDialog();
-          dialogAddToEvent();
         },
       );
     }
@@ -305,22 +306,22 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                     "Aceptar",
                     style: TextStyle(fontSize: 16),
                   ),
-                  onPressed: () => Navigator.pop(
-                        context,
-                      ))
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
             ],
           );
         });
+    setState(() {});
   }
 
-  waitToCheck() async {
-    userId = await MySharedPreferences.instance.getStringValue("userId");
-    checkUser(userId);
-    return waitComplete = true;
-  }
-
-  checkUser(String userId) {
-    isMember = widget.event.participants.contains(userId);
+  waitToCheck() {
+    try {
+      isMember = widget.event.participants.contains(widget.userId);
+    } catch (e) {
+      isMember = false;
+    }
+    waitComplete = true;
   }
 
   void showEventDialog() {
@@ -361,6 +362,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           onPressed: () {
                             addMemberToEvent("true");
                             Navigator.of(context).pop();
+                            dialogAddToEvent();
                           },
                           label: Text(
                             "Iré Seguro",
@@ -378,6 +380,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           onPressed: () {
                             addMemberToEvent("false");
                             Navigator.of(context).pop();
+                            dialogAddToEvent();
                           },
                           label: Text(
                             "Quizás",
