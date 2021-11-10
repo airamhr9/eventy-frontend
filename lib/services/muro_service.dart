@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 
 class MuroService {
   //String url = "10.0.2.2:8000";
-  String url = "localhost:8000";
+  //String url = "localhost:8000";
+  String url = "eventyserver.herokuapp.com";
 
   Future<List<PostObject>> getCommunityMuro(int communityId) async {
     final query = {'idCommunity': communityId.toString()};
