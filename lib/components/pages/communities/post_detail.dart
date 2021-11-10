@@ -218,8 +218,13 @@ class _PostDetailsState extends State<PostDetails>
                       onPressed: () {
                         String messageText = _commentController.text.trim();
                         if (messageText.isNotEmpty) {
-                          Message newMessage = Message("", messageText,
-                              DateTime.now(), userId, user.profilePicture);
+                          Message newMessage = Message(
+                              "",
+                              messageText,
+                              DateTime.now(),
+                              userId,
+                              user.userName,
+                              user.profilePicture);
                           _commentController.clear();
                           setState(() {
                             key.currentState!.insertItem(0,
@@ -231,6 +236,7 @@ class _PostDetailsState extends State<PostDetails>
                               newMessage.text,
                               newMessage.dateTime,
                               newMessage.userId,
+                              newMessage.userName,
                               user.profilePictureName!);
                           //ChatService().sendMessageCommunity(
                           //  messageToSend, widget.post.id);

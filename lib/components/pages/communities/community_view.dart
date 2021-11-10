@@ -5,6 +5,7 @@ import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/communities_service.dart';
+import 'package:eventy_front/services/muro_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -26,11 +27,24 @@ class _CommunitiesState extends State<CommunityView>
     Tab(text: 'Detalles'),
   ];
   String userId = "";
+  List<PostObject> muro = [];
+  bool muroLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    _fetchMuro();
+  }
+
+  void _fetchMuro() {
+    MuroService()
+        .getCommunityMuro(widget.community.id)
+        .then((value) => setState(() {
+              muro = value;
+              muroLoading = false;
+            }));
   }
 
   @override
@@ -171,34 +185,21 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildTabMuro() {
-    List<PostObject> posts = [
-      PostObject(
-          "id",
-          "Título del post",
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-          "2016-10-20T00:00:00.000",
-          "Juan Antonio",
-          123, []),
-      PostObject(
-          "id",
-          "Título del post pero ahora mucho más largo vamos a ver qué tal aunque debe ser más largo aparentemente joder",
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever",
-          "2012-10-20T00:00:00.000",
-          "Juan Antonio",
-          123, [
-        "https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fevents%2Ferasmus.png?alt=media&token=8a744c36-4656-4d38-aee7-306e980b3d79"
-      ])
-    ];
-
-    return ListView.separated(
-      itemBuilder: (BuildContext context, int index) {
-        return Post(posts[index]);
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return Divider();
-      },
-      itemCount: posts.length,
-    );
+    return (!muroLoading)
+        ? (muro.length > 0)
+            ? ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return Post(muro[index]);
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider();
+                },
+                itemCount: muro.length,
+              )
+            : Center(
+                child: Text("No hay posts en el muro"),
+              )
+        : (Center(child: CircularProgressIndicator()));
   }
 
   bool isMember = false;
