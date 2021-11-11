@@ -526,6 +526,8 @@ class _AddEventState extends State<AddEvent> {
 
   void createEvent(BuildContext context) async {
     if (_formKey.currentState!.validate() && validateFields(context)) {
+      String userId =
+          await MySharedPreferences.instance.getStringValue("userId");
       double precio = (_priceController.text.isEmpty)
           ? 0
           : double.parse(_priceController.text);
@@ -538,11 +540,9 @@ class _AddEventState extends State<AddEvent> {
           eventLocation!.latitude,
           eventLocation!.longitude,
           (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
-          [],
+          [userId],
           _eventNameController.text,
-          //Cambiar a obtener el usuario actual
-
-          await MySharedPreferences.instance.getStringValue("userId"),
+          userId,
           precio,
           (_visibilityValue == "Público") ? false : true,
           _summaryController.text,
