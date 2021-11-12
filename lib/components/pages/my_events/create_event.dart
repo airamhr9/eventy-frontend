@@ -31,16 +31,20 @@ class _CreateEventState extends State<CreateEvent> {
         requestCompleted = true;
       });
     });
-    eventService.sendImage(widget.images.first).then((value) {
-      if (!value) {
+    for (var image in widget.images) {
+      eventService.sendImage(image).then((value) {
+        if (!value) {
+          setState(() {
+            error = true;
+          });
+        }
         setState(() {
-          error = true;
+          if (image == widget.images.last) {
+            imageCompleted = true;
+          }
         });
-      }
-      setState(() {
-        imageCompleted = true;
       });
-    });
+    }
   }
 
   @override
