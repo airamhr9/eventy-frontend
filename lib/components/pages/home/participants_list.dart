@@ -13,7 +13,8 @@ class Participants extends StatefulWidget {
 }
 
 class _ParticipantsState extends State<Participants> {
-  List<User> participantsList = [];
+  List<List<User>> participantsList = [];
+bool loading = true;
 
   @override
   void initState() {
@@ -21,9 +22,10 @@ class _ParticipantsState extends State<Participants> {
     EventService()
         .getParticipants(widget.event.id.toString())
         .then((value) => setState(() {
-              print("Here");
-              participantsList = value;
-            }));
+      print("Here");
+      participantsList = value;
+      loading = false;
+    }));
   }
 
   @override
@@ -73,7 +75,7 @@ class _ParticipantsState extends State<Participants> {
               child: Container(
                 width: double.infinity,
                 padding:
-                    EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+                EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -81,23 +83,64 @@ class _ParticipantsState extends State<Participants> {
                         topRight: Radius.circular(20))),
                 child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...participantsList.map((participant) => ListTile(
-                            leading: Container(
-                                width: 45,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                        participant.profilePicture,
-                                      )),
-                                )),
-                            title: Text(participant.userName),
-                          ))
+                      Text("Usuarios que asistirán",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.blueAccent),
+
+                      ),
+
+                      (!loading)?
+                      (participantsList[0].length > 0 )?
+                      Column(children: [
+                        ...participantsList[0].map((participant) => ListTile(
+                          leading: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      participant.profilePicture,
+
+                                    )),
+                              )),
+                          title: Text(participant.userName),
+                        ))
+                      ],):SizedBox():Center(child: CircularProgressIndicator()),
+                      SizedBox(height: 15),
+                      Text("Usuarios en duda",
+    style: TextStyle(
+    fontWeight: FontWeight.w500, fontSize: 20, color: Colors.orangeAccent),
+
+                      ),
+
+                      (!loading)?
+                      (participantsList[1].length > 0 )?
+                      Column(
+
+                        children: [
+                        ...participantsList[1].map((participant) => ListTile(
+                          leading: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      participant.profilePicture,
+
+                                    )),
+                              )),
+                          title: Text(participant.userName),
+                        ))
+                      ],):SizedBox():Center(child: SizedBox())
                     ],
-                  ),
+
+                   ),
                 ),
               ),
             )
@@ -110,7 +153,7 @@ class _ParticipantsState extends State<Participants> {
     int numberParticipants = widget.event.participants.length;
     if (maxParticipants == -1) {
       String asistentes =
-          (numberParticipants == 1) ? " asistente." : " asistentes.";
+      (numberParticipants == 1) ? " asistente." : " asistentes.";
       return Text(
         numberParticipants.toString() + asistentes,
         style: TextStyle(
@@ -118,7 +161,7 @@ class _ParticipantsState extends State<Participants> {
       );
     } else {
       String plazasOcupadas =
-          (numberParticipants == 1) ? " plaza ocupada." : " plazas ocupadas.";
+      (numberParticipants == 1) ? " plaza ocupada." : " plazas ocupadas.";
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

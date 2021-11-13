@@ -1,5 +1,6 @@
 import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/components/pages/login/login.dart';
+import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
@@ -20,41 +21,64 @@ class _HomeState extends State<Home> {
   List<Color> colors = [Colors.black, Colors.red, Colors.blue, Colors.green];
   List<Event> events = [];
   late Event currentEvent;
+  List<User> participants = [];
+ List <User> possiblyParticipants = [];
+
 
   @override
   void initState() {
     super.initState();
     EventService().get().then((value) => setState(() {
-          print("Here");
-          events = value;
-          currentEvent = events.first;
-        }));
+      print("Here");
+      events = value;
+      currentEvent = events.first;
+      _loadParticipants();
+    }));
+
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     return events.length > 0
         ? TikTokStyleFullPageScroller(
-            contentSize: events.length,
-            swipePositionThreshold: 0.1,
-            swipeVelocityThreshold: 500,
-            animationDuration: const Duration(milliseconds: 200),
-            builder: (BuildContext context, int index) {
-              return RecommendedEvent(events[index]);
-            },
-            onScrollEvent: _handleCallbackEvent,
-          )
+      contentSize: events.length,
+      swipePositionThreshold: 0.1,
+      swipeVelocityThreshold: 500,
+      animationDuration: const Duration(milliseconds: 200),
+      builder: (BuildContext context, int index) {
+        return RecommendedEvent(events[index]);
+      },
+      onScrollEvent: _handleCallbackEvent,
+    )
         : Center(
-            child: CircularProgressIndicator(),
-          );
+      child: CircularProgressIndicator(),
+    );
   }
 
   void _handleCallbackEvent(ScrollEventType type, {int? currentIndex}) {
     if (currentIndex != null) {
       setState(() {
         currentEvent = events[currentIndex];
+        _loadParticipants();
+
       });
     }
+  }
+
+  void _loadParticipants(){
+    EventService().getParticipants(currentEvent.id.toString()).then((value) => setState(() {
+      print(value.toString());
+      participants = value[0];
+      possiblyParticipants = value[1];
+
+      print("participantes");
+      print(participants);
+      print("posible");
+      print(possiblyParticipants);
+      print(participants[1].toString());
+    }));
   }
 
   addMemberToEvent(String confirmed) async {
@@ -81,13 +105,23 @@ class _HomeState extends State<Home> {
   }
 
   buildMessageAddEvent() async {
-    String userId = await MySharedPreferences.instance.getStringValue("userId");
+    String myUserId = await MySharedPreferences.instance.getStringValue("userId");
+
+    setState(() {
+      print("cargando usuarios");
+  _loadParticipants();
+
+    });
+
     bool userIsParticpant = false;
-    for (String userIdInList in currentEvent.participants) {
-      if (userId == userIdInList) {
-        userIsParticpant = true;
-      }
-    }
+
+if((participants.where((element) => element.id == myUserId).length) >0)
+  userIsParticpant = true;
+
+if((possiblyParticipants.where((element) => element.id == myUserId).length) >0)
+  userIsParticpant = true;
+
+
     if (userIsParticpant == true) {
       showDialog(
           context: context,
@@ -156,7 +190,9 @@ class _HomeState extends State<Home> {
                           ),
                           onPressed: () {
                             addMemberToEvent("true");
+
                             Navigator.of(context).pop();
+
                           },
                           label: Text(
                             "Iré Seguro",
@@ -173,7 +209,12 @@ class _HomeState extends State<Home> {
                               color: Colors.orangeAccent),
                           onPressed: () {
                             addMemberToEvent("false");
-                            Navigator.of(context).pop();
+                           Navigator.of(context).pop();
+                           /* Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );*/
+
                           },
                           label: Text(
                             "Quizás",

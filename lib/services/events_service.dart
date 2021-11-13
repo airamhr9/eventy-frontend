@@ -128,18 +128,22 @@ class EventService {
     return response.statusCode == 200;
   }
 
-  Future<List<User>> getParticipants(String eventId) async {
+  Future<List<List<User>>> getParticipants(String eventId) async {
     final query = {'participants': "0", 'id': eventId};
     Uri url = Uri.http(this.url, '/events', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    final list = (data as List)[0] as List;
-    print(list);
-    //final list = dataMap.keys;
+    final list = data as List;
+    print("lista de participantes: ");
+       print(list);
+       print("Fin de lista");
+
     List<User> participantsList =
-        list.map((participant) => User.fromJson(participant)).toList();
-    return participantsList;
+    (list[0] as List).map((participant) => User.fromJson(participant)).toList();
+    List<User> possiblyParticipantsList =
+    (list[1] as List).map((participant) => User.fromJson(participant)).toList();
+    return [participantsList, possiblyParticipantsList];
   }
 
   Future<bool> sendNewParticipant(String eventId, String userId, String confirmed) async {
