@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
       print("Here");
       events = value;
       currentEvent = events.first;
-      _loadParticipants();
+
     }));
 
 
@@ -72,18 +72,53 @@ class _HomeState extends State<Home> {
       print(value.toString());
       participants = value[0];
       possiblyParticipants = value[1];
-
+      print("cargando usuarios");
       print("participantes");
       print(participants);
       print("posible");
       print(possiblyParticipants);
       print(participants[1].toString());
+      print("usuarios cargados");
     }));
   }
 
   addMemberToEvent(String confirmed) async {
     EventService().sendNewParticipant(currentEvent.id.toString(),
         await MySharedPreferences.instance.getStringValue("userId"), confirmed);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Te has unido al evento",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            content: Text(
+                "Puedes encontrar el evento en la pantalla: Mis eventos."),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Vale",
+                    style: TextStyle(color: Colors.lightBlue),
+                  ))
+            ],
+          );
+        });
+
+    EventService().get().then((value) => setState(() {
+      print("Here");
+      events = value;
+      currentEvent = events.first;
+
+    }));
+
+
   }
 
   saveEvent() {
@@ -105,13 +140,8 @@ class _HomeState extends State<Home> {
   }
 
   buildMessageAddEvent() async {
+   _loadParticipants();
     String myUserId = await MySharedPreferences.instance.getStringValue("userId");
-
-    setState(() {
-      print("cargando usuarios");
-  _loadParticipants();
-
-    });
 
     bool userIsParticpant = false;
 
@@ -210,10 +240,6 @@ if((possiblyParticipants.where((element) => element.id == myUserId).length) >0)
                           onPressed: () {
                             addMemberToEvent("false");
                            Navigator.of(context).pop();
-                           /* Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                            );*/
 
                           },
                           label: Text(

@@ -5,9 +5,9 @@ import 'package:eventy_front/objects/message.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  String url = "10.0.2.2:8000";
+  //String url = "10.0.2.2:8000";
   //String url = "localhost:8000";
-  //String url = "eventyserver.herokuapp.com";
+  String url = "eventyserver.herokuapp.com";
 
   Future<List<Message>> getEventMessages(int eventId) async {
     final query = {'eventId': eventId.toString()};
