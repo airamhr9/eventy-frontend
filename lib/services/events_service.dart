@@ -10,9 +10,9 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:path/path.dart';
 
 class EventService {
-  //String url = "10.0.2.2:8000";
+  String url = "10.0.2.2:8000";
   // String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
+  //String url = "eventyserver.herokuapp.com";
 
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion
@@ -65,7 +65,7 @@ class EventService {
   Future<List<Event>> search(
       String text, List<String> tags, Map<String, dynamic> filters) async {
     final query = {'text': text, 'tags': tags};
-    if (filters.keys.length > 0){
+    if (filters.keys.length > 0) {
       query['enabled'] = true.toString();
       filters.keys.forEach((element) {
         query[element] = filters[element].toString();
@@ -146,11 +146,28 @@ class EventService {
     return [participantsList, possiblyParticipantsList];
   }
 
-  Future<bool> sendNewParticipant(String eventId, String userId, String confirmed) async {
-    final query = {'eventId': eventId, 'userId': userId, 'confirmed': confirmed};
+  Future<bool> sendNewParticipant(
+      String eventId, String userId, String confirmed) async {
+    final query = {
+      'eventId': eventId,
+      'userId': userId,
+      'confirmed': confirmed
+    };
     Uri url = Uri.http(this.url, '/joinEvent', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;
+  }
+
+  Future<double> getUserPunctuation(String eventId, String userId) async{
+    final query = {
+      'eventId': eventId,
+      'userId': userId,
+    };
+    Uri url = Uri.http(this.url, '/joinEvent', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    return data;
   }
 }

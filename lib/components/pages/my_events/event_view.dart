@@ -1,5 +1,5 @@
 import 'dart:isolate';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
@@ -7,7 +7,6 @@ import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +24,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late String date;
   bool isMember = false;
   bool waitComplete = false;
+  double score = 0;
 
   @override
   void initState() {
@@ -232,7 +232,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     if (isMember == true) {
       return Row(
         children: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.star_rounded)),
+          IconButton(
+              onPressed: () {
+                pointEvent();
+              },
+              icon: Icon(Icons.star_rounded)),
           IconButton(
               onPressed: () {
                 EventService().saveEvent(widget.event.id).then((value) {
@@ -312,15 +316,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             ],
           );
         });
-    setState(() {});
   }
 
-  waitToCheck() {
+  waitToCheck() async {
     try {
       isMember = widget.event.participants.contains(widget.userId);
     } catch (e) {
+      //contains devuelve null si el usuario no es un particpante
       isMember = false;
     }
+    if (isMember == true)
+      score = await EventService()
+          .getUserPunctuation(widget.event.id.toString(), widget.userId);
     waitComplete = true;
   }
 
@@ -410,5 +417,91 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   addMemberToEvent(String confirmed) async {
     EventService().sendNewParticipant(widget.event.id.toString(),
         await MySharedPreferences.instance.getStringValue("userId"), confirmed);
+  }
+
+  pointEvent() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
+              child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.topLeft,
+                  width: 150,
+                  height: 249,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.event.name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Puntuación",
+                        style: TextStyle(fontSize: 15, color: Colors.black87),
+                      ),
+                      buildRatingBar(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          label: Text("Guardar "),
+                          icon: Icon(Icons.save_rounded))
+                    ],
+                  )));
+        });
+  }
+
+  Widget buildRatingBar() {
+    return RatingBar(
+        initialRating: score,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemCount: 5,
+        ratingWidget: RatingWidget(
+            full: Icon(Icons.star, color: Colors.orange),
+            half: Icon(
+              Icons.star_half,
+              color: Colors.orange,
+            ),
+            empty: Icon(
+              Icons.star_outline,
+              color: Colors.orange,
+            )),
+        onRatingUpdate: (value) {
+          setState(() {
+            score = value;
+          });
+        });
+  }
+
+  buildMessageThanks() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            child: Text(
+              "Gracias por puntuar el evento!",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+          );
+        });
   }
 }

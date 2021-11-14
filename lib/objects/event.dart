@@ -14,6 +14,9 @@ class Event {
   bool private;
   String summary;
   List<String> tags;
+  ///////////////
+  Map<String, double> scores;
+  double averageScore;
 
   Event(
       this.id,
@@ -30,7 +33,10 @@ class Event {
       this.price,
       this.private,
       this.summary,
-      this.tags);
+      this.tags,
+      //////////////
+      this.scores,
+      this.averageScore);
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
@@ -51,6 +57,9 @@ class Event {
       json['private'],
       json['summary'],
       (json['tags'] as List).cast<String>(),
+      /////////////////
+      json['scores'],
+      json['averageScore']
     );
   }
 
@@ -70,7 +79,10 @@ class Event {
       'price': this.price,
       'private': this.private,
       'summary': this.summary,
-      'tags': this.tags
+      'tags': this.tags,
+      //////////////
+      'scores':this.scores,
+      'averageSocre':this.averageScore
     };
     return result;
   }

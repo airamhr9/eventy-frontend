@@ -32,6 +32,10 @@ class _AddEventState extends State<AddEvent> {
 
   List<String> tags = [];
   List<String> tagsEvent = [];
+  ////////////////
+  late Map scores;
+  late double averageScore;
+  ///////////////////
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
 
@@ -532,21 +536,25 @@ class _AddEventState extends State<AddEvent> {
           ? 0
           : double.parse(_priceController.text);
       final Event event = Event(
-          -1,
-          _descriptionController.text,
-          startDate.toIso8601String(),
-          finishDate.toIso8601String(),
-          imageFiles.map((e) => basename(e.file.path)).toList(),
-          eventLocation!.latitude,
-          eventLocation!.longitude,
-          (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
-          [userId],
-          _eventNameController.text,
-          userId,
-          precio,
-          (_visibilityValue == "Público") ? false : true,
-          _summaryController.text,
-          tagsEvent);
+        -1,
+        _descriptionController.text,
+        startDate.toIso8601String(),
+        finishDate.toIso8601String(),
+        imageFiles.map((e) => basename(e.file.path)).toList(),
+        eventLocation!.latitude,
+        eventLocation!.longitude,
+        (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
+        [userId],
+        _eventNameController.text,
+        userId,
+        precio,
+        (_visibilityValue == "Público") ? false : true,
+        _summaryController.text,
+        tagsEvent,
+        ///////////////
+        scores = Map<String, double>(), // userId, puntuación
+        averageScore = 0,
+      );
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return CreateEvent(event, imageFiles);
