@@ -5,6 +5,8 @@ class PostObject {
   String date;
   String author;
   int numComments;
+  int likes;
+  int dislikes;
   List<String> images;
 
   PostObject(
@@ -14,6 +16,8 @@ class PostObject {
     this.date,
     this.author,
     this.numComments,
+    this.likes,
+    this.dislikes,
     this.images,
   );
 
@@ -25,6 +29,8 @@ class PostObject {
       json['date'],
       json['author'],
       json['numComments'],
+      json['likes'],
+      json['dislikes'],
       (json['images'] as List).cast<String>(),
     );
   }
@@ -37,6 +43,8 @@ class PostObject {
       'date': this.date,
       'author': this.author,
       'numComments': this.numComments,
+      'likes': this.likes,
+      'dislikes': this.dislikes,
       'images': this.images,
     };
     return result;

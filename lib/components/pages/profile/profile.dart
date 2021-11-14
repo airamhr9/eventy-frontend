@@ -1,4 +1,5 @@
 import 'package:eventy_front/components/pages/friends/friends.dart';
+import 'package:eventy_front/components/pages/friends/groups.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
@@ -129,8 +130,17 @@ class _ProfileState extends State<Profile> {
                     MaterialPageRoute(
                         builder: (BuildContext context) => Friends(userId)));
               },
-              icon: Icon(Icons.people_rounded),
-              label: Text("Mis amigos"))
+              icon: Icon(Icons.person_rounded),
+              label: Text("Mis amigos")),
+          TextButton.icon(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Groups(userId)));
+              },
+              icon: Icon(Icons.group_rounded),
+              label: Text("Mis Grupos")),
           /*Wrap(
           children: List<Widget>.generate(
             options.length,

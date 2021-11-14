@@ -78,8 +78,26 @@ class Post extends StatelessWidget {
                   overflow: TextOverflow.ellipsis, color: Color(0xFF484848)),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Row(
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.thumb_up_rounded,
+                          size: 20,
+                        ),
+                        label: Text(post.likes.toString())),
+                    TextButton.icon(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.thumb_down_rounded,
+                          size: 20,
+                        ),
+                        label: Text(post.dislikes.toString())),
+                  ],
+                ),
                 TextButton.icon(
                     onPressed: () {},
                     icon: Icon(

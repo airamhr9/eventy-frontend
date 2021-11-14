@@ -40,27 +40,26 @@ class Event {
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      json['id'],
-      json['description'],
-      json['startDate'],
-      json['finishDate'],
-      (json['images'] as List).cast<String>(),
-      json['latitude'],
-      json['longitude'],
-      json['maxParticipants'],
-      (json['participants'] != null)
-          ? (json['participants'] as List).cast<String>()
-          : [],
-      json['name'],
-      json['owner'],
-      json['price'].toDouble(),
-      json['private'],
-      json['summary'],
-      (json['tags'] as List).cast<String>(),
-      /////////////////
-      json['scores'],
-      json['averageScore']
-    );
+        json['id'],
+        json['description'],
+        json['startDate'],
+        json['finishDate'],
+        (json['images'] as List).cast<String>(),
+        json['latitude'],
+        json['longitude'],
+        json['maxParticipants'],
+        (json['participants'] != null)
+            ? (json['participants'] as List).cast<String>()
+            : [],
+        json['name'],
+        json['owner'],
+        json['price'].toDouble(),
+        json['private'],
+        json['summary'],
+        (json['tags'] as List).cast<String>(),
+        /////////////////
+        (json['scores'] != null) ? json['scores'] as Map<String, double> : {},
+        (json['averageScore'] != null) ? json['averageScore'] : -1);
   }
 
   Map toJson() {
@@ -81,8 +80,8 @@ class Event {
       'summary': this.summary,
       'tags': this.tags,
       //////////////
-      'scores':this.scores,
-      'averageSocre':this.averageScore
+      'scores': this.scores,
+      'averageSocre': this.averageScore
     };
     return result;
   }
