@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/location_service.dart';
+import 'package:eventy_front/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -9,11 +10,7 @@ import 'dart:convert';
 import 'package:eventy_front/objects/event.dart';
 import 'package:path/path.dart';
 
-class EventService {
-  //String url = "10.0.2.2:8000";
-  // String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
-
+class EventService extends Service {
   Future<List<Event>> get() async {
     //sustituir por obtener localizacion
     LatLng position = await LocationService.determinePosition();
@@ -136,13 +133,15 @@ class EventService {
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
     print("lista de participantes: ");
-       print(list);
-       print("Fin de lista");
+    print(list);
+    print("Fin de lista");
 
-    List<User> participantsList =
-    (list[0] as List).map((participant) => User.fromJson(participant)).toList();
-    List<User> possiblyParticipantsList =
-    (list[1] as List).map((participant) => User.fromJson(participant)).toList();
+    List<User> participantsList = (list[0] as List)
+        .map((participant) => User.fromJson(participant))
+        .toList();
+    List<User> possiblyParticipantsList = (list[1] as List)
+        .map((participant) => User.fromJson(participant))
+        .toList();
     return [participantsList, possiblyParticipantsList];
   }
 
@@ -159,7 +158,7 @@ class EventService {
     return response.statusCode == 200;
   }
 
-  Future<double> getUserPunctuation(String eventId, String userId) async{
+  Future<double> getUserPunctuation(String eventId, String userId) async {
     final query = {
       'eventId': eventId,
       'userId': userId,

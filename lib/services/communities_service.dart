@@ -1,16 +1,13 @@
 import 'dart:io';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 
-class CommunityService {
-  //String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
-
+class CommunityService extends Service {
   Future<List<Community>> get() async {
     final query = {
       'user': await MySharedPreferences.instance.getStringValue("userId"),

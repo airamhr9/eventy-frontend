@@ -1,13 +1,18 @@
 import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
+import 'package:eventy_front/components/pages/login/login.dart';
+import 'package:eventy_front/components/pages/login/register.dart';
 import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/components/pages/search/search.dart';
+import 'package:eventy_front/main.dart';
 import 'package:eventy_front/navigation/custom_bottom_drawer.dart';
 import 'package:eventy_front/navigation/drawer_tile.dart';
 import 'package:eventy_front/navigation/navigation.dart';
 import 'package:eventy_front/navigation/navigation_model.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:restart_app/restart_app.dart';
 
 class Root extends StatefulWidget {
   final int selectedPage;
@@ -77,12 +82,16 @@ class _RootState extends State<Root> {
                   //color: darkBlue,
                 )),
             Spacer(),
-            IconButton(
-                icon: Icon(
-                  Icons.more_vert,
-                  //color: darkBlue,
-                ),
-                onPressed: () {}),
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: Text("Cerrar sesión"),
+                  onTap: () {
+                    logOut();
+                  },
+                )
+              ],
+            )
           ],
         ),
         shape: AutomaticNotchedShape(
@@ -91,6 +100,11 @@ class _RootState extends State<Root> {
       floatingActionButton: getCurrentFab(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  void logOut() async {
+    await MySharedPreferences.instance.setBooleanValue("isLoggedIn", false);
+    Restart.restartApp();
   }
 
   void openBottomDrawer() {

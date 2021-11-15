@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                               .setStringValue("userId", value.id);
                           MySharedPreferences.instance
                               .setBooleanValue("isLoggedIn", true);
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Root(

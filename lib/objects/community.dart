@@ -24,7 +24,7 @@ class Community {
         (json['members'] as List).cast<String>(),
         json['name'],
         json['creator'],
-        json['private'],
+        (json['private'] != null) ? json['private'] : false,
         (json['tags'] == null) ? [] : (json['tags'] as List).cast<String>()
         //(json['events'] as List).cast<Event>(),
         );

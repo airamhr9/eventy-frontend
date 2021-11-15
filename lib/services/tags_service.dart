@@ -1,13 +1,10 @@
 import 'dart:io';
+import 'package:eventy_front/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class TagsService {
-  //String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
-
+class TagsService extends Service {
   List<String> tags = [];
 
   Future<List<String>> get() async {

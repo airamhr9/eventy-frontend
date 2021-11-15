@@ -2,13 +2,10 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/objects/post.dart';
+import 'package:eventy_front/services/service.dart';
 import 'package:http/http.dart' as http;
 
-class MuroService {
-  //String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
-
+class MuroService extends Service {
   Future<List<PostObject>> getCommunityMuro(int communityId) async {
     final query = {'idCommunity': communityId.toString()};
 
