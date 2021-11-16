@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/message.dart';
+import 'package:eventy_front/services/service.dart';
 import 'package:http/http.dart' as http;
 
-class ChatService {
-  //String url = "10.0.2.2:8000";
-  //String url = "localhost:8000";
-  String url = "eventyserver.herokuapp.com";
+class ChatService extends Service {
 
   Future<List<Message>> getEventMessages(int eventId) async {
     final query = {'eventId': eventId.toString()};
