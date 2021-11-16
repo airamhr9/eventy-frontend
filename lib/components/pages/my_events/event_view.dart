@@ -263,7 +263,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildButtonsSaveEnventAndPoint() {
-    if (isMember == true) {
+    if (isMember == true && widget.event.finishDate.compareTo(DateTime.now().toString()) > 0){
       return Row(
         children: [
           IconButton(
