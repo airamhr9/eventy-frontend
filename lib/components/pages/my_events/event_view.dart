@@ -13,8 +13,7 @@ import 'package:intl/intl.dart';
 
 class EventView extends StatefulWidget {
   final Event event;
-  final String userId;
-  const EventView(this.event, this.userId) : super();
+  const EventView(this.event) : super();
 
   @override
   _EventView createState() => _EventView();
@@ -22,16 +21,24 @@ class EventView extends StatefulWidget {
 
 class _EventView extends State<EventView> with TickerProviderStateMixin {
   late String date;
-  bool isMember = false;
+  late bool isMember;
   bool waitComplete = false;
   double score = 0;
+  late String userId;
 
   @override
   void initState() {
-    waitToCheck();
     super.initState();
+    MySharedPreferences.instance
+        .getStringValue("userId")
+        .then((value) => setState(() {
+              userId = value;
+              print("ya tengo el usuarioooo");
+              waitToCheck();
+            }));
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
+    print("super ya");
   }
 
   @override
@@ -73,6 +80,33 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         : Center(
             child: CircularProgressIndicator(),
           );
+  }
+
+  waitToCheck() async {
+    try {
+      print("usuario : " + userId);
+      isMember = widget.event.participants.contains(userId);
+    } catch (e) {
+      //contains devuelve null si el usuario no es un particpante
+      isMember = false;
+    }
+    if (isMember == true) {
+      /*EventService()
+          .getUserPunctuation(widget.event.id.toString(), userId)
+          .then((value) => setState(() {
+                score = value;
+                waitComplete = true;
+              }));*/
+      setState(() {
+        isMember = true;
+        waitComplete = true;
+      });
+    } else {
+      setState(() {
+        isMember = false;
+        waitComplete = true;
+      });
+    }
   }
 
   Widget buildTop() {
@@ -294,41 +328,37 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "Te has unido con exito",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
-            ),
-            actionsPadding: EdgeInsets.only(left: 10),
-            actionsAlignment: MainAxisAlignment.start,
-            actions: [
-              TextButton(
-                  child: Text(
-                    "Aceptar",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  })
-            ],
-          );
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
+              child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.topLeft,
+                  width: 150,
+                  height: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Gracias por tu valoración!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      Spacer(),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              isMember = true;
+                            });
+                          },
+                          child: Text("Volver"))
+                    ],
+                  )));
         });
-  }
-
-  waitToCheck() async {
-    try {
-      isMember = widget.event.participants.contains(widget.userId);
-    } catch (e) {
-      //contains devuelve null si el usuario no es un particpante
-      isMember = false;
-    }
-    if (isMember == true)
-      score = await EventService()
-          .getUserPunctuation(widget.event.id.toString(), widget.userId);
-    waitComplete = true;
   }
 
   void showEventDialog() {
@@ -431,7 +461,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   margin: const EdgeInsets.all(10.0),
                   alignment: Alignment.topLeft,
                   width: 150,
-                  height: 249,
+                  height: 165,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -443,21 +473,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                             color: Colors.black87),
                       ),
                       SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Puntuación",
-                        style: TextStyle(fontSize: 15, color: Colors.black87),
+                        height: 20,
                       ),
                       buildRatingBar(),
                       SizedBox(
                         height: 10,
                       ),
+                      Spacer(),
                       TextButton.icon(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          label: Text("Guardar "),
+                          label: Text("Guardar puntuación"),
                           icon: Icon(Icons.save_rounded))
                     ],
                   )));

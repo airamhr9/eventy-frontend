@@ -32,11 +32,7 @@ class _HomeState extends State<Home> {
       print("Here");
       events = value;
       currentEvent = events.first;
-
     }));
-
-
-
   }
 
   @override

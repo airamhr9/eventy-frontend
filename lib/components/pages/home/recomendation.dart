@@ -22,11 +22,9 @@ class RecommendedEventState extends State<RecommendedEvent> {
   final CarouselController _controller = CarouselController();
   int _current = 0;
   late String date;
-  late String userId;
 
   @override
   void initState() {
-    getUserId();
     super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
@@ -190,7 +188,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                EventView(widget.event, userId)));
+                                EventView(widget.event)));
                   },
                   icon: Icon(
                     Icons.description,
@@ -227,9 +225,5 @@ class RecommendedEventState extends State<RecommendedEvent> {
         ],
       ),
     );
-  }
-
-  getUserId() async {
-    userId = await MySharedPreferences.instance.getStringValue("userId");
   }
 }

@@ -1,6 +1,8 @@
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
+import 'package:eventy_front/components/pages/my_events/event_view.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +17,7 @@ class SearchResult extends StatefulWidget {
 
 class _SearchResultState extends State<SearchResult> {
   late String date;
+  late String userId;
 
   @override
   void initState() {
@@ -108,7 +111,13 @@ class _SearchResultState extends State<SearchResult> {
                     icon: Icon(Icons.place_rounded)),
                 Spacer(),
                 TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EventView(widget.event)));
+                    },
                     label: Text("Saber más"),
                     icon: Icon(Icons.add_rounded)),
               ],

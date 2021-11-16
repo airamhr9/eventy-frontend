@@ -241,9 +241,12 @@ class _CommunitiesState extends State<CommunityView>
                           "Aceptar",
                           style: TextStyle(fontSize: 16),
                         ),
-                        onPressed: () => Navigator.pop(
-                              context,
-                            ))
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            isMember = true;
+                          });
+                        })
                   ],
                 );
               });
