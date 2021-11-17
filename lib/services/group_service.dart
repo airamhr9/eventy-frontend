@@ -26,7 +26,7 @@ class GroupService extends Service {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    print(data);
+    print("THIS IS REQUESTS " + data.toString());
     final list = data as List;
     List<User> users = list.map((user) => User.fromJson(user)).toList();
     return users;

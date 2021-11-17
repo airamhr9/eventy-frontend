@@ -2,13 +2,15 @@ import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';
 import 'package:eventy_front/services/tags_service.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 class GroupDetail extends StatefulWidget {
   final Group group;
-  const GroupDetail(this.group, {Key? key}) : super(key: key);
+  final String userId;
+  const GroupDetail(this.group, this.userId, {Key? key}) : super(key: key);
 
   @override
   _GroupDetailState createState() => _GroupDetailState();
@@ -21,6 +23,8 @@ class _GroupDetailState extends State<GroupDetail> {
   TextEditingController minDateController = TextEditingController();
   TextEditingController maxDateController = TextEditingController();
   double _currentSliderValue = 0;
+  List<User> friends = [];
+  bool hasFriendsResponse = false;
 
   Map<UserGroup, bool> users = {};
 
@@ -29,6 +33,14 @@ class _GroupDetailState extends State<GroupDetail> {
     super.initState();
     users = new Map.fromIterable(widget.group.users,
         key: (v) => v, value: (v) => false);
+    _fetchFriends();
+  }
+
+  void _fetchFriends() async {
+    UserService().getFriends(widget.userId).then((value) => setState(() {
+          friends = value[0];
+          hasFriendsResponse = true;
+        }));
   }
 
   @override
@@ -62,7 +74,9 @@ class _GroupDetailState extends State<GroupDetail> {
                               style: TextStyle(fontSize: 17),
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                showFriendsDialog();
+                              },
                               icon: Icon(Icons.person_add_rounded),
                               label: Text("Invitar"),
                             )
@@ -233,6 +247,44 @@ class _GroupDetailState extends State<GroupDetail> {
                 ],
               ),
             )));
+  }
+
+  void showFriendsDialog() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        ),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: 550,
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: ListView(
+                children: [
+                  ...friends.map((friend) => ListTile(
+                        leading: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    friend.profilePicture,
+                                  )),
+                            )),
+                        title: Text(friend.userName),
+                        trailing: Container(),
+                      ))
+                ],
+              ),
+            );
+          });
+        });
   }
 
   Widget buildParticipantTile(bool allOptionsSet, UserGroup user) {

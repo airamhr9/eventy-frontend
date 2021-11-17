@@ -124,12 +124,14 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15))),
                   onPressed: () {
+                    print("pressed");
                     if (_formKey.currentState!.validate()) {
                       UserService()
                           .login(_usernameController.text,
                               _passwordController.text)
                           .then((value) {
                         if (value.success) {
+                          print("logged");
                           MySharedPreferences.instance
                               .setStringValue("userId", value.id);
                           MySharedPreferences.instance
@@ -141,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                         selectedPage: EventsNavigation.NAV_HOME,
                                       )));
                         } else {
+                          print("bad");
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(value.error),
                             backgroundColor: Colors.red,

@@ -23,8 +23,10 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
   late TabController _tabController;
   List<Group> groups = [];
   List<User> requests = [];
+  List<User> friends = [];
   bool hasGroupsResponse = false;
   bool hasRequestsResponse = false;
+  bool hasFriendsResponse = false;
 
   @override
   void initState() {
@@ -40,17 +42,17 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
 
     final results = await Future.wait([
       groupService.getGroups(widget.userId),
-      groupService.getRequests(widget.userId)
+      //groupService.getRequests(widget.userId),
     ]);
 
     setState(() {
-      groups = results[0] as List<Group>;
+      groups = results[0];
       hasGroupsResponse = true;
     });
-    setState(() {
+/*     setState(() {
       requests = results[1] as List<User>;
       hasRequestsResponse = true;
-    });
+    }); */
   }
 
   @override
@@ -129,7 +131,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      GroupDetail(group)));
+                                      GroupDetail(group, widget.userId)));
                         },
                         leading: Container(
                             width: 35,
