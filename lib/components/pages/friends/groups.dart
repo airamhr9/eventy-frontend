@@ -46,7 +46,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
     ]);
 
     setState(() {
-      groups = results[0];
+      groups = results[0] as List<Group>;
       hasGroupsResponse = true;
     });
 /*     setState(() {

@@ -278,7 +278,8 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                         ),
                         onPressed: () {
                           if (groupRequest) {
-                            GroupService().createGroup(widget.userId, user.id);
+                            GroupService().createGroup(
+                                widget.userId, List.filled(1, user.id));
                           } else {
                             UserService().handleFriendRequest(
                                 widget.userId, user.userName, "REQUEST");

@@ -1,6 +1,7 @@
 import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';
+import 'package:eventy_front/services/group_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -365,5 +366,22 @@ class _GroupDetailState extends State<GroupDetail> {
     );
   }
 
-  void sendInvitations() {}
+  void sendInvitations() {
+    GroupService().sendInvite(
+        widget.group.id,
+        sendInvites.keys
+            .where((element) => sendInvites[element] == true)
+            .toList());
+
+    setState(() {
+      sendInvites.keys.forEach((element) {
+        sendInvites[element] = false;
+      });
+    });
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Invitaciones enviadas"),
+      backgroundColor: Colors.green,
+    ));
+  }
 }
