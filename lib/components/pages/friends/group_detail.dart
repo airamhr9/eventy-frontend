@@ -25,7 +25,7 @@ class _GroupDetailState extends State<GroupDetail> {
   double _currentSliderValue = 0;
   List<User> friends = [];
   bool hasFriendsResponse = false;
-
+  Map<String, bool> sendInvites = {};
   Map<UserGroup, bool> users = {};
 
   @override
@@ -33,14 +33,24 @@ class _GroupDetailState extends State<GroupDetail> {
     super.initState();
     users = new Map.fromIterable(widget.group.users,
         key: (v) => v, value: (v) => false);
-    _fetchFriends();
   }
 
-  void _fetchFriends() async {
-    UserService().getFriends(widget.userId).then((value) => setState(() {
-          friends = value[0];
+  void _fetchFriends(StateSetter setModalState) async {
+    if (friends.isEmpty) {
+      UserService().getFriends(widget.userId).then((value) {
+        List<String> userIds = users.keys.map((e) => e.id).toList();
+        List<User> friendsAux =
+            value[0].where((friend) => !userIds.contains(friend.id)).toList();
+        Iterable<String> friendsIds = friendsAux.map((e) => e.id);
+        Map<String, bool> mapAux = Map.fromIterables(
+            friendsIds, Iterable.generate(friendsAux.length, (index) => false));
+        setModalState(() {
+          friends = friendsAux;
+          sendInvites = mapAux;
           hasFriendsResponse = true;
-        }));
+        });
+      });
+    }
   }
 
   @override
@@ -54,7 +64,7 @@ class _GroupDetailState extends State<GroupDetail> {
         backgroundColor: Colors.blue[500],
         body: Container(
             width: double.infinity,
-            padding: EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+            padding: EdgeInsets.only(top: 15, right: 10, left: 10),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -242,6 +252,9 @@ class _GroupDetailState extends State<GroupDetail> {
                                   borderRadius: BorderRadius.circular(15))),
                           onPressed: () {},
                           child: Text("Recomendaciones actuales")),
+                      SizedBox(
+                        height: 15,
+                      )
                     ],
                   )
                 ],
@@ -260,28 +273,66 @@ class _GroupDetailState extends State<GroupDetail> {
         builder: (context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setModalState) {
+            _fetchFriends(setModalState);
+
             return Container(
               height: 550,
               padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: ListView(
-                children: [
-                  ...friends.map((friend) => ListTile(
-                        leading: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    friend.profilePicture,
+              child: (hasFriendsResponse)
+                  ? ListView(
+                      children: [
+                        Text(
+                          "Invitar amigos",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ...friends.map((friend) => ListTile(
+                              leading: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          friend.profilePicture,
+                                        )),
                                   )),
+                              title: Text(friend.userName),
+                              trailing: Checkbox(
+                                value: sendInvites[friend.id],
+                                onChanged: (value) {
+                                  setModalState(() {
+                                    sendInvites[friend.id] = value!;
+                                  });
+                                },
+                              ),
                             )),
-                        title: Text(friend.userName),
-                        trailing: Container(),
-                      ))
-                ],
-              ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity,
+                                    40), // double.infinity is the width and 30 is the height
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                            onPressed: () {
+                              sendInvitations();
+                            },
+                            child: Text("Enviar invitaciones")),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ),
             );
           });
         });
@@ -313,4 +364,6 @@ class _GroupDetailState extends State<GroupDetail> {
       trailing: icon,
     );
   }
+
+  void sendInvitations() {}
 }
