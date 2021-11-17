@@ -1,4 +1,6 @@
+import 'package:eventy_front/components/pages/friends/groups.dart';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/services/group_service.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -184,7 +186,8 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       ...fromDatabase.map((user) => ListTile(
-                                            onTap: () => showRequestSheet(user),
+                                            onTap: () =>
+                                                showRequestSheet(user, false),
                                             leading: Container(
                                                 width: 45,
                                                 height: 45,
@@ -206,7 +209,17 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
         ));
   }
 
-  void showRequestSheet(User user) {
+  void showRequestSheet(User user, bool groupRequest) {
+    late String requestMessage;
+    late String scaffoldMessage;
+    if (groupRequest) {
+      requestMessage = "Enviar solicitud de grupo";
+      scaffoldMessage = "Solicitud de amistad enviada";
+    } else {
+      requestMessage = "Crear nuevo grupo";
+      scaffoldMessage = "Creado nuevo grupo e invitación enviada";
+    }
+
     showModalBottomSheet(
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -264,16 +277,27 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                           minimumSize: Size(double.infinity, 40),
                         ),
                         onPressed: () {
-                          UserService().handleFriendRequest(
-                              widget.userId, user.userName, "REQUEST");
+                          if (groupRequest) {
+                            GroupService().createGroup(widget.userId, user.id);
+                          } else {
+                            UserService().handleFriendRequest(
+                                widget.userId, user.userName, "REQUEST");
+                          }
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Solicitud de amistad enviada"),
+                            content: Text(requestMessage),
                             backgroundColor: Colors.green,
                           ));
+                          if (groupRequest) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Groups(widget.userId)));
+                          }
                         },
                         icon: Icon(Icons.add_rounded),
-                        label: Text("Enviar solicitud de amistad")),
+                        label: Text(scaffoldMessage)),
                     SizedBox(
                       height: 10,
                     )
@@ -321,7 +345,8 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
               )
             : Column(
                 children: [
-                  ...friends.map((participant) => ListTile(
+                  ...friends.map((friend) => ListTile(
+                        onTap: () => showRequestSheet(friend, true),
                         leading: Container(
                             width: 45,
                             height: 45,
@@ -330,10 +355,10 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                    participant.profilePicture,
+                                    friend.profilePicture,
                                   )),
                             )),
-                        title: Text(participant.userName),
+                        title: Text(friend.userName),
                       ))
                 ],
               );

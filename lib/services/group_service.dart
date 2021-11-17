@@ -31,4 +31,12 @@ class GroupService extends Service {
     List<User> users = list.map((user) => User.fromJson(user)).toList();
     return users;
   }
+
+  Future<bool> createGroup(String creatorId, String requestedUserId) async {
+    final query = {'creator': creatorId, 'anotherUser': requestedUserId};
+    Uri url = Uri.http(this.url, '/groups', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.post(url, headers: headers);
+    return localhostResponse.statusCode == 200;
+  }
 }
