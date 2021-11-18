@@ -24,6 +24,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late bool isMember;
   bool waitComplete = false;
   double score = 0;
+  late List scoreList = [];
+  late double averageScore;
   late String userId;
 
   @override
@@ -91,12 +93,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       isMember = false;
     }
     if (isMember == true) {
-      /*EventService()
-          .getUserPunctuation(widget.event.id.toString(), userId)
-          .then((value) => setState(() {
-                score = value;
+      EventService()
+          .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
+          .then((list) => setState(() {
+                int scoreUser = list[0];
+                int average = list[1];
+                score = scoreUser.toDouble();
+                averageScore = average.toDouble();
                 waitComplete = true;
-              }));*/
+              }));
       setState(() {
         isMember = true;
         waitComplete = true;
@@ -143,7 +148,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [Spacer(), buildTextParticipants(), Spacer()]),
+              Row(children: [
+                Spacer(),
+                buildTextParticipantsAndScoreEvent(),
+                Spacer(),
+              ]),
               SizedBox(
                 height: 20,
               ),
@@ -176,6 +185,26 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ),
       ],
     );
+  }
+
+  buildTextParticipantsAndScoreEvent() {
+    if (widget.event.averageScore != 0.0) {
+      return Row(
+        children: [
+          buildTextParticipants(),
+          SizedBox(
+            width: 60,
+          ),
+          Text(widget.event.averageScore.toString()),
+          Icon(
+            Icons.star_rounded,
+            color: Colors.orange,
+          ),
+        ],
+      );
+    } else {
+      return buildTextParticipants();
+    }
   }
 
   Widget buildTextParticipants() {
@@ -263,7 +292,10 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildButtonsSaveEnventAndPoint() {
-    if (isMember == true && widget.event.finishDate.compareTo(DateTime.now().toString()) < 0){
+    if (isMember ==
+            true /*&&
+        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0*/
+        ) {
       return Row(
         children: [
           IconButton(
@@ -450,6 +482,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   pointEvent() {
+    if (score != -1) {
+      buildTextScore(score);
+    } else {
+      score = 0;
+      buildTextScore(score);
+    }
+  }
+
+  buildTextScore(double scoreUser) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -475,14 +516,30 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                       SizedBox(
                         height: 20,
                       ),
-                      buildRatingBar(),
+                      buildRatingBar(scoreUser),
                       SizedBox(
                         height: 10,
                       ),
                       Spacer(),
                       TextButton.icon(
                           onPressed: () {
+                            EventService().postUserScore(
+                                widget.event.id.toString(),
+                                userId,
+                                score.toString());
                             Navigator.of(context).pop();
+                            setState(() {
+                              EventService()
+                                  .getUserScoreAndEventAverage(
+                                      widget.event.id.toString(), userId)
+                                  .then((list) => setState(() {
+                                        int scoreUser = list[0];
+                                        int average = list[1];
+                                        score = scoreUser.toDouble();
+                                        averageScore = average.toDouble();
+                                        waitComplete = true;
+                                      }));
+                            });
                           },
                           label: Text("Guardar puntuación"),
                           icon: Icon(Icons.save_rounded))
@@ -491,9 +548,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  Widget buildRatingBar() {
+  Widget buildRatingBar(scoreUser) {
     return RatingBar(
-        initialRating: score,
+        initialRating: scoreUser,
         direction: Axis.horizontal,
         allowHalfRating: true,
         itemCount: 5,

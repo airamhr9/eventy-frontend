@@ -158,15 +158,29 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<double> getUserPunctuation(String eventId, String userId) async {
+  Future<List> getUserScoreAndEventAverage(
+      String eventId, String userId) async {
     final query = {
-      'eventId': eventId,
-      'userId': userId,
+      'user': userId,
+      'event': eventId,
     };
-    Uri url = Uri.http(this.url, '/joinEvent', query);
+    Uri url = Uri.http(this.url, '/eventScores', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     return data;
+  }
+
+  Future<bool> postUserScore(
+      String eventId, String userId, String score) async {
+    final query = {
+      'user': userId,
+      'event': eventId,
+      'score': score,
+    };
+    Uri url = Uri.http(this.url, '/eventScores', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
   }
 }

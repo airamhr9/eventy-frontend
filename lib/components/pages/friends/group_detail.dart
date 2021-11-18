@@ -1,3 +1,5 @@
+import 'package:eventy_front/components/pages/friends/group_recomendation_events.dart';
+import 'package:eventy_front/components/pages/friends/recomended_event_card.dart';
 import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';
@@ -28,6 +30,9 @@ class _GroupDetailState extends State<GroupDetail> {
   bool hasFriendsResponse = false;
   Map<String, bool> sendInvites = {};
   late UserGroup currentUser;
+  late bool creator;
+
+  Map<UserGroup, bool> users = {};
 
   @override
   void initState() {
@@ -128,6 +133,7 @@ class _GroupDetailState extends State<GroupDetail> {
                             TextButton.icon(
                               onPressed: () {
                                 savePreferences();
+                                showFriendsDialog();
                               },
                               icon: Icon(Icons.save_rounded),
                               label: Text("Guardar"),
@@ -280,7 +286,13 @@ class _GroupDetailState extends State<GroupDetail> {
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GroupRecomendedEvents(
+                                        widget.group, creator)));
+                          },
                           child: Text("Recomendaciones actuales")),
                       SizedBox(
                         height: 15,
@@ -430,5 +442,8 @@ class _GroupDetailState extends State<GroupDetail> {
       content: Text("Invitaciones enviadas"),
       backgroundColor: Colors.green,
     ));
+    checkCreator() {
+      creator = widget.userId.compareTo(widget.group.creator) == 0;
+    }
   }
 }
