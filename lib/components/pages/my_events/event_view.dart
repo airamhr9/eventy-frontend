@@ -23,9 +23,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late String date;
   late bool isMember;
   bool waitComplete = false;
-  double score = 0;
-  late List scoreList = [];
-  late double averageScore;
+  late num score;
+  //late num averageScore;
   late String userId;
 
   @override
@@ -35,83 +34,83 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         .getStringValue("userId")
         .then((value) => setState(() {
               userId = value;
-              print("ya tengo el usuarioooo");
               waitToCheck();
             }));
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
-    print("super ya");
   }
 
   @override
   Widget build(BuildContext context) {
-    return waitComplete == true
-        ? Scaffold(
-            appBar: AppBar(
-              title: Text(widget.event.name),
-              elevation: 0,
-              actions: [
-                buildButtonsSaveEnventAndPoint(),
-              ],
-              automaticallyImplyLeading: true,
-            ),
-            body: Container(
-                color: Theme.of(context).primaryColor,
-                child: Material(
-                    elevation: 0,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25)),
-                    color: Color(0xFFFAFAFA),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15.0),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 5),
-                        child: NestedScrollView(
-                            headerSliverBuilder: (context, boolean) {
-                              return [SliverToBoxAdapter(child: buildTop())];
-                            },
-                            body: Container()),
-                      ),
-                    ))),
-            floatingActionButton: buildFlotaingButton(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-          )
-        : Center(
-            child: CircularProgressIndicator(),
-          );
+    if (waitComplete == true)
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.event.name),
+          elevation: 0,
+          actions: [
+            buildButtonsSaveEnventAndPoint(),
+          ],
+          automaticallyImplyLeading: true,
+        ),
+        body: Container(
+            color: Theme.of(context).primaryColor,
+            child: Material(
+                elevation: 0,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25)),
+                color: Color(0xFFFAFAFA),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 5),
+                    child: NestedScrollView(
+                        headerSliverBuilder: (context, boolean) {
+                          return [SliverToBoxAdapter(child: buildTop())];
+                        },
+                        body: Container()),
+                  ),
+                ))),
+        floatingActionButton: buildFlotaingButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      );
+    else
+      return Center(
+        child: CircularProgressIndicator(),
+      );
   }
 
-  waitToCheck() async {
+  waitToCheck() {
     try {
-      print("usuario : " + userId);
       isMember = widget.event.participants.contains(userId);
     } catch (e) {
       //contains devuelve null si el usuario no es un particpante
       isMember = false;
     }
     if (isMember == true) {
-      EventService()
-          .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
-          .then((list) => setState(() {
-                int scoreUser = list[0];
-                int average = list[1];
-                score = scoreUser.toDouble();
-                averageScore = average.toDouble();
-                waitComplete = true;
-              }));
-      setState(() {
-        isMember = true;
-        waitComplete = true;
-      });
+      llamada();
     } else {
       setState(() {
         isMember = false;
         waitComplete = true;
       });
     }
+  }
+
+  llamada() {
+    EventService()
+        .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
+        .then((list) => setState(() {
+              print("dentroooooo");
+              waitComplete = true;
+              isMember = true;
+              print("ok1");
+              score = list[0];
+              print("ok2");
+              widget.event.averageScore = list[1];
+              print("ok3");
+            }));
   }
 
   Widget buildTop() {
@@ -292,8 +291,10 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildButtonsSaveEnventAndPoint() {
-    if (isMember == true &&
-        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
+    if (isMember ==
+            true /*&&
+        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0*/
+        ) {
       return Row(
         children: [
           IconButton(
@@ -488,7 +489,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildTextScore(double scoreUser) {
+  buildTextScore(num scoreUser) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -525,19 +526,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                                 widget.event.id.toString(),
                                 userId,
                                 score.toString());
-                            Navigator.of(context).pop();
                             setState(() {
-                              EventService()
-                                  .getUserScoreAndEventAverage(
-                                      widget.event.id.toString(), userId)
-                                  .then((list) => setState(() {
-                                        int scoreUser = list[0];
-                                        int average = list[1];
-                                        score = scoreUser.toDouble();
-                                        averageScore = average.toDouble();
-                                        waitComplete = true;
-                                      }));
+                              //llamada();
                             });
+                            Navigator.of(context).pop();
+                            buildMessageThanks();
                           },
                           label: Text("Guardar puntuación"),
                           icon: Icon(Icons.save_rounded))
@@ -546,9 +539,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  Widget buildRatingBar(scoreUser) {
+  Widget buildRatingBar(num scoreUser) {
     return RatingBar(
-        initialRating: scoreUser,
+        initialRating: scoreUser.toDouble(),
         direction: Axis.horizontal,
         allowHalfRating: true,
         itemCount: 5,
@@ -574,16 +567,20 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
-            child: Text(
-              "Gracias por puntuar el evento!",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
-            ),
-          );
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
+              child: Container(
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      "Puntuación guardada correctamente!",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                          color: Colors.black87),
+                    ),
+                  )));
         });
   }
 }

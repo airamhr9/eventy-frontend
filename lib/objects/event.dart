@@ -16,7 +16,7 @@ class Event {
   List<String> tags;
   ///////////////
   List<dynamic> scores;
-  double averageScore;
+  num averageScore;
 
   Event(
       this.id,
