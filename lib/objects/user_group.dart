@@ -7,10 +7,11 @@ class UserGroup {
   String dateMin;
   String dateMax;
   String price;
+  bool validPreferences;
   List<String> tags;
 
   UserGroup(this.id, this.username, this.imageUrl, this.dateMin, this.dateMax,
-      this.price, this.tags);
+      this.price, this.validPreferences, this.tags);
 
   factory UserGroup.fromJson(Map<String, dynamic> json) {
     return UserGroup(
@@ -20,6 +21,7 @@ class UserGroup {
       json['dateMin'],
       json['dateMax'],
       json['price'],
+      json['validPreferences'],
       (json['tags'] as List).cast<String>(),
     );
   }

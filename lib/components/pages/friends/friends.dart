@@ -212,8 +212,8 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
   void showRequestSheet(User user, bool groupRequest) {
     late String requestMessage;
     late String scaffoldMessage;
-    if (groupRequest) {
-      requestMessage = "Enviar solicitud de grupo";
+    if (!groupRequest) {
+      requestMessage = "Enviar solicitud de amistad";
       scaffoldMessage = "Solicitud de amistad enviada";
     } else {
       requestMessage = "Crear nuevo grupo";
@@ -286,7 +286,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                           }
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(requestMessage),
+                            content: Text(scaffoldMessage),
                             backgroundColor: Colors.green,
                           ));
                           if (groupRequest) {
@@ -298,7 +298,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                           }
                         },
                         icon: Icon(Icons.add_rounded),
-                        label: Text(scaffoldMessage)),
+                        label: Text(requestMessage)),
                     SizedBox(
                       height: 10,
                     )

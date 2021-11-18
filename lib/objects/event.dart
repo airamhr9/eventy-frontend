@@ -15,7 +15,7 @@ class Event {
   String summary;
   List<String> tags;
   ///////////////
-  Map<String, double> scores;
+  List<dynamic> scores;
   double averageScore;
 
   Event(
@@ -39,6 +39,8 @@ class Event {
       this.averageScore);
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    print("TYPE:" + json['scores'].runtimeType.toString());
+    print("SCORES" + json['scores'].toString());
     return Event(
         json['id'],
         json['description'],
@@ -58,8 +60,10 @@ class Event {
         json['summary'],
         (json['tags'] as List).cast<String>(),
         /////////////////
-        (json['scores'] != null) ? json['scores'] as Map<String, double> : {},
-        (json['averageScore'] != null) ? json['averageScore'] : -1);
+        (json['scores'] != null) ? json['scores'] as List<dynamic> : [],
+        (json['averageScore'] != null)
+            ? double.parse(json['averageScore'].toString())
+            : -1);
   }
 
   Map toJson() {

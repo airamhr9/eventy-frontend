@@ -121,7 +121,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
           )
         : (groups.length <= 0)
             ? Center(
-                child: Text("No tienes amigos"),
+                child: Text("No tienes grupos"),
               )
             : Column(
                 children: [

@@ -39,8 +39,8 @@ class GroupService extends Service {
       ids += element + ",";
     });
     ids = ids.substring(0, ids.length - 1);
-    final query = {'creator': creatorId, 'anotherUser': ids};
-    Uri url = Uri.http(this.url, '/groups', query);
+    final query = {'creator': creatorId};
+    Uri url = Uri.http(this.url, '/groups/$ids', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.post(url, headers: headers);
     return localhostResponse.statusCode == 200;
@@ -49,9 +49,20 @@ class GroupService extends Service {
   Future<bool> sendInvite(String groupId, List<String> requestedUserId) async {
     final query = {'group': groupId, 'op': 'REQUEST'};
     Uri url = Uri.http(this.url, '/groups', query);
+    print(requestedUserId);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    final localhostResponse = await http.post(url,
+    final localhostResponse = await http.put(url,
         headers: headers, body: json.encode(requestedUserId));
+    return localhostResponse.statusCode == 200;
+  }
+
+  Future<bool> updateUser(String groupId, Map<String, dynamic> filters) async {
+    final query = {'group': groupId};
+    Uri url = Uri.http(this.url, '/groups', query);
+    print(filters);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse =
+        await http.put(url, headers: headers, body: json.encode(filters));
     return localhostResponse.statusCode == 200;
   }
 }

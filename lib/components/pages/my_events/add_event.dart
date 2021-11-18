@@ -33,7 +33,7 @@ class _AddEventState extends State<AddEvent> {
   List<String> tags = [];
   List<String> tagsEvent = [];
   ////////////////
-  late Map scores;
+  late List scores;
   late double averageScore;
   ///////////////////
   String _visibilityValue = "Público";
@@ -552,7 +552,7 @@ class _AddEventState extends State<AddEvent> {
         _summaryController.text,
         tagsEvent,
         ///////////////
-        scores = Map<String, double>(), // userId, puntuación
+        scores = List.empty(growable: true), // userId, puntuación
         averageScore = 0,
       );
 

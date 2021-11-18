@@ -19,27 +19,51 @@ class GroupDetail extends StatefulWidget {
 
 class _GroupDetailState extends State<GroupDetail> {
   List<String> filterTags = [];
-  DateTime minDate = DateTime.now();
-  DateTime maxDate = DateTime.now();
+  String minDate = "";
+  String maxDate = "";
   TextEditingController minDateController = TextEditingController();
   TextEditingController maxDateController = TextEditingController();
-  double _currentSliderValue = 0;
+  double _currentPriceValue = 100;
   List<User> friends = [];
   bool hasFriendsResponse = false;
   Map<String, bool> sendInvites = {};
-  Map<UserGroup, bool> users = {};
+  late UserGroup currentUser;
 
   @override
   void initState() {
     super.initState();
-    users = new Map.fromIterable(widget.group.users,
-        key: (v) => v, value: (v) => false);
+    currentUser =
+        widget.group.users.firstWhere((element) => element.id == widget.userId);
+
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    if (currentUser.dateMin != "") {
+      setState(() {
+        minDate = currentUser.dateMin;
+        minDateController.text = formatter.format(DateTime.parse(minDate));
+      });
+    }
+    if (currentUser.dateMax != "") {
+      setState(() {
+        maxDate = currentUser.dateMax;
+        maxDateController.text = formatter.format(DateTime.parse(maxDate));
+      });
+    }
+    if (currentUser.price != "") {
+      setState(() {
+        _currentPriceValue = double.parse(currentUser.price);
+      });
+    }
+    if (currentUser.tags != []) {
+      setState(() {
+        filterTags = currentUser.tags;
+      });
+    }
   }
 
   void _fetchFriends(StateSetter setModalState) async {
     if (friends.isEmpty) {
       UserService().getFriends(widget.userId).then((value) {
-        List<String> userIds = users.keys.map((e) => e.id).toList();
+        List<String> userIds = widget.group.users.map((e) => e.id).toList();
         List<User> friendsAux =
             value[0].where((friend) => !userIds.contains(friend.id)).toList();
         Iterable<String> friendsIds = friendsAux.map((e) => e.id);
@@ -92,8 +116,7 @@ class _GroupDetailState extends State<GroupDetail> {
                               label: Text("Invitar"),
                             )
                           ]),
-                      ...users.keys
-                          .map((e) => buildParticipantTile(users[e]!, e)),
+                      ...widget.group.users.map((e) => buildParticipantTile(e)),
                       Divider(),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +126,9 @@ class _GroupDetailState extends State<GroupDetail> {
                               style: TextStyle(fontSize: 17),
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                savePreferences();
+                              },
                               icon: Icon(Icons.save_rounded),
                               label: Text("Guardar"),
                             )
@@ -132,7 +157,8 @@ class _GroupDetailState extends State<GroupDetail> {
                                           DateFormat('dd/MM/yyyy');
                                       final String formatted =
                                           formatter.format(date);
-                                      minDate = date;
+                                      minDate = date.toIso8601String();
+                                      currentUser.dateMin = minDate;
                                       minDateController.text = formatted;
                                     });
                                   });
@@ -169,7 +195,8 @@ class _GroupDetailState extends State<GroupDetail> {
                                           DateFormat('dd/MM/yyyy');
                                       final String formatted =
                                           formatter.format(date);
-                                      maxDate = date;
+                                      maxDate = date.toIso8601String();
+                                      currentUser.dateMax = maxDate;
                                       maxDateController.text = formatted;
                                     });
                                   });
@@ -194,14 +221,16 @@ class _GroupDetailState extends State<GroupDetail> {
                           Text("Presupuesto"),
                           Expanded(
                             child: Slider(
-                              value: _currentSliderValue,
+                              value: _currentPriceValue,
                               min: 0,
                               max: 100,
                               divisions: 20,
-                              label: _currentSliderValue.round().toString(),
+                              label: _currentPriceValue.round().toString(),
                               onChanged: (double value) {
                                 setState(() {
-                                  _currentSliderValue = value;
+                                  _currentPriceValue = value;
+                                  currentUser.price =
+                                      _currentPriceValue.toString();
                                 });
                               },
                             ),
@@ -261,6 +290,24 @@ class _GroupDetailState extends State<GroupDetail> {
                 ],
               ),
             )));
+  }
+
+  void savePreferences() {
+    Map<String, dynamic> filters = {};
+    filters["userId"] = widget.userId;
+    filters["validPreferences"] = true;
+    if (currentUser.price != "") filters['price'] = currentUser.price;
+    if (currentUser.dateMin != "") filters['dateMin'] = currentUser.dateMin;
+    if (currentUser.dateMax != "") filters['dateMax'] = currentUser.dateMax;
+    if (currentUser.tags != []) filters['tags'] = currentUser.tags;
+    setState(() {
+      currentUser.validPreferences = true;
+    });
+    GroupService().updateUser(widget.group.id, filters);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Tus preferencias se han actualizado"),
+      backgroundColor: Colors.green,
+    ));
   }
 
   void showFriendsDialog() {
@@ -339,8 +386,8 @@ class _GroupDetailState extends State<GroupDetail> {
         });
   }
 
-  Widget buildParticipantTile(bool allOptionsSet, UserGroup user) {
-    Icon icon = (allOptionsSet)
+  Widget buildParticipantTile(UserGroup user) {
+    Icon icon = (user.validPreferences)
         ? Icon(
             Icons.check_rounded,
             color: Colors.green,
