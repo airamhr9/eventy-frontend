@@ -24,7 +24,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late bool isMember;
   bool waitComplete = false;
   late num score;
-  //late num averageScore;
   late String userId;
 
   @override
@@ -89,7 +88,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       isMember = false;
     }
     if (isMember == true) {
-      llamada();
+      getScores();
     } else {
       setState(() {
         isMember = false;
@@ -98,18 +97,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  llamada() {
+  getScores() {
     EventService()
         .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
         .then((list) => setState(() {
-              print("dentroooooo");
               waitComplete = true;
               isMember = true;
-              print("ok1");
               score = list[0];
-              print("ok2");
               widget.event.averageScore = list[1];
-              print("ok3");
             }));
   }
 
@@ -187,7 +182,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildTextParticipantsAndScoreEvent() {
-    if (widget.event.averageScore != 0.0) {
+    if (widget.event.averageScore != 0.0 &&
+        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
       return Row(
         children: [
           buildTextParticipants(),
@@ -291,10 +287,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildButtonsSaveEnventAndPoint() {
-    if (isMember ==
-            true /*&&
-        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0*/
-        ) {
+    if (isMember == true &&
+        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
       return Row(
         children: [
           IconButton(
@@ -355,43 +349,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  dialogAddToEvent() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0))),
-              child: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  margin: const EdgeInsets.all(10.0),
-                  alignment: Alignment.topLeft,
-                  width: 150,
-                  height: 120,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Gracias por tu valoración!",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            color: Colors.black87),
-                      ),
-                      Spacer(),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              isMember = true;
-                            });
-                          },
-                          child: Text("Volver"))
-                    ],
-                  )));
-        });
-  }
-
   void showEventDialog() {
     showDialog(
         context: context,
@@ -430,7 +387,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           onPressed: () {
                             addMemberToEvent("true");
                             Navigator.of(context).pop();
-                            dialogAddToEvent();
                           },
                           label: Text(
                             "Iré Seguro",
@@ -448,7 +404,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           onPressed: () {
                             addMemberToEvent("false");
                             Navigator.of(context).pop();
-                            dialogAddToEvent();
                           },
                           label: Text(
                             "Quizás",
@@ -526,9 +481,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                                 widget.event.id.toString(),
                                 userId,
                                 score.toString());
-                            setState(() {
-                              //llamada();
-                            });
+                            setState(() {});
                             Navigator.of(context).pop();
                             buildMessageThanks();
                           },
@@ -570,17 +523,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(25.0))),
               child: Container(
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                    child: Text(
-                      "Puntuación guardada correctamente!",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                          color: Colors.black87),
-                    ),
-                  )));
+                padding: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(10.0),
+                height: 100,
+                width: 165,
+                child: Text(
+                  "Puntuación guardada correctamente!",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      color: Colors.black87),
+                ),
+              ));
         });
   }
 }
