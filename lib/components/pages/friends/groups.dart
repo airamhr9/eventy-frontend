@@ -42,17 +42,17 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
 
     final results = await Future.wait([
       groupService.getGroups(widget.userId),
-      //groupService.getRequests(widget.userId),
+      groupService.getRequests(widget.userId),
     ]);
 
     setState(() {
       groups = results[0] as List<Group>;
       hasGroupsResponse = true;
     });
-/*     setState(() {
+    setState(() {
       requests = results[1] as List<User>;
       hasRequestsResponse = true;
-    }); */
+    });
   }
 
   @override
@@ -103,15 +103,6 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                   buildTabGroups(),
                   buildTabRequests(),
                 ])))));
-    /*  Column(
-                  children: [
-                    ListTile(
-                     
-                      },
-                      title: Text("Grupo ejemplo"),
-                    )
-                  ],
-                )))); */
   }
 
   Widget buildTabGroups() {
@@ -220,15 +211,15 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
     late Color dialogActionColor;
     late String snackbarMessage;
     if (response == "accept") {
-      dialogMessage = "¿Aceptar a ${requester.userName}?";
-      dialogAction = "Aceptar";
+      dialogMessage = "Unirse al grupo de ${requester.userName}?";
+      dialogAction = "Unirse";
       dialogActionColor = Colors.green;
-      snackbarMessage = "${requester.userName} aceptado";
+      snackbarMessage = "Te has unido al grupo de ${requester.userName}";
     } else {
-      dialogMessage = "¿Rechazar a ${requester.userName}?";
+      dialogMessage = "¿Rechazar invitación al grupo de ${requester.userName}?";
       dialogAction = "Rechazar";
       dialogActionColor = Colors.red;
-      snackbarMessage = "${requester.userName} rechazado";
+      snackbarMessage = "Has rechazado el grupo de ${requester.userName}";
     }
     showDialog(
         context: context,
@@ -251,7 +242,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                   )),
               TextButton(
                   onPressed: () {
-                    handleFriendRequest(userId, requester, response);
+                    handleGroupRequest(userId, requester, response);
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(snackbarMessage),
@@ -267,7 +258,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
         });
   }
 
-  void handleFriendRequest(String userId, User requester, String response) {
+  void handleGroupRequest(String userId, User requester, String response) {
     /*  UserService().handleFriendRequest(userId, requester.userName, response);
     setState(() {
       requests.remove(requester);
