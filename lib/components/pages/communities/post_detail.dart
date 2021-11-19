@@ -91,7 +91,7 @@ class _PostDetailsState extends State<PostDetails>
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                                 child: Image.network(
-                                                  widget.post.images.first,
+                                                  widget.post.images,
                                                   fit: BoxFit.fill,
                                                 ),
                                               )),

@@ -34,7 +34,7 @@ class Post extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.network(
-                              post.images.first,
+                              post.images,
                               fit: BoxFit.fill,
                             ),
                           )),

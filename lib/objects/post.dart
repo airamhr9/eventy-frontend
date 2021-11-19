@@ -7,7 +7,7 @@ class PostObject {
   int numComments;
   int likes;
   int dislikes;
-  List<String> images;
+  String images;
 
   PostObject(
     this.id,
@@ -31,7 +31,7 @@ class PostObject {
       json['numComments'],
       json['likes'],
       json['dislikes'],
-      (json['images'] as List).cast<String>(),
+      json['images'],
     );
   }
 

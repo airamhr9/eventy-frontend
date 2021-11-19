@@ -13,11 +13,17 @@ class MuroService extends Service {
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
     print(data);
-    final postsMap = data as LinkedHashMap<String, dynamic>;
-    List<String> list = postsMap.keys.toList();
-    List<PostObject> posts =
-        list.map((post) => PostObject.fromJson(postsMap[post])).toList();
-    return posts;
+    try {
+      (data as List).length;
+      return [];
+    } catch (e) {
+      final postsMap = data as LinkedHashMap<String, dynamic>;
+      List<String> list = postsMap.keys.toList();
+      List<PostObject> posts =
+      list.map((post) => PostObject.fromJson(postsMap[post])).toList();
+      return posts;
+    }
+
   }
 
   Future<List<Message>> getMuroComments(String muroId) async {
@@ -32,4 +38,13 @@ class MuroService extends Service {
         list.map((comments) => Message.fromJson(comments)).toList();
     return comments;
   }
+
+  Future <bool> newPost(PostObject post) async{
+    final body = json.encode(post);
+    Uri url = Uri.http(this.url, '/post');
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"}, body: body);
+    return response.statusCode == 200;
+  }
+
 }

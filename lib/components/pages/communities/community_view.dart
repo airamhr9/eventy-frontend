@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_community.dart';
+import 'package:eventy_front/components/pages/communities/add_new_post.dart';
 import 'package:eventy_front/components/pages/communities/post.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/post.dart';
@@ -152,6 +153,27 @@ class _CommunitiesState extends State<CommunityView>
               Spacer()
             ],
           ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 50),
+                // double.infinity is the width and 30 is the height
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15))),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddNewPost(widget.community.id)),
+              );
+            },
+            icon: Icon(Icons.add_circle_rounded),
+            label: Text("Nueva publicación")),
+        SizedBox(
+          height: 20,
         ),
       ],
     );
