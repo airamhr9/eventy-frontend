@@ -58,8 +58,12 @@ class GroupService extends Service {
     return localhostResponse.statusCode == 200;
   }
 
-  Future<bool> updateUser(String groupId, Map<String, dynamic> filters) async {
+  Future<bool> updateUser(String groupId, Map<String, dynamic> filters,
+      {String? userId}) async {
     final query = {'group': groupId};
+    if (userId != null) {
+      query['user'] = userId;
+    }
     Uri url = Uri.http(this.url, '/groups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse =

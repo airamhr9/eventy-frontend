@@ -283,7 +283,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
       Map<String, dynamic> filters = {};
       filters["userId"] = widget.userId;
       filters["validPreferences"] = false;
-      groupService.updateUser(request.groupId, filters);
+      groupService.updateUser(request.groupId, filters, userId: widget.userId);
       updateGroups();
     } else {
       groupService.rejectGroupRequest(request.groupId, widget.userId);
