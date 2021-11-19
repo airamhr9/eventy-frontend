@@ -1,5 +1,6 @@
 import 'package:eventy_front/components/pages/friends/group_detail.dart';
 import 'package:eventy_front/objects/group.dart';
+import 'package:eventy_front/objects/group_request.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/services/group_service.dart';
 import 'package:eventy_front/services/muro_service.dart';
@@ -22,7 +23,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
   ];
   late TabController _tabController;
   List<Group> groups = [];
-  List<User> requests = [];
+  List<GroupRequest> requests = [];
   List<User> friends = [];
   bool hasGroupsResponse = false;
   bool hasRequestsResponse = false;
@@ -50,7 +51,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
       hasGroupsResponse = true;
     });
     setState(() {
-      requests = results[1] as List<User>;
+      requests = results[1] as List<GroupRequest>;
       hasRequestsResponse = true;
     });
   }
@@ -153,7 +154,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
             : SingleChildScrollView(
                 child: Column(
                   children: [
-                    ...requests.map((requester) => Padding(
+                    ...requests.map((request) => Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 5.0),
                           child: Row(
@@ -169,28 +170,28 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                                           image: DecorationImage(
                                               fit: BoxFit.cover,
                                               image: NetworkImage(
-                                                requester.profilePicture,
+                                                request.user.profilePicture,
                                               )),
                                         )),
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Text(requester.userName),
+                                    Text(request.user.userName),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () => showRequestDialog(
-                                          widget.userId, requester, "reject"),
+                                      onPressed: () =>
+                                          showRequestDialog(request, "reject"),
                                       icon: Icon(
                                         Icons.close_rounded,
                                         color: Colors.red,
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () => showRequestDialog(
-                                          widget.userId, requester, "accept"),
+                                      onPressed: () =>
+                                          showRequestDialog(request, "accept"),
                                       icon: Icon(
                                         Icons.check_rounded,
                                         color: Colors.green,
@@ -205,21 +206,22 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
               );
   }
 
-  void showRequestDialog(String userId, User requester, String response) {
+  void showRequestDialog(GroupRequest request, String response) {
     late String dialogMessage;
     late String dialogAction;
     late Color dialogActionColor;
     late String snackbarMessage;
     if (response == "accept") {
-      dialogMessage = "Unirse al grupo de ${requester.userName}?";
+      dialogMessage = "Unirse al grupo de ${request.user.userName}?";
       dialogAction = "Unirse";
       dialogActionColor = Colors.green;
-      snackbarMessage = "Te has unido al grupo de ${requester.userName}";
+      snackbarMessage = "Te has unido al grupo de ${request.user.userName}";
     } else {
-      dialogMessage = "¿Rechazar invitación al grupo de ${requester.userName}?";
+      dialogMessage =
+          "¿Rechazar invitación al grupo de ${request.user.userName}?";
       dialogAction = "Rechazar";
       dialogActionColor = Colors.red;
-      snackbarMessage = "Has rechazado el grupo de ${requester.userName}";
+      snackbarMessage = "Has rechazado el grupo de ${request.user.userName}";
     }
     showDialog(
         context: context,
@@ -242,7 +244,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                   )),
               TextButton(
                   onPressed: () {
-                    handleGroupRequest(userId, requester, response);
+                    handleGroupRequest(request, response);
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(snackbarMessage),
@@ -258,16 +260,26 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
         });
   }
 
-  void handleGroupRequest(String userId, User requester, String response) {
-    /*  UserService().handleFriendRequest(userId, requester.userName, response);
+  void handleGroupRequest(GroupRequest request, String response) async {
+    GroupService groupService = GroupService();
     setState(() {
-      requests.remove(requester);
+      requests.remove(request);
     });
     if (response == "accept") {
+      Map<String, dynamic> filters = {};
+      filters["userId"] = widget.userId;
+      filters["validPreferences"] = false;
+      groupService.updateUser(request.groupId, filters);
       setState(() {
-        groups.add(requester);
+        hasGroupsResponse = false;
       });
+
+      groupService.getGroups(widget.userId).then((value) => setState(() {
+            groups = value;
+            hasGroupsResponse = true;
+          }));
+    } else {
+      groupService.rejectGroupRequest(request.groupId, widget.userId);
     }
-  } */
   }
 }

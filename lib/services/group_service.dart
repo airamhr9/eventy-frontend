@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eventy_front/objects/group.dart';
+import 'package:eventy_front/objects/group_request.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';
 import 'package:eventy_front/services/service.dart';
@@ -20,7 +21,7 @@ class GroupService extends Service {
     return groups;
   }
 
-  Future<List<User>> getRequests(String userId) async {
+  Future<List<GroupRequest>> getRequests(String userId) async {
     final query = {'user': userId, 'type': 'REQUESTS'};
     Uri url = Uri.http(this.url, '/groups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
@@ -28,7 +29,8 @@ class GroupService extends Service {
     final data = await json.decode(localhostResponse.body);
     print("THIS IS REQUESTS " + data.toString());
     final list = data as List;
-    List<User> users = list.map((user) => User.fromJson(user)).toList();
+    List<GroupRequest> users =
+        list.map((grequest) => GroupRequest.fromJson(grequest)).toList();
     return users;
   }
 
@@ -59,10 +61,17 @@ class GroupService extends Service {
   Future<bool> updateUser(String groupId, Map<String, dynamic> filters) async {
     final query = {'group': groupId};
     Uri url = Uri.http(this.url, '/groups', query);
-    print(filters);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse =
         await http.put(url, headers: headers, body: json.encode(filters));
+    return localhostResponse.statusCode == 200;
+  }
+
+  Future<bool> rejectGroupRequest(String groupId, String userId) async {
+    final query = {'op': 'REJECT', 'group': groupId, 'user': userId};
+    Uri url = Uri.http(this.url, '/groups', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.put(url, headers: headers);
     return localhostResponse.statusCode == 200;
   }
 }

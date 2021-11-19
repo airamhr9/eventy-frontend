@@ -442,8 +442,10 @@ class _GroupDetailState extends State<GroupDetail> {
       content: Text("Invitaciones enviadas"),
       backgroundColor: Colors.green,
     ));
-    checkCreator() {
-      creator = widget.userId.compareTo(widget.group.creator) == 0;
-    }
+  }
+
+  bool checkCreator() {
+    creator = widget.userId.compareTo(widget.group.creator) == 0;
+    return creator;
   }
 }
