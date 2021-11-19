@@ -64,6 +64,10 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text("Mis grupos"),
+          actions: [
+            IconButton(
+                onPressed: updateGroups, icon: Icon(Icons.refresh_rounded))
+          ],
         ),
         backgroundColor: Colors.blue[500],
         body: Container(
@@ -206,6 +210,16 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
               );
   }
 
+  void updateGroups() async {
+    setState(() {
+      hasGroupsResponse = false;
+    });
+    GroupService().getGroups(widget.userId).then((value) => setState(() {
+          groups = value;
+          hasGroupsResponse = true;
+        }));
+  }
+
   void showRequestDialog(GroupRequest request, String response) {
     late String dialogMessage;
     late String dialogAction;
@@ -270,14 +284,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
       filters["userId"] = widget.userId;
       filters["validPreferences"] = false;
       groupService.updateUser(request.groupId, filters);
-      setState(() {
-        hasGroupsResponse = false;
-      });
-
-      groupService.getGroups(widget.userId).then((value) => setState(() {
-            groups = value;
-            hasGroupsResponse = true;
-          }));
+      updateGroups();
     } else {
       groupService.rejectGroupRequest(request.groupId, widget.userId);
     }

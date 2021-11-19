@@ -36,7 +36,9 @@ class User {
         json['id'],
         json['image'],
         json['email'],
-        (json['preferences'] as List).cast<String>(),
+        (json['preferences'] != null)
+            ? (json['preferences'] as List).cast<String>()
+            : [],
         json['username'],
         json['password'],
         json['bio'],
