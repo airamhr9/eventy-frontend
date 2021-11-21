@@ -30,7 +30,7 @@ class _GroupDetailState extends State<GroupDetail> {
   bool hasFriendsResponse = false;
   Map<String, bool> sendInvites = {};
   late UserGroup currentUser;
-  late bool creator;
+  late bool currentUserIsCreator;
 
   Map<UserGroup, bool> users = {};
 
@@ -39,7 +39,7 @@ class _GroupDetailState extends State<GroupDetail> {
     super.initState();
     currentUser =
         widget.group.users.firstWhere((element) => element.id == widget.userId);
-
+    currentUserIsCreator = currentUser.id.compareTo(widget.group.creator) == 0;
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     if (currentUser.dateMin != "") {
       setState(() {
@@ -291,7 +291,7 @@ class _GroupDetailState extends State<GroupDetail> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => GroupRecomendedEvents(
-                                        widget.group, creator)));
+                                        widget.group, currentUserIsCreator)));
                           },
                           child: Text("Recomendaciones actuales")),
                       SizedBox(
@@ -442,10 +442,5 @@ class _GroupDetailState extends State<GroupDetail> {
       content: Text("Invitaciones enviadas"),
       backgroundColor: Colors.green,
     ));
-  }
-
-  bool checkCreator() {
-    creator = widget.userId.compareTo(widget.group.creator) == 0;
-    return creator;
   }
 }

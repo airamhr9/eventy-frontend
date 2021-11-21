@@ -1,5 +1,3 @@
-import 'package:eventy_front/objects/user.dart';
-
 class UserGroup {
   String id;
   String username;
