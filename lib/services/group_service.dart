@@ -81,11 +81,11 @@ class GroupService extends Service {
   }
 
   Future<List<dynamic>> getRecomendedEvents(String groupId) async {
-    final query = {'groupId': groupId};
+    final query = {'group': groupId};
     Uri url = Uri.http(this.url, '/groups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
-    //print("RESPONSE " + localhostResponse.body.toString());
+    print("RESPONSE " + localhostResponse.body.toString());
     final data = await json.decode(localhostResponse.body);
     final dataList = data as List;
     print(data);
