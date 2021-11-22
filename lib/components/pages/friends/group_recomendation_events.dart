@@ -52,7 +52,10 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Eventos recomendados"),
+        automaticallyImplyLeading: true,
+      ),
       body: (SingleChildScrollView(
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),

@@ -92,12 +92,8 @@ class GroupService extends Service {
     List events = [];
     print(todoOk);
     map.remove(map.keys.first);
-    if (todoOk == true) {
-      events = map.values.map((event) => Event.fromJson(event)).toList();
-    } else {
-      for (List list in map.values) {
-        events.add(list.map((event) => Event.fromJson(event)).toList());
-      }
+    for (List list in map.values) {
+      events.add(list.map((event) => Event.fromJson(event)).toList());
     }
     return events;
   }
