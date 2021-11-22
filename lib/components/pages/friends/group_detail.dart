@@ -132,7 +132,6 @@ class _GroupDetailState extends State<GroupDetail> {
                             TextButton.icon(
                               onPressed: () {
                                 savePreferences();
-                                showFriendsDialog();
                               },
                               icon: Icon(Icons.save_rounded),
                               label: Text("Guardar"),
