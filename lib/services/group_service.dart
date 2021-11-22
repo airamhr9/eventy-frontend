@@ -90,6 +90,7 @@ class GroupService extends Service {
     Map map = data as Map<String, dynamic>;
     bool todoOk = map.values.first;
     List events = [];
+    print(todoOk);
     map.remove(map.keys.first);
     if (todoOk == true) {
       events = map.values.map((event) => Event.fromJson(event)).toList();

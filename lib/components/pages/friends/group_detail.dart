@@ -1,5 +1,4 @@
 import 'package:eventy_front/components/pages/friends/group_recomendation_events.dart';
-import 'package:eventy_front/components/pages/friends/recomended_event_card.dart';
 import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';

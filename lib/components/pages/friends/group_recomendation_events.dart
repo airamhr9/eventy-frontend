@@ -24,7 +24,6 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
   late String userId;
   bool wait = true;
   bool filtrosOk = false;
-  bool notEvents = false;
 
   @override
   void initState() {
@@ -32,6 +31,7 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     GroupService()
         .getRecomendedEvents(widget.group.id)
         .then((value) => setState(() {
+              print(value);
               print("Añadiendo eventos recomendados para el grupo");
               if (value.length > 1) {
                 eventsSinStartDate = value[0];
@@ -41,6 +41,7 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
                 wait = false;
               } else {
                 events = value[0];
+                print(events);
                 filtrosOk = true;
                 wait = false;
               }
@@ -165,30 +166,61 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     if (widget.userIsGroupLider == true) {
       return ElevatedButton.icon(
           onPressed: () {
-            GroupService()
-                .addGroupUsersToEvent(widget.group.id, eventId.toString());
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(
-                      "Miembros añadidos con exito!",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.black87),
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            "Vale",
-                          )),
-                    ],
-                  );
-                });
+            bool allMembersOk = true;
+            for (UserGroup user in widget.group.users) {
+              if (user.validPreferences != true) {
+                allMembersOk = false;
+              }
+            }
+            if (allMembersOk) {
+              GroupService()
+                  .addGroupUsersToEvent(widget.group.id, eventId.toString());
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        "Miembros añadidos con exito!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              "Vale",
+                            )),
+                      ],
+                    );
+                  });
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        "Hay miembros que no han confirmado su aistencia",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black87),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              "Vale",
+                            )),
+                      ],
+                    );
+                  });
+            }
           },
           icon: Icon(Icons.add_rounded),
           label: Text("Añadir miembros del grupo al evento"));
