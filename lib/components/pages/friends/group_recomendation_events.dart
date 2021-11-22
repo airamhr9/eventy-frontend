@@ -22,9 +22,9 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
   List<Event> eventsSinFinishDate = [];
   List<Event> eventsSinPrice = [];
   late String userId;
+  bool wait = true;
   bool filtrosOk = false;
-  bool oneList = false;
-  bool threeLists = false;
+  bool notEvents = false;
 
   @override
   void initState() {
@@ -32,28 +32,33 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     GroupService()
         .getRecomendedEvents(widget.group.id)
         .then((value) => setState(() {
-              if (value != []) {
+              print(value);
+              if (value.isNotEmpty) {
                 print("Añadiendo eventos recomendados para el grupo");
-                if (value.length == 2) {
-                  events = value[1];
-                  oneList = true;
-                  filtrosOk = true;
+                if (value.length > 1) {
+                  eventsSinStartDate = value[0];
+                  print(eventsSinStartDate);
+                  eventsSinFinishDate = value[1];
+                  print(eventsSinFinishDate);
+                  eventsSinPrice = value[2];
+                  print(eventsSinPrice);
+                  filtrosOk = false;
+                  wait = false;
                 } else {
-                  eventsSinStartDate = value[1];
-                  eventsSinFinishDate = value[2];
-                  eventsSinPrice = value[3];
-                  threeLists = true;
+                  events = value[0];
+                  print(events);
                   filtrosOk = true;
                 }
               } else {
-                filtrosOk = false;
+                notEvents = true;
               }
+              print("salgo");
             }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return events.length > 0
+    return wait == false
         ? Scaffold(
             appBar: AppBar(),
             body: (SingleChildScrollView(
@@ -71,18 +76,19 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
 
   buildRecomendedEventList() {
     if (filtrosOk == true) {
-      if (events.isNotEmpty) {
-        buildOneList();
-      } else {
-        buildEventListSinStartDate();
-        buildEventListSinFinishDate();
-        buildEventListSinPrice();
-      }
+      buildOneList();
+    } else if (filtrosOk == false) {
+      buildEventListSinStartDate();
+      buildEventListSinFinishDate();
+      buildEventListSinPrice();
     } else {
-      return Center(
-        child: Text("No se han encontrado eventos"),
+      Center(
+        child: Text("No hay nada te jodes"),
       );
     }
+    setState(() {
+      wait = false;
+    });
   }
 
   Widget buildOneList() {

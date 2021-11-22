@@ -7,6 +7,7 @@ import 'package:eventy_front/objects/group_request.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/objects/user_group.dart';
 import 'package:eventy_front/services/service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class GroupService extends Service {
@@ -16,7 +17,7 @@ class GroupService extends Service {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    print(data);
+    //print(data);
     final list = data as List;
     List<Group> groups = list.map((groups) => Group.fromJson(groups)).toList();
     return groups;
@@ -28,7 +29,7 @@ class GroupService extends Service {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    print("THIS IS REQUESTS " + data.toString());
+    //print("THIS IS REQUESTS " + data.toString());
     final list = data as List;
     List<GroupRequest> users =
         list.map((grequest) => GroupRequest.fromJson(grequest)).toList();
@@ -52,7 +53,7 @@ class GroupService extends Service {
   Future<bool> sendInvite(String groupId, List<String> requestedUserId) async {
     final query = {'group': groupId, 'op': 'REQUEST'};
     Uri url = Uri.http(this.url, '/groups', query);
-    print(requestedUserId);
+    //print(requestedUserId);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.put(url,
         headers: headers, body: json.encode(requestedUserId));
@@ -81,61 +82,29 @@ class GroupService extends Service {
   }
 
   Future<List<dynamic>> getRecomendedEvents(String groupId) async {
+    print("estoy dentrooo");
     final query = {'group': groupId};
-    Uri url = Uri.http(this.url, '/groups', query);
+    Uri url = Uri.http(this.url, '/searchGroups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    print("esperando respuesta");
     final localhostResponse = await http.get(url, headers: headers);
-    print("RESPONSE " + localhostResponse.body.toString());
+    print("ya tengo la respuesta");
     final data = await json.decode(localhostResponse.body);
-    final dataList = data as List;
-    print(data);
-    List<List<dynamic>> resultList = [];
+    Map map = data as Map<String, dynamic>;
+    bool todoOk = map.values.first;
     List events = [];
-    if (dataList[0] == true) {
-      // todo ha ido bien
-      if (dataList.length == 2) {
-        // me han pasado solo 1 lista de eventos
-        final list = dataList[1] as List;
-        resultList.add(list);
-        events = resultList.map((eventList) {
-          for (dynamic event in eventList) {
-            Event.fromJson(event);
-          }
-        }).toList();
-        return events;
-      } else {
-        var aux;
-        // me han pasado 3 listas de eventos
-        if (data[1] != []) {
-          aux = data[1] as List;
-          resultList.add(aux);
-        } else {
-          resultList.add([]);
-        }
-        if (data[2] != []) {
-          aux = data[2] as List;
-          resultList.add(aux);
-        } else {
-          resultList.add([]);
-        }
-        if (data[3] != []) {
-          aux = data[3] as List;
-          resultList.add(aux);
-        } else {
-          resultList.add([]);
-        }
-        events = resultList.map((eventList) {
-          if (eventList != []) {
-            for (dynamic event in eventList) {
-              Event.fromJson(event);
-            }
-          }
-        }).toList();
-        return events;
-      }
+    map.remove(map.keys.first);
+    if (todoOk == true) {
+      events = map.values.map((event) => Event.fromJson(event)).toList();
     } else {
-      return events;
+      for (List list in map.values) {
+        print(list.length);
+        events.add(list.map((event) => Event.fromJson(event)).toList());
+        print(events.toString());
+      }
     }
+    print(events);
+    return events;
   }
 
   Future<bool> sendGroupUsersToEvent(String groupId, String eventId) async {
