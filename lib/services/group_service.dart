@@ -82,13 +82,10 @@ class GroupService extends Service {
   }
 
   Future<List<dynamic>> getRecomendedEvents(String groupId) async {
-    print("estoy dentrooo");
-    final query = {'group': groupId};
+    final query = {'groupId': groupId};
     Uri url = Uri.http(this.url, '/searchGroups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    print("esperando respuesta");
     final localhostResponse = await http.get(url, headers: headers);
-    print("ya tengo la respuesta");
     final data = await json.decode(localhostResponse.body);
     Map map = data as Map<String, dynamic>;
     bool todoOk = map.values.first;
@@ -98,20 +95,18 @@ class GroupService extends Service {
       events = map.values.map((event) => Event.fromJson(event)).toList();
     } else {
       for (List list in map.values) {
-        print(list.length);
         events.add(list.map((event) => Event.fromJson(event)).toList());
-        print(events.toString());
       }
     }
-    print(events);
     return events;
   }
 
-  Future<bool> sendGroupUsersToEvent(String groupId, String eventId) async {
-    final query = {'groupId': groupId, 'eventId': eventId};
+  Future<bool> addGroupUsersToEvent(String groupId, String eventId) async {
+    final query = {'group': groupId, 'event': eventId};
     Uri url = Uri.http(this.url, '/groups', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.put(url, headers: headers);
+    print(localhostResponse.statusCode.toString());
     return localhostResponse.statusCode == 200;
   }
 }

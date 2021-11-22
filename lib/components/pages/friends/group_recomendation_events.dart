@@ -32,66 +32,50 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     GroupService()
         .getRecomendedEvents(widget.group.id)
         .then((value) => setState(() {
-              print(value);
-              if (value.isNotEmpty) {
-                print("Añadiendo eventos recomendados para el grupo");
-                if (value.length > 1) {
-                  eventsSinStartDate = value[0];
-                  print(eventsSinStartDate);
-                  eventsSinFinishDate = value[1];
-                  print(eventsSinFinishDate);
-                  eventsSinPrice = value[2];
-                  print(eventsSinPrice);
-                  filtrosOk = false;
-                  wait = false;
-                } else {
-                  events = value[0];
-                  print(events);
-                  filtrosOk = true;
-                }
+              print("Añadiendo eventos recomendados para el grupo");
+              if (value.length > 1) {
+                eventsSinStartDate = value[0];
+                eventsSinFinishDate = value[1];
+                eventsSinPrice = value[2];
+                filtrosOk = false;
+                wait = false;
               } else {
-                notEvents = true;
+                events = value[0];
+                filtrosOk = true;
+                wait = false;
               }
-              print("salgo");
+              print("ya tengo los eventos");
             }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return wait == false
-        ? Scaffold(
-            appBar: AppBar(),
-            body: (SingleChildScrollView(
-              child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: buildRecomendedEventList() //////////////////////
-                  ),
-            )),
-          )
-        : Center(
-            child: CircularProgressIndicator(),
-          );
+    return Scaffold(
+      appBar: AppBar(),
+      body: (SingleChildScrollView(
+        child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(color: Colors.white),
+            child: buildRecomendedEventList()),
+      )),
+    );
   }
 
-  buildRecomendedEventList() {
-    if (filtrosOk == true) {
-      buildOneList();
-    } else if (filtrosOk == false) {
-      buildEventListSinStartDate();
-      buildEventListSinFinishDate();
-      buildEventListSinPrice();
-    } else {
-      Center(
-        child: Text("No hay nada te jodes"),
+  Widget buildRecomendedEventList() {
+    if (wait == true) {
+      return Center(
+        child: CircularProgressIndicator(),
       );
+    } else {
+      if (filtrosOk == true) {
+        return buildOneList();
+      } else {
+        return buildThreeListOrMessageNoEvents();
+      }
     }
-    setState(() {
-      wait = false;
-    });
   }
 
-  Widget buildOneList() {
+  buildOneList() {
     return Column(
       children: [
         ...events.map((event) => Column(children: [
@@ -103,49 +87,78 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     );
   }
 
-  buildEventListSinStartDate() {
-    if (eventsSinStartDate.isNotEmpty) {
-      return Column(
-        children: [
-          Text("Eventos sin fecha de inicio"),
-          ...eventsSinStartDate.map((event) => Column(children: [
-                EventCard(event),
-                buildButtonAddMembers(event.id),
-                Divider()
-              ]))
-        ],
-      );
+  buildThreeListOrMessageNoEvents() {
+    if (eventsSinFinishDate.isNotEmpty ||
+        eventsSinPrice.isNotEmpty ||
+        eventsSinStartDate.isNotEmpty) {
+      if (eventsSinStartDate.isNotEmpty) {
+        return Column(
+          children: [
+            Text(
+              "Eventos sin filtro de fecha de inicio",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            ...eventsSinStartDate.map((event) => Column(children: [
+                  EventCard(event),
+                  buildButtonAddMembers(event.id),
+                  Divider()
+                ]))
+          ],
+        );
+      }
+      if (eventsSinFinishDate.isNotEmpty) {
+        return Column(
+          children: [
+            Text(
+              "Eventos sin filtro de fecha de finalización",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            ...eventsSinFinishDate.map((event) => Column(children: [
+                  EventCard(event),
+                  buildButtonAddMembers(event.id),
+                  Divider()
+                ]))
+          ],
+        );
+      }
+      if (eventsSinPrice.isNotEmpty) {
+        return Column(
+          children: [
+            Text(
+              "Eventos sin filtro de precio",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            ...eventsSinPrice.map((event) => Column(children: [
+                  EventCard(event),
+                  buildButtonAddMembers(event.id),
+                  Divider()
+                ]))
+          ],
+        );
+      }
+    } else {
+      return buildTextNoEvents();
     }
   }
 
-  buildEventListSinFinishDate() {
-    if (eventsSinFinishDate.isNotEmpty) {
-      return Column(
-        children: [
-          Text("Eventos sin fecha de finalización"),
-          ...eventsSinFinishDate.map((event) => Column(children: [
-                EventCard(event),
-                buildButtonAddMembers(event.id),
-                Divider()
-              ]))
-        ],
-      );
-    }
-  }
-
-  buildEventListSinPrice() {
-    if (eventsSinPrice.isNotEmpty) {
-      return Column(
-        children: [
-          Text("Eventos sin precio"),
-          ...eventsSinPrice.map((event) => Column(children: [
-                EventCard(event),
-                buildButtonAddMembers(event.id),
-                Divider()
-              ]))
-        ],
-      );
-    }
+  buildTextNoEvents() {
+    return Container(
+        child: Center(
+      child: Text(
+        "No se han encontrado eventos con esos filtros",
+        style: TextStyle(
+            fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black87),
+      ),
+    ));
   }
 
   buildButtonAddMembers(int eventId) {
@@ -153,10 +166,36 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
       return ElevatedButton.icon(
           onPressed: () {
             GroupService()
-                .sendGroupUsersToEvent(widget.group.id, eventId.toString());
+                .addGroupUsersToEvent(widget.group.id, eventId.toString());
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      "Miembros añadidos con exito!",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.black87),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Vale",
+                          )),
+                    ],
+                  );
+                });
           },
           icon: Icon(Icons.add_rounded),
           label: Text("Añadir miembros del grupo al evento"));
+    } else {
+      return SizedBox(
+        height: 0,
+      );
     }
   }
 }
