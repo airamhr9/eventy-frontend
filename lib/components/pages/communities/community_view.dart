@@ -45,6 +45,8 @@ class _CommunitiesState extends State<CommunityView>
         .then((value) => setState(() {
               muro = value;
               muroLoading = false;
+              print("value loaded with ${value.length} posts");
+              print("muro loaded with ${muro.length} posts");
             }));
   }
 
@@ -167,7 +169,8 @@ class _CommunitiesState extends State<CommunityView>
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddNewPost(widget.community.id)),
+                MaterialPageRoute(
+                    builder: (context) => AddNewPost(widget.community.id)),
               );
             },
             icon: Icon(Icons.add_circle_rounded),

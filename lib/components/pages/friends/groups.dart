@@ -280,6 +280,7 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
       requests.remove(request);
     });
     if (response == "accept") {
+      print("request accepted");
       Map<String, dynamic> filters = {};
       filters["userId"] = widget.userId;
       filters["validPreferences"] = false;

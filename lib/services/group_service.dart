@@ -70,7 +70,10 @@ class GroupService extends Service {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse =
         await http.put(url, headers: headers, body: json.encode(filters));
-    return localhostResponse.statusCode == 200;
+    print("Request sent: $url with body ${filters.toString()}");
+    var success = localhostResponse.statusCode == 200;
+    print(success);
+    return success;
   }
 
   Future<bool> rejectGroupRequest(String groupId, String userId) async {

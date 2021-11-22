@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
-
 class MuroService extends Service {
   Future<List<PostObject>> getCommunityMuro(int communityId) async {
     final query = {'idCommunity': communityId.toString()};
@@ -17,17 +16,10 @@ class MuroService extends Service {
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
     print(data);
-    try {
-      (data as List).length;
-      return [];
-    } catch (e) {
-      final postsMap = data as LinkedHashMap<String, dynamic>;
-      List<String> list = postsMap.keys.toList();
-      List<PostObject> posts =
-      list.map((post) => PostObject.fromJson(postsMap[post])).toList();
-      return posts;
-    }
-
+    final postList = data as List;
+    List<PostObject> posts =
+        postList.map((post) => PostObject.fromJson(post)).toList();
+    return posts;
   }
 
   Future<List<Message>> getMuroComments(String muroId) async {
@@ -43,7 +35,7 @@ class MuroService extends Service {
     return comments;
   }
 
-  Future <bool> newPost(PostObject post, String id) async{
+  Future<bool> newPost(PostObject post, String id) async {
     final query = {
       'idCommunity': id,
       'title': post.title,
@@ -63,10 +55,9 @@ class MuroService extends Service {
     Uri url = Uri.http(this.url, '/images', query);
     final request = http.MultipartRequest("POST", url);
     final imageToSend =
-    await http.MultipartFile.fromPath('photo', image.file.path);
+        await http.MultipartFile.fromPath('photo', image.file.path);
     request.files.add(imageToSend);
     var response = await request.send();
     return response.statusCode == 200;
   }
-
 }
