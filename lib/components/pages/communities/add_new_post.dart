@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:eventy_front/objects/post.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/muro_service.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +29,34 @@ class _AddNewPostState extends State<AddNewPost> {
   ImageProvider imageProviders = NetworkImage("");
   File imageFiles = File("");
 
+  String userId = "";
+  User user = User(
+      "-1",
+      "https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fusers%2FuserImg.jpg?alt=media&token=9a12a294-94c9-4e76-8eae-86a17054bbe0",
+      "",
+      [],
+      "CARGANDO",
+      "",
+      "",
+      "",
+      "userImage.jpg");
+
+  @override
+  void initState() {
+    super.initState();
+    MySharedPreferences.instance.getStringValue("userId").then((value) {
+      setState(() {
+        userId = value;
+      });
+
+      print("id" + userId);
+      UserService().getUser(userId).then((value) => setState(() {
+        user = value;
+      }));
+
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +177,39 @@ class _AddNewPostState extends State<AddNewPost> {
          _postNameController.text,
          _postDescriptionController.text,
          date,
-         await MySharedPreferences.instance.getStringValue("userName"),
+         user.userName,
          0, 0, 0, imageFiles.path.split('/').last);
-      MuroService().newPost(sendingPost);
+     print(sendingPost.toJson());
+      MuroService().newPost(sendingPost,widget.cId.toString() );
+      MuroService().sendImage(FileImage(imageFiles));
+
+     showDialog(
+         context: context,
+         builder: (BuildContext context) {
+           return AlertDialog(
+             title: Text(
+               "Tu post ha sido creado correctamente",
+               style: TextStyle(
+                   fontWeight: FontWeight.w500,
+                   fontSize: 20,
+                   color: Colors.black87),
+             ),
+             content: Text(
+                 "Se te devolverá a la ventana de tu comunidad"),
+             actions: [
+               TextButton(
+                   onPressed: () {
+                     Navigator.pop(context);
+                     Navigator.of(context).pop();
+
+                   },
+                   child: Text(
+                     "Vale",
+                     style: TextStyle(color: Colors.lightBlue),
+                   ))
+             ],
+           );
+         });
 
   }
 }

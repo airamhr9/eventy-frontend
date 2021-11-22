@@ -1,9 +1,13 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/services/service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+
 
 class MuroService extends Service {
   Future<List<PostObject>> getCommunityMuro(int communityId) async {
@@ -39,11 +43,29 @@ class MuroService extends Service {
     return comments;
   }
 
-  Future <bool> newPost(PostObject post) async{
-    final body = json.encode(post);
-    Uri url = Uri.http(this.url, '/post');
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"}, body: body);
+  Future <bool> newPost(PostObject post, String id) async{
+    final query = {
+      'idCommunity': id,
+      'title': post.title,
+      'text': post.text,
+      'date': post.date,
+      'author': post.author,
+      'images': post.images
+    };
+    Uri url = Uri.http(this.url, '/post', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> sendImage(FileImage image) async {
+    final query = {'type': 'post', 'name': basename(image.file.path)};
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    final imageToSend =
+    await http.MultipartFile.fromPath('photo', image.file.path);
+    request.files.add(imageToSend);
+    var response = await request.send();
     return response.statusCode == 200;
   }
 
