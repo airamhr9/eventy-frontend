@@ -102,7 +102,12 @@ class Post extends StatelessWidget {
                 */
                 SizedBox(),
                 TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PostDetails(post)));
+                    },
                     icon: Icon(
                       Icons.comment_rounded,
                       size: 20,
