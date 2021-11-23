@@ -28,7 +28,7 @@ class MuroService extends Service {
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
     print(data);
-    final list = data['comments'] as List;
+    final list = data as List;
     List<Message> comments =
         list.map((comments) => Message.fromJsonComment(comments)).toList();
     return comments;
