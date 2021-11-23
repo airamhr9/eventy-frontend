@@ -80,6 +80,7 @@ class Post extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                /*
                 Row(
                   children: [
                     TextButton.icon(
@@ -98,6 +99,8 @@ class Post extends StatelessWidget {
                         label: Text(post.dislikes.toString())),
                   ],
                 ),
+                */
+                SizedBox(),
                 TextButton.icon(
                     onPressed: () {},
                     icon: Icon(
