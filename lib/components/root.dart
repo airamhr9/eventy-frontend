@@ -26,13 +26,14 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   late Widget body;
   late String title;
-  int currentSelectedIndex = 0;
+  late int currentSelectedIndex;
   //Color darkBlue = Color.fromARGB(255, 1, 31, 46);
 
   @override
   void initState() {
     body = EventsNavigation.getNavItem(widget.selectedPage);
     title = EventsNavigation.titles[widget.selectedPage];
+    currentSelectedIndex = widget.selectedPage;
     super.initState();
   }
 
@@ -40,6 +41,7 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: ValueKey("appbar"),
         title: Text(
           title,
           //style: TextStyle(color: Colors.black87),

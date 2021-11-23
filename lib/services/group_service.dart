@@ -17,7 +17,6 @@ class GroupService extends Service {
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
-    //print(data);
     final list = data as List;
     List<Group> groups = list.map((groups) => Group.fromJson(groups)).toList();
     return groups;
@@ -30,13 +29,14 @@ class GroupService extends Service {
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     //print("THIS IS REQUESTS " + data.toString());
+    print("NNNNNNNNNNNNNNNNNNNN");
     final list = data as List;
     List<GroupRequest> users =
         list.map((grequest) => GroupRequest.fromJson(grequest)).toList();
     return users;
   }
 
-  Future<bool> createGroup(
+  Future<String> createGroup(
       String creatorId, List<String> requestedUserId) async {
     String ids = "";
     requestedUserId.forEach((element) {
@@ -45,9 +45,11 @@ class GroupService extends Service {
     ids = ids.substring(0, ids.length - 1);
     final query = {'creator': creatorId};
     Uri url = Uri.http(this.url, '/groups/$ids', query);
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.post(url, headers: headers);
-    return localhostResponse.statusCode == 200;
+    print(localhostResponse.body);
+    return localhostResponse.body.toString();
   }
 
   Future<bool> sendInvite(String groupId, List<String> requestedUserId) async {

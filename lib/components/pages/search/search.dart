@@ -147,6 +147,7 @@ class _SearchState extends State<Search> {
                       height: 10,
                     ),
                     TextField(
+                      key: ValueKey("search_textfield"),
                       controller: _searchController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search_rounded),
@@ -364,6 +365,7 @@ class _SearchState extends State<Search> {
                               ),
                             ),
                             ElevatedButton(
+                                key: ValueKey("search_button"),
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: Size(double.infinity,
                                         40), // double.infinity is the width and 30 is the height
