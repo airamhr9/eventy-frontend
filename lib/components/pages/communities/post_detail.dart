@@ -25,7 +25,6 @@ class _PostDetailsState extends State<PostDetails>
   List<Message> comments = [];
   String userId = "";
   late User user;
-  bool commentsLoaded = false;
   late String formattedDate;
 
   @override
@@ -43,7 +42,6 @@ class _PostDetailsState extends State<PostDetails>
             }));
     MuroService().getPostComments(widget.post.id).then((value) {
       setState(() {
-        commentsLoaded = true;
         comments.addAll(value);
         comments = comments.reversed.toList();
         for (int i = 0; i < comments.length; i++) {
@@ -169,31 +167,26 @@ class _PostDetailsState extends State<PostDetails>
                             ),
                           ),
                           Expanded(
-                            child: (commentsLoaded)
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10.0, right: 10.0, top: 10),
-                                    child: AnimatedList(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      key: key,
-                                      itemBuilder: (context, index, animation) {
-                                        return SlideTransition(
-                                            position: animation.drive(Tween(
-                                                begin: Offset(0, -2),
-                                                end: Offset(0.0, 0.0))),
-                                            child: Column(children: [
-                                              PostComment(comments[index]),
-                                              SizedBox(
-                                                height: 5,
-                                              )
-                                            ]));
-                                      },
-                                    ),
-                                  )
-                                : Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                          ),
+                              child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0, top: 10),
+                            child: AnimatedList(
+                              physics: NeverScrollableScrollPhysics(),
+                              key: key,
+                              itemBuilder: (context, index, animation) {
+                                return SlideTransition(
+                                    position: animation.drive(Tween(
+                                        begin: Offset(0, -2),
+                                        end: Offset(0.0, 0.0))),
+                                    child: Column(children: [
+                                      PostComment(comments[index]),
+                                      SizedBox(
+                                        height: 5,
+                                      )
+                                    ]));
+                              },
+                            ),
+                          )),
                           SizedBox(
                             height: 10,
                           ),
