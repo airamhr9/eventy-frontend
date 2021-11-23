@@ -24,7 +24,7 @@ class PostComment extends StatelessWidget {
               width: 10,
             ),
             Text(
-              comment.userId,
+              comment.userName,
               style: TextStyle(
                   color: Colors.black87,
                   fontWeight: FontWeight.w500,

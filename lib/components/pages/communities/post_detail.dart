@@ -176,7 +176,7 @@ class _PostDetailsState extends State<PostDetails>
                               itemBuilder: (context, index, animation) {
                                 return SlideTransition(
                                     position: animation.drive(Tween(
-                                        begin: Offset(0, -2),
+                                        begin: Offset(0, 2),
                                         end: Offset(0.0, 0.0))),
                                     child: Column(children: [
                                       PostComment(comments[index]),
