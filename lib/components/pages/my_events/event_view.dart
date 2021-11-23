@@ -1,4 +1,6 @@
 import 'dart:isolate';
+import 'package:eventy_front/components/pages/my_events/create_poll.dart';
+import 'package:eventy_front/objects/poll.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
@@ -25,6 +27,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool waitComplete = false;
   late num score;
   late String userId;
+  List<Poll> pollsList = [];
 
   @override
   void initState() {
@@ -173,7 +176,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   widget.event.price.toString() + " €",
                   style: TextStyle(fontSize: 16),
                 )
-              ])
+              ]),
+              SizedBox(
+                height: 15,
+              ),
+              buildPolls()
             ],
           ),
         ),
@@ -536,5 +543,45 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 ),
               ));
         });
+  }
+
+  buildPolls() {
+    //Polls son encuestas XD
+    if (pollsList.isNotEmpty) {
+      return Container(
+        child: Column(
+          children: [
+            Text("ENCUESTAS"),
+            buildButtonAddPoll(),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(height: 0);
+    }
+  }
+
+  buildButtonAddPoll() {
+    if (widget.event.ownerId == userId) {
+      return ElevatedButton(
+          onPressed: () {
+            // Llamada a creacion de encuesta
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return CreatePoll(widget.event.id.toString());
+            }));
+          },
+          child: Text("Añadir"));
+    } else {
+      return SizedBox(height: 1);
+    }
+  }
+
+  buildPollsData() {
+    Column(
+      children: [
+        // ACABAR /////////////////
+      ],
+    );
   }
 }
