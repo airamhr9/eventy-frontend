@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/service.dart';
 import 'package:http/http.dart' as http;
@@ -80,6 +81,17 @@ class CommunityService extends Service {
     Uri url = Uri.http(this.url, '/joinCommunity', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> postComment(Message message, String postId) async {
+    final query = {
+      'idPost': postId,
+    };
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    Uri url = Uri.http(this.url, '/comment', query);
+    final response = await http.post(url,
+        body: json.encode(message.toJson()), headers: headers);
     return response.statusCode == 200;
   }
 }

@@ -3,6 +3,7 @@ import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/muro_service.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:intl/intl.dart';
 
 class PostDetails extends StatefulWidget {
   final PostObject post;
-
   const PostDetails(this.post) : super();
 
   @override
@@ -238,8 +238,8 @@ class _PostDetailsState extends State<PostDetails>
                               newMessage.userId,
                               newMessage.userName,
                               user.profilePictureName!);
-                          //ChatService().sendMessageCommunity(
-                          //  messageToSend, widget.post.id);
+                          CommunityService()
+                              .postComment(commentToAdd, widget.post.id);
                         }
                       },
                       icon: Icon(
