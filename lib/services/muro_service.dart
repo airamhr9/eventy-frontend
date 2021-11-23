@@ -22,8 +22,8 @@ class MuroService extends Service {
     return posts;
   }
 
-  Future<List<Message>> getMuroComments(String muroId) async {
-    final query = {'muroId': muroId};
+  Future<List<Message>> getPostComments(String postId) async {
+    final query = {'postId': postId};
     Uri url = Uri.http(this.url, '/comments', query);
     print(url);
     final localhostResponse = await http.get(url);

@@ -40,7 +40,7 @@ class _PostDetailsState extends State<PostDetails>
                 user = value;
               });
             }));
-    MuroService().getMuroComments(widget.post.id).then((value) {
+    MuroService().getPostComments(widget.post.id).then((value) {
       setState(() {
         posts.addAll(value);
         posts = posts.reversed.toList();
