@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:eventy_front/objects/message.dart';
@@ -23,7 +22,7 @@ class MuroService extends Service {
   }
 
   Future<List<Message>> getPostComments(String postId) async {
-    final query = {'postId': postId};
+    final query = {'idPost': postId};
     Uri url = Uri.http(this.url, '/comments', query);
     print(url);
     final localhostResponse = await http.get(url);
