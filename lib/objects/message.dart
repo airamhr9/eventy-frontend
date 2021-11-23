@@ -18,6 +18,16 @@ class Message {
         json['images']);
   }
 
+  factory Message.fromJsonComment(Map json) {
+    return Message(
+        json['id'].toString(),
+        json['text'],
+        DateTime.parse(json["dateTime"]),
+        json['userId'],
+        json['username'],
+        json['images']);
+  }
+
   Map toJson() {
     return {
       'id': this.id,

@@ -30,7 +30,7 @@ class MuroService extends Service {
     print(data);
     final list = data['comments'] as List;
     List<Message> comments =
-        list.map((comments) => Message.fromJson(comments)).toList();
+        list.map((comments) => Message.fromJsonComment(comments)).toList();
     return comments;
   }
 
