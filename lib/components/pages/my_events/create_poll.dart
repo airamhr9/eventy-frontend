@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
-class CreatePoll extends StatefulWidget {
+class CreateSurvey extends StatefulWidget {
   final String eventId;
 
-  const CreatePoll(this.eventId) : super();
+  const CreateSurvey(this.eventId) : super();
 
   @override
-  _CreatePollState createState() => _CreatePollState();
+  _CreateSurveyState createState() => _CreateSurveyState();
 }
 
-class _CreatePollState extends State<CreatePoll> {
+class _CreateSurveyState extends State<CreateSurvey> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _pollNameController = TextEditingController();
+  final TextEditingController _surveyNameController = TextEditingController();
   final TextEditingController _optionsController = TextEditingController();
   String startDateLabel = "Sin seleccionar";
   String finishDateLabel = "Sin seleccionar";
@@ -46,7 +46,7 @@ class _CreatePollState extends State<CreatePoll> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
-                        controller: _pollNameController,
+                        controller: _surveyNameController,
                         validator: (value) {
                           return (value!.isEmpty)
                               ? 'La encuesta debe tener nombre'
@@ -219,7 +219,7 @@ class _CreatePollState extends State<CreatePoll> {
           await MySharedPreferences.instance.getStringValue("userId");
       final Poll poll = Poll(
         -1,
-        _pollNameController.text,
+        _surveyNameController.text,
         options,
         startDate.toIso8601String(),
         finishDate.toIso8601String(),

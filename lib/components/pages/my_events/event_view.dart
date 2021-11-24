@@ -27,7 +27,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool waitComplete = false;
   late num score;
   late String userId;
-  List<Poll> pollsList = [];
+  List<Poll> surveysList = [];
 
   @override
   void initState() {
@@ -180,7 +180,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               SizedBox(
                 height: 15,
               ),
-              buildPolls()
+              //buildSurveys()
             ],
           ),
         ),
@@ -545,14 +545,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  buildPolls() {
+  buildSurveys() {
     //Polls son encuestas XD
-    if (pollsList.isNotEmpty) {
+    if (surveysList.isNotEmpty && widget.event.participants.contains(userId)) {
       return Container(
         child: Column(
           children: [
             Text("ENCUESTAS"),
-            buildButtonAddPoll(),
+            buildButtonAddSurvey(),
           ],
         ),
       );
@@ -561,14 +561,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildButtonAddPoll() {
+  buildButtonAddSurvey() {
     if (widget.event.ownerId == userId) {
       return ElevatedButton(
           onPressed: () {
             // Llamada a creacion de encuesta
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) {
-              return CreatePoll(widget.event.id.toString());
+              return CreateSurvey(widget.event.id.toString());
             }));
           },
           child: Text("Añadir"));
@@ -577,7 +577,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildPollsData() {
+  buildSurveyData() {
     Column(
       children: [
         // ACABAR /////////////////
