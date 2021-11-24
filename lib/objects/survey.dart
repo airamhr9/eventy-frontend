@@ -1,17 +1,17 @@
-class Poll {
+class Survey {
   int id;
   String name;
-  List<String> options;
+  List<dynamic> options;
   String startDate;
   String finishDate;
 
-  Poll(this.id, this.name, this.options, this.startDate, this.finishDate);
+  Survey(this.id, this.name, this.options, this.startDate, this.finishDate);
 
-  factory Poll.fromJson(Map<String, dynamic> json) {
-    return Poll(
+  factory Survey.fromJson(Map<String, dynamic> json) {
+    return Survey(
       json['id'],
       json['name'],
-      (json['options'] as List).cast<String>(),
+      (json['options'] as List).cast<dynamic>(),
       json['startDate'],
       json['finishDate'],
     );
@@ -22,6 +22,6 @@ class Poll {
         'name': name,
         'options': options,
         'startDate': startDate,
-        'finishDate': finishDate
+        'finishDate': finishDate,
       };
 }

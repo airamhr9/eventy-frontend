@@ -1,6 +1,6 @@
 import 'dart:isolate';
 import 'package:eventy_front/components/pages/my_events/create_poll.dart';
-import 'package:eventy_front/objects/poll.dart';
+import 'package:eventy_front/objects/survey.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
@@ -11,6 +11,7 @@ import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:intl/intl.dart';
 
 class EventView extends StatefulWidget {
@@ -27,7 +28,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool waitComplete = false;
   late num score;
   late String userId;
-  List<Poll> surveysList = [];
+  List<Survey> surveysList = [];
+  String _visibilityValue = "option1";
 
   @override
   void initState() {
@@ -547,7 +549,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   buildSurveys() {
     //Polls son encuestas XD
-    if (surveysList.isNotEmpty && widget.event.participants.contains(userId)) {
+    if ((surveysList.isNotEmpty &&
+            widget.event.participants.contains(userId)) ||
+        widget.event.ownerId == userId) {
       return Container(
         child: Column(
           children: [
@@ -577,11 +581,69 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildSurveyData() {
-    Column(
-      children: [
-        // ACABAR /////////////////
-      ],
-    );
+  buildSurveyDataOrOptionsToVote() {
+    for(Survey survey in surveysList) {
+      List<List> option1 = survey.options[1];
+      List<List> option2 = survey.options[1];
+      if (option1[1].contains(userId) || option2[1].contains(userId)) {
+        // Si el usuario ha votado alguna opcion
+        int numVotes = option1[1].length + option2[1].length;
+        Column(
+          children: [
+            // MOSTRAR DATOS DE LA ENCUESTA /////////////////
+            Text(survey.name),
+            Text(option1[0].toString()),
+            Row(
+              children: [
+                // Barra de progreso y %
+              ],
+            ),
+            Text(option2[0].toString()),
+            Row(
+              children: [
+                // Barra de progreso y %
+              ],
+            ),
+            Text("Han votado: " +
+                numVotes.toString() +
+                "/" +
+                widget.event.participants.length.toString())
+          ],
+        );
+      } else {
+        // Si el usuario NO ha votado
+        Column(
+          children: [
+            // MOSTRAR LAS OPCIONES DE LA ENCUESTA  /////////////////
+            Text(survey.name),
+            RadioButton(
+              description: option1[0].toString(),
+              value: "option1",
+              groupValue: _visibilityValue,
+              onChanged: (value) {
+                setState(() {
+                  _visibilityValue = value as String;
+                });
+              },
+            ),
+            RadioButton(
+              description: option2[0].toString(),
+              value: "option2",
+              groupValue: _visibilityValue,
+              onChanged: (value) {
+                setState(() {
+                  _visibilityValue = value as String;
+                });
+              },
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  // VOTACION DEL USUSARIO
+                },
+                child: Text("Votar"))
+          ],
+        );
+      }
+    }
   }
 }
