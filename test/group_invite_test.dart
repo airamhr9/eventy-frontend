@@ -1,7 +1,6 @@
 import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/group_request.dart';
 import 'package:eventy_front/services/group_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,8 +9,7 @@ void main() {
     String user1 = "8qQpJyOmcCRAh9pZ4yFvntVu4oq2";
     String user2 = "Xamie8BQKCdD6mup0ew5KlQFBiI2";
 
-    String newGroupId = await GroupService().createGroup(user1, [user2]);
-    debugPrint(newGroupId);
+    String newGroupId = await groupService.createGroup(user1, [user2]);
 
     List<Group> user1Groups = await groupService.getGroups(user1);
     List<GroupRequest> user2Requests = await groupService.getRequests(user2);
