@@ -499,13 +499,12 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget buildButtonSurveyDate() {
+  Widget buildButtonSurveyDate(BuildContext context) {
     return ElevatedButton.icon(
         onPressed: () {
-          /*Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-              return CreateSurvey(id del evento);
-            }));*/
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return CreateSurvey();
+          }));
         },
         icon: Icon(Icons.calendar_today_rounded),
         label: Text("Encuesta"));

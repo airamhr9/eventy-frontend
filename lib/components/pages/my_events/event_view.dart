@@ -549,7 +549,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    
     if ((surveysList.isNotEmpty &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
@@ -574,7 +573,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             // Llamada a creacion de encuesta
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) {
-              return CreateSurvey(widget.event.id.toString());
+              return CreateSurvey();
             }));
           },
           child: Text("Añadir"));

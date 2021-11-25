@@ -6,9 +6,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateSurvey extends StatefulWidget {
-  final String eventId;
-
-  const CreateSurvey(this.eventId) : super();
+  const CreateSurvey() : super();
 
   @override
   _CreateSurveyState createState() => _CreateSurveyState();
