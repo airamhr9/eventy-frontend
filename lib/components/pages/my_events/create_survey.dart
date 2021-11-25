@@ -218,6 +218,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
       final Survey survey = Survey(
         -1,
         _surveyNameController.text,
+        0,
         options,
         startDate.toIso8601String(),
         finishDate.toIso8601String(),

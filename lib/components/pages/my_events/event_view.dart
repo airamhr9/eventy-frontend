@@ -1,6 +1,7 @@
 import 'dart:isolate';
-import 'package:eventy_front/components/pages/my_events/create_poll.dart';
+import 'package:eventy_front/components/pages/my_events/create_survey.dart';
 import 'package:eventy_front/objects/survey.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
@@ -548,7 +549,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    //Polls son encuestas XD
+    
     if ((surveysList.isNotEmpty &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
@@ -557,6 +558,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           children: [
             Text("ENCUESTAS"),
             buildButtonAddSurvey(),
+            buildSurveyDataOrOptionsToVote(),
           ],
         ),
       );
@@ -582,68 +584,80 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveyDataOrOptionsToVote() {
-    for(Survey survey in surveysList) {
-      List<List> option1 = survey.options[1];
-      List<List> option2 = survey.options[1];
-      if (option1[1].contains(userId) || option2[1].contains(userId)) {
+    bool userAlreadyVote = false;
+    int count = 0;
+    for (Survey survey in surveysList) {
+      for (List<String> userVoteList
+          in survey.options[count] <= survey.options.length) {
+        count++;
+        if (userVoteList.contains(userId)) {
+          userAlreadyVote = true;
+          break;
+        }
+        /*if (count == survey.options.length) { // Si ya no hay mas opciones
+          break;
+        }*/
+      }
+      if (userAlreadyVote == true) {
         // Si el usuario ha votado alguna opcion
-        int numVotes = option1[1].length + option2[1].length;
-        Column(
-          children: [
-            // MOSTRAR DATOS DE LA ENCUESTA /////////////////
-            Text(survey.name),
-            Text(option1[0].toString()),
-            Row(
-              children: [
-                // Barra de progreso y %
-              ],
-            ),
-            Text(option2[0].toString()),
-            Row(
-              children: [
-                // Barra de progreso y %
-              ],
-            ),
-            Text("Han votado: " +
-                numVotes.toString() +
-                "/" +
-                widget.event.participants.length.toString())
-          ],
-        );
+        buildDataOption(survey);
       } else {
         // Si el usuario NO ha votado
-        Column(
-          children: [
-            // MOSTRAR LAS OPCIONES DE LA ENCUESTA  /////////////////
-            Text(survey.name),
-            RadioButton(
-              description: option1[0].toString(),
-              value: "option1",
-              groupValue: _visibilityValue,
-              onChanged: (value) {
-                setState(() {
-                  _visibilityValue = value as String;
-                });
-              },
-            ),
-            RadioButton(
-              description: option2[0].toString(),
-              value: "option2",
-              groupValue: _visibilityValue,
-              onChanged: (value) {
-                setState(() {
-                  _visibilityValue = value as String;
-                });
-              },
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  // VOTACION DEL USUSARIO
-                },
-                child: Text("Votar"))
-          ],
-        );
+        buildOptions(survey);
       }
     }
+  }
+
+  buildDataOption(Survey survey) {
+    Text(survey.name);
+    for (List option in survey.options) {
+      Column(
+        children: [
+          Text(option[0].toString()),
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+                  color: Colors.orange,
+                  value: option[2],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    Text("Han votado " +
+        survey.numVotes.toString() +
+        "/" +
+        widget.event.participants.length.toString());
+  }
+
+  buildOptions(Survey survey) {
+    int count = 0;
+    Text(survey.name);
+    for (List option in survey.options) {
+      count++;
+      Column(
+        children: [
+          RadioButton(
+            description: option[0].toString(),
+            value: "option" + count.toString(),
+            groupValue: _visibilityValue,
+            onChanged: (value) {
+              setState(() {
+                _visibilityValue = value as String;
+              });
+            },
+          ),
+        ],
+      );
+    }
+    ElevatedButton(
+        onPressed: () {
+          // VOTACION DEL USUSARIO
+        },
+        child: Text("Votar"));
   }
 }
