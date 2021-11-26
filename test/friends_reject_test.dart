@@ -21,7 +21,7 @@ void main() {
     expect(requestExists, true);
   });
 
-  test('Aceptar petición de amistad', () async {
+  test('Rechazar petición de amistad', () async {
     userService.handleFriendRequest(reveiverID, senderUsername, 'REJECT');
     await Future.delayed(Duration(seconds: 2));
 
