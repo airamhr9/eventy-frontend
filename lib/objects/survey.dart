@@ -1,5 +1,5 @@
 class Survey {
-  int id;
+  String id;
   String name;
   int numVotes;
   List<dynamic> options;

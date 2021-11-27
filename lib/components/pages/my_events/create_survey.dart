@@ -214,7 +214,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
   void createEvent(BuildContext context) async {
     if (_formKey.currentState!.validate() && validateFields(context)) {
       final Survey survey = Survey(
-        -1,
+        '',
         _surveyNameController.text,
         0,
         options,
