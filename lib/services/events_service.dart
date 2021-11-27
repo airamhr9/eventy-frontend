@@ -189,7 +189,8 @@ class EventService extends Service {
     final query = { 'event': eventId };
     Uri url = Uri.http(this.url, '/surveys', query);
     final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
-    final response = await http.post(url, headers: headers);
+    final response = await http.post(url, headers: headers,
+        body: jsonEncode(survey.toJson()));
     return response.statusCode == 200;
   }
 
@@ -207,7 +208,7 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<List<Survey>> getSurvey(int eventId, String userId) async {
+  Future<List<Survey>> getSurveys(int eventId, String userId) async {
     final query = {
       'event': eventId,
       'user': userId
