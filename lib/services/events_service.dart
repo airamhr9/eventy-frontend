@@ -49,7 +49,7 @@ class EventService extends Service {
   Future<List<Event>> getFutureEvents() async {
     //sustituir por obtener localizacion
     final query = {
-      'id': await MySharedPreferences.instance.getStringValue("userId"),
+      'userId': await MySharedPreferences.instance.getStringValue("userId"),
       'futureEvents': "true"
     };
     Uri url = Uri.http(this.url, '/users', query);
