@@ -124,7 +124,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       child: Column(
         children: [
           SizedBox(
-            height: 50,
+            height: 55,
             child: MovingTitle(widget.event.name),
           ),
           Container(
@@ -132,11 +132,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             child: Column(
               children: [
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 FilledButton(text: "Unirse", onPressed: showEventDialog),
                 SizedBox(
-                  height: 20,
+                  height: 30,
                 ),
                 CarouselSlider(
                   options: CarouselOptions(
@@ -245,7 +245,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -307,7 +307,27 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 ),
               ],
             ),
-          )
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "Hablemos",
+                    style: TextStyle(
+                        fontFamily: 'Tiny', fontSize: 80, color: Colors.black),
+                  ),
+                )
+              ],
+            ),
+          ),
+          ...["a", "b"].map((e) => Text(e)),
           /*  Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(

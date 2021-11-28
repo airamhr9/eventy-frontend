@@ -9,7 +9,7 @@ class MovingTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Marquee(
       text: text,
-      style: TextStyle(fontFamily: 'Tiny', fontSize: 60, color: Colors.black),
+      style: TextStyle(fontFamily: 'Tiny', fontSize: 80, color: Colors.black),
       scrollAxis: Axis.horizontal,
       crossAxisAlignment: CrossAxisAlignment.start,
       blankSpace: 20.0,

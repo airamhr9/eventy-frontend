@@ -152,11 +152,11 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : (seeLater.length > 0)
+        : (futureEvents.length > 0)
             ? ListView.separated(
-                itemCount: seeLater.length,
+                itemCount: futureEvents.length,
                 itemBuilder: (context, index) {
-                  return EventCard(seeLater[index]);
+                  return EventCard(futureEvents[index]);
                 },
                 separatorBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
