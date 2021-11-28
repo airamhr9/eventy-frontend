@@ -44,6 +44,7 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   restart_app: ^1.1.0
   network_image_mock: ^2.0.1
+  marquee: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,20 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+  fonts:
+    - family: Tiny
+      fonts:
+        - asset: fonts/dotty.ttf
+    - family: FirsNeue
+      fonts:
+        - asset: fonts/TTFirsNeue-Regular.ttf
+        - asset: fonts/TTFirsNeue-Light.ttf
+          weight: 200
+        - asset: fonts/TTFirsNeue-LightItalic.ttf
+          style: italic
+        - asset: fonts/TTFirsNeue-Bold.ttf
+          weight: 800
+
   uses-material-design: true
   assets: 
     - mock_data/events.json

@@ -46,6 +46,21 @@ class EventService extends Service {
     return events;
   }
 
+  Future<List<Event>> getFutureEvents() async {
+    //sustituir por obtener localizacion
+    final query = {
+      'id': await MySharedPreferences.instance.getStringValue("userId"),
+      'futureEvents': "true"
+    };
+    Uri url = Uri.http(this.url, '/users', query);
+    final localhostResponse = await http.get(url);
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data as List;
+    List<Event> events = list.map((event) => Event.fromJson(event)).toList();
+    return events;
+  }
+
   Future<List<Event>> getSeeLaterEvents() async {
     //sustituir por obtener localizacion
     final query = {
@@ -186,11 +201,11 @@ class EventService extends Service {
   }
 
   Future<bool> postSurvey(Survey survey, int eventId) async {
-    final query = { 'event': eventId };
+    final query = {'event': eventId};
     Uri url = Uri.http(this.url, '/surveys', query);
-    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
-    final response = await http.post(url, headers: headers,
-        body: jsonEncode(survey.toJson()));
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(survey.toJson()));
     return response.statusCode == 200;
   }
 
@@ -203,22 +218,19 @@ class EventService extends Service {
       'user': userId
     };
     Uri url = Uri.http(this.url, '/votes', query);
-    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;
   }
 
   Future<List<Survey>> getSurveys(int eventId, String userId) async {
-    final query = {
-      'event': eventId,
-      'user': userId
-    };
+    final query = {'event': eventId, 'user': userId};
     Uri url = Uri.http(this.url, '/surveys', query);
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
-    List<Survey> surveys = list.map((survey) => Survey.fromJson(survey)).toList();
+    List<Survey> surveys =
+        list.map((survey) => Survey.fromJson(survey)).toList();
     return surveys;
   }
-
 }

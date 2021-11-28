@@ -1,5 +1,8 @@
 import 'dart:isolate';
 import 'package:eventy_front/components/pages/my_events/create_survey.dart';
+import 'package:eventy_front/components/widgets/filled_button.dart';
+import 'package:eventy_front/components/widgets/moving_title.dart';
+import 'package:eventy_front/components/widgets/border_button.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -31,6 +34,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late String userId;
   List<Survey> surveysList = [];
   String _visibilityValue = "option1";
+  late String priceText;
+  late String plazasText;
+  late String plazasCounter;
 
   @override
   void initState() {
@@ -41,8 +47,16 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               userId = value;
               waitToCheck();
             }));
+    priceText =
+        (widget.event.price > 0) ? widget.event.price.toString() : "Gratis";
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
+    plazasText = (widget.event.maxParticipants != -1)
+        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas"
+        : "No hay límite de plazas";
+    plazasCounter = (widget.event.maxParticipants != -1)
+        ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
+        : "";
   }
 
   @override
@@ -50,35 +64,25 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     if (waitComplete == true)
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.event.name),
+          title: Text("OnPoint"),
           elevation: 0,
           actions: [
             buildButtonsSaveEnventAndPoint(),
           ],
           automaticallyImplyLeading: true,
+          backgroundColor: Color(0xFFFAFAFA),
+          foregroundColor: Colors.black,
         ),
         body: Container(
-            color: Theme.of(context).primaryColor,
-            child: Material(
-                elevation: 0,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25)),
-                color: Color(0xFFFAFAFA),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
-                  child: Container(
-                    padding: EdgeInsets.only(top: 5),
-                    child: NestedScrollView(
-                        headerSliverBuilder: (context, boolean) {
-                          return [SliverToBoxAdapter(child: buildTop())];
-                        },
-                        body: Container()),
-                  ),
-                ))),
-        floatingActionButton: buildFlotaingButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.black, width: .8))),
+          padding: EdgeInsets.only(top: 5),
+          child: NestedScrollView(
+              headerSliverBuilder: (context, boolean) {
+                return [SliverToBoxAdapter(child: buildTop())];
+              },
+              body: Container()),
+        ),
       );
     else
       return Center(
@@ -115,79 +119,241 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildTop() {
-    return Column(
-      children: [
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 200.0,
-            viewportFraction: 1,
-            enableInfiniteScroll: false,
+    return Container(
+      padding: EdgeInsets.only(top: 15),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: MovingTitle(widget.event.name),
           ),
-          items: widget.event.images.map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        i,
-                        fit: BoxFit.fill,
-                      ),
-                    ));
-              },
-            );
-          }).toList(),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                Spacer(),
-                buildTextParticipantsAndScoreEvent(),
-                Spacer(),
-              ]),
-              SizedBox(
-                height: 20,
-              ),
-              buildTextDescription(),
-              SizedBox(
-                height: 20,
-              ),
-              buidDateAndLocation(),
-              SizedBox(
-                height: 15,
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  "Precio",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.lightBlueAccent),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                FilledButton(text: "Unirse", onPressed: showEventDialog),
+                SizedBox(
+                  height: 20,
+                ),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200.0,
+                    viewportFraction: 1,
+                    enableInfiniteScroll: false,
+                  ),
+                  items: widget.event.images.map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                i,
+                                fit: BoxFit.fill,
+                              ),
+                            ));
+                      },
+                    );
+                  }).toList(),
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 30,
                 ),
-                Text(
-                  widget.event.price.toString() + " €",
-                  style: TextStyle(fontSize: 16),
-                )
-              ]),
-              SizedBox(
-                height: 15,
-              ),
-              //buildSurveys()
-            ],
+                Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      border: Border(
+                          top: BorderSide(color: Colors.black, width: .8),
+                          bottom: BorderSide(color: Colors.black, width: .8)),
+                    )),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Casa Luz Mª. Valencia"),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EventLocation(LatLng(
+                                      widget.event.latitude,
+                                      widget.event.longitude))));
+                        },
+                        child: Text(
+                          "Ver en mapa",
+                          style: TextStyle(color: Colors.black45),
+                        ))
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width / 2 - 10,
+                          child: Text(
+                            widget.event.description,
+                          )),
+                      Transform.rotate(
+                        angle: -.2,
+                        child: VerticalDivider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IntrinsicWidth(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              date.substring(0, 10),
+                              style: TextStyle(
+                                  fontFamily: 'Tiny',
+                                  fontSize: 45,
+                                  color: Colors.black),
+                            ),
+                            Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                            Text(
+                              date.substring(10, date.length),
+                              style: TextStyle(
+                                  fontFamily: 'Tiny',
+                                  fontSize: 45,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      priceText,
+                      style: TextStyle(
+                          fontFamily: 'Tiny',
+                          fontSize: 80,
+                          color: Colors.black),
+                    ),
+                    BorderButton(
+                        text: "Participantes",
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Participants(widget.event))))
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 1.5))),
+            child: Stack(
+              alignment: AlignmentDirectional.centerStart,
+              children: [
+                LinearProgressIndicator(
+                  minHeight: 30,
+                  value: widget.event.participants.length /
+                      widget.event.maxParticipants,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text(plazasText), Text(plazasCounter)],
+                  ),
+                ),
+              ],
+            ),
+          )
+          /*  Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Spacer(),
+                  buildTextParticipantsAndScoreEvent(),
+                  Spacer(),
+                ]),
+                SizedBox(
+                  height: 20,
+                ),
+                buildTextDescription(),
+                SizedBox(
+                  height: 20,
+                ),
+                buidDateAndLocation(),
+                SizedBox(
+                  height: 15,
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    "Precio",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.lightBlueAccent),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    widget.event.price.toString() + " €",
+                    style: TextStyle(fontSize: 16),
+                  )
+                ]),
+                SizedBox(
+                  height: 15,
+                ),
+                //buildSurveys()
+              ],
+            ),
+          ), */
+        ],
+      ),
     );
   }
 

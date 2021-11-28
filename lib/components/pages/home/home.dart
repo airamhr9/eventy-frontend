@@ -22,35 +22,34 @@ class _HomeState extends State<Home> {
   List<Event> events = [];
   late Event currentEvent;
   List<User> participants = [];
- List <User> possiblyParticipants = [];
-
+  List<User> possiblyParticipants = [];
 
   @override
   void initState() {
     super.initState();
     EventService().get().then((value) => setState(() {
-      print("Here");
-      events = value;
-      currentEvent = events.first;
-    }));
+          print("Here");
+          events = value;
+          currentEvent = events.first;
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
     return events.length > 0
         ? TikTokStyleFullPageScroller(
-      contentSize: events.length,
-      swipePositionThreshold: 0.1,
-      swipeVelocityThreshold: 500,
-      animationDuration: const Duration(milliseconds: 200),
-      builder: (BuildContext context, int index) {
-        return RecommendedEvent(events[index]);
-      },
-      onScrollEvent: _handleCallbackEvent,
-    )
+            contentSize: events.length,
+            swipePositionThreshold: 0.1,
+            swipeVelocityThreshold: 500,
+            animationDuration: const Duration(milliseconds: 200),
+            builder: (BuildContext context, int index) {
+              return RecommendedEvent(events[index]);
+            },
+            onScrollEvent: _handleCallbackEvent,
+          )
         : Center(
-      child: CircularProgressIndicator(),
-    );
+            child: CircularProgressIndicator(),
+          );
   }
 
   void _handleCallbackEvent(ScrollEventType type, {int? currentIndex}) {
@@ -58,24 +57,25 @@ class _HomeState extends State<Home> {
       setState(() {
         currentEvent = events[currentIndex];
         _loadParticipants();
-
       });
     }
   }
 
-  void _loadParticipants(){
-    EventService().getParticipants(currentEvent.id.toString()).then((value) => setState(() {
-      print(value.toString());
-      participants = value[0];
-      possiblyParticipants = value[1];
-      print("cargando usuarios");
-      print("participantes");
-      print(participants);
-      print("posible");
-      print(possiblyParticipants);
-      print(participants[1].toString());
-      print("usuarios cargados");
-    }));
+  void _loadParticipants() {
+    EventService()
+        .getParticipants(currentEvent.id.toString())
+        .then((value) => setState(() {
+              print(value.toString());
+              participants = value[0];
+              possiblyParticipants = value[1];
+              print("cargando usuarios");
+              print("participantes");
+              print(participants);
+              print("posible");
+              print(possiblyParticipants);
+              print(participants.toString());
+              print("usuarios cargados");
+            }));
   }
 
   addMemberToEvent(String confirmed) async {
@@ -92,8 +92,8 @@ class _HomeState extends State<Home> {
                   fontSize: 20,
                   color: Colors.black87),
             ),
-            content: Text(
-                "Puedes encontrar el evento en la pantalla: Mis eventos."),
+            content:
+                Text("Puedes encontrar el evento en la pantalla: Mis eventos."),
             actions: [
               TextButton(
                   onPressed: () {
@@ -108,13 +108,10 @@ class _HomeState extends State<Home> {
         });
 
     EventService().get().then((value) => setState(() {
-      print("Here");
-      events = value;
-      currentEvent = events.first;
-
-    }));
-
-
+          print("Here");
+          events = value;
+          currentEvent = events.first;
+        }));
   }
 
   saveEvent() {
@@ -136,17 +133,19 @@ class _HomeState extends State<Home> {
   }
 
   buildMessageAddEvent() async {
-   _loadParticipants();
-    String myUserId = await MySharedPreferences.instance.getStringValue("userId");
+    _loadParticipants();
+    String myUserId =
+        await MySharedPreferences.instance.getStringValue("userId");
 
     bool userIsParticpant = false;
 
-if((participants.where((element) => element.id == myUserId).length) >0)
-  userIsParticpant = true;
+    if ((participants.where((element) => element.id == myUserId).length) > 0)
+      userIsParticpant = true;
 
-if((possiblyParticipants.where((element) => element.id == myUserId).length) >0)
-  userIsParticpant = true;
-
+    if ((possiblyParticipants
+            .where((element) => element.id == myUserId)
+            .length) >
+        0) userIsParticpant = true;
 
     if (userIsParticpant == true) {
       showDialog(
@@ -218,7 +217,6 @@ if((possiblyParticipants.where((element) => element.id == myUserId).length) >0)
                             addMemberToEvent("true");
 
                             Navigator.of(context).pop();
-
                           },
                           label: Text(
                             "Iré Seguro",
@@ -235,8 +233,7 @@ if((possiblyParticipants.where((element) => element.id == myUserId).length) >0)
                               color: Colors.orangeAccent),
                           onPressed: () {
                             addMemberToEvent("false");
-                           Navigator.of(context).pop();
-
+                            Navigator.of(context).pop();
                           },
                           label: Text(
                             "Quizás",

@@ -12,6 +12,8 @@ class MyEvents extends StatefulWidget {
 }
 
 class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
+  List<Event> futureEvents = [];
+  bool hasFutureEventsResponse = false;
   List<Event> eventHistory = [];
   bool hasResponse = false;
   List<Event> seeLater = [];
@@ -35,15 +37,22 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   Future _fetchEvents() async {
     final eventsService = EventService();
 
-    final results = await Future.wait(
-        [eventsService.getHistory(), eventsService.getSeeLaterEvents()]);
+    final results = await Future.wait([
+      eventsService.getFutureEvents(),
+      eventsService.getHistory(),
+      eventsService.getSeeLaterEvents()
+    ]);
 
     setState(() {
-      eventHistory = results[0];
+      futureEvents = results[0];
+      hasFutureEventsResponse = true;
+    });
+    setState(() {
+      eventHistory = results[1];
       hasResponse = true;
     });
     setState(() {
-      seeLater = results[1];
+      seeLater = results[2];
       seeLaterResponse = true;
     });
   }
@@ -101,7 +110,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : (hasResponse && eventHistory.length > 0)
+        : (eventHistory.length > 0)
             ? ListView.separated(
                 itemCount: eventHistory.length,
                 itemBuilder: (context, index) {
@@ -122,7 +131,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : (seeLaterResponse && seeLater.length > 0)
+        : (seeLater.length > 0)
             ? ListView.separated(
                 itemCount: seeLater.length,
                 itemBuilder: (context, index) {
@@ -139,8 +148,23 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   }
 
   Widget buildTabCurrent() {
-    return Center(
-      child: Text("No hay eventos próximos"),
-    );
+    return (!hasFutureEventsResponse)
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : (seeLater.length > 0)
+            ? ListView.separated(
+                itemCount: seeLater.length,
+                itemBuilder: (context, index) {
+                  return EventCard(seeLater[index]);
+                },
+                separatorBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Divider(),
+                ),
+              )
+            : Center(
+                child: Text("No estás inscrito en ningún evento próximo"),
+              );
   }
 }
