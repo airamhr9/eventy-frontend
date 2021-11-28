@@ -1,10 +1,14 @@
 import 'dart:isolate';
 import 'package:eventy_front/components/pages/my_events/create_survey.dart';
+import 'package:eventy_front/components/widgets/comment.dart';
 import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/components/widgets/border_button.dart';
+import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/services/chat_service.dart';
+import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
@@ -37,16 +41,21 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late String priceText;
   late String plazasText;
   late String plazasCounter;
+  List<Message> comments = [];
+  bool hasComments = false;
+  late User user;
+  bool hasUser = false;
 
   @override
   void initState() {
     super.initState();
-    MySharedPreferences.instance
-        .getStringValue("userId")
-        .then((value) => setState(() {
-              userId = value;
-              waitToCheck();
-            }));
+    MySharedPreferences.instance.getStringValue("userId").then((value) {
+      setState(() {
+        userId = value;
+      });
+      _fetch();
+      waitToCheck();
+    });
     priceText =
         (widget.event.price > 0) ? widget.event.price.toString() : "Gratis";
     date = DateFormat("dd/MM/yyyy HH:mm")
@@ -57,6 +66,23 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
+  }
+
+  _fetch() async {
+    final results = await Future.wait([
+      ChatService().getEventMessages(widget.event.id),
+      UserService().getUser(userId),
+    ]);
+
+    setState(() {
+      comments.addAll(results[0] as List<Message>);
+      comments = comments.reversed.toList();
+      hasComments = true;
+    });
+    setState(() {
+      user = results[1] as User;
+      hasUser = true;
+    });
   }
 
   @override
@@ -77,11 +103,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           decoration: BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black, width: .8))),
           padding: EdgeInsets.only(top: 5),
-          child: NestedScrollView(
-              headerSliverBuilder: (context, boolean) {
-                return [SliverToBoxAdapter(child: buildTop())];
-              },
-              body: Container()),
+          child: SingleChildScrollView(child: buildTop()),
         ),
       );
     else
@@ -213,6 +235,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           width: MediaQuery.of(context).size.width / 2 - 10,
                           child: Text(
                             widget.event.description,
+                            style: TextStyle(color: Colors.black54),
                           )),
                       Transform.rotate(
                         angle: -.2,
@@ -311,23 +334,107 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 30,
           ),
-          Container(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "Hablemos",
-                    style: TextStyle(
-                        fontFamily: 'Tiny', fontSize: 80, color: Colors.black),
-                  ),
-                )
+                Text(
+                  "Hablemos",
+                  style: TextStyle(
+                      fontFamily: 'Tiny', fontSize: 80, color: Colors.black),
+                ),
+                TextButton(
+                    child: Text(
+                      "Comentar",
+                      style: TextStyle(color: Colors.black54, fontSize: 20),
+                    ),
+                    onPressed: (hasUser)
+                        ? () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  TextEditingController commentController =
+                                      TextEditingController();
+                                  return AlertDialog(
+                                    title: Text("Comentar"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text(
+                                            "Cancelar",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            String messageText =
+                                                commentController.text.trim();
+                                            if (messageText.isNotEmpty) {
+                                              Message newMessage = Message(
+                                                  "",
+                                                  messageText,
+                                                  DateTime.now(),
+                                                  user.id,
+                                                  user.userName,
+                                                  user.profilePicture);
+                                              Navigator.pop(context);
+                                              setState(() {
+                                                comments.insert(0, newMessage);
+                                              });
+                                              Message messageToSend = Message(
+                                                  newMessage.id,
+                                                  newMessage.text,
+                                                  newMessage.dateTime,
+                                                  newMessage.userId,
+                                                  newMessage.userName,
+                                                  user.profilePictureName!);
+                                              ChatService().sendMessageEvent(
+                                                  messageToSend,
+                                                  widget.event.id);
+                                            }
+                                          },
+                                          child: Text(
+                                            "Comentar",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ))
+                                    ],
+                                    content: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5.0, vertical: 10),
+                                      child: TextField(
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        controller: commentController,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                                bottom: 25, left: 15),
+                                            fillColor: Colors.white70,
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                    width: 1)),
+                                            filled: true,
+                                            hintText: "Comentario"),
+                                      ),
+                                    ),
+                                  );
+                                });
+                          }
+                        : null)
               ],
             ),
           ),
-          ...["a", "b"].map((e) => Text(e)),
+          (!hasComments)
+              ? CircularProgressIndicator()
+              : Column(
+                  children: [...comments.map((e) => Comment(e))],
+                ),
           /*  Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
