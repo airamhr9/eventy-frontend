@@ -1,6 +1,7 @@
 import 'dart:isolate';
-import 'package:eventy_front/components/pages/my_events/create_poll.dart';
-import 'package:eventy_front/objects/poll.dart';
+import 'package:eventy_front/components/pages/my_events/create_survey.dart';
+import 'package:eventy_front/objects/survey.dart';
+import 'package:eventy_front/objects/user.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_event.dart';
@@ -11,6 +12,7 @@ import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:intl/intl.dart';
 
 class EventView extends StatefulWidget {
@@ -27,7 +29,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool waitComplete = false;
   late num score;
   late String userId;
-  List<Poll> surveysList = [];
+  List<Survey> surveysList = [];
+  String _visibilityValue = "option1";
 
   @override
   void initState() {
@@ -546,13 +549,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    //Polls son encuestas XD
-    if (surveysList.isNotEmpty && widget.event.participants.contains(userId)) {
+    if ((surveysList.isNotEmpty &&
+            widget.event.participants.contains(userId)) ||
+        widget.event.ownerId == userId) {
       return Container(
         child: Column(
           children: [
             Text("ENCUESTAS"),
             buildButtonAddSurvey(),
+            buildSurveyDataOrOptionsToVote(),
           ],
         ),
       );
@@ -568,7 +573,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             // Llamada a creacion de encuesta
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) {
-              return CreateSurvey(widget.event.id.toString());
+              return CreateSurvey();
             }));
           },
           child: Text("Añadir"));
@@ -577,11 +582,81 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildSurveyData() {
-    Column(
-      children: [
-        // ACABAR /////////////////
-      ],
-    );
+  buildSurveyDataOrOptionsToVote() {
+    bool userAlreadyVote = false;
+    int count = 0;
+    for (Survey survey in surveysList) {
+      for (List<String> userVoteList
+          in survey.options[count] <= survey.options.length) {
+        count++;
+        if (userVoteList.contains(userId)) {
+          userAlreadyVote = true;
+          break;
+        }
+        /*if (count == survey.options.length) { // Si ya no hay mas opciones
+          break;
+        }*/
+      }
+      if (userAlreadyVote == true) {
+        // Si el usuario ha votado alguna opcion
+        buildDataOption(survey);
+      } else {
+        // Si el usuario NO ha votado
+        buildOptions(survey);
+      }
+    }
+  }
+
+  buildDataOption(Survey survey) {
+    Text(survey.name);
+    for (List option in survey.options) {
+      Column(
+        children: [
+          Text(option[0].toString()),
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+                  color: Colors.orange,
+                  value: option[2],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    Text("Han votado " +
+        survey.numVotes.toString() +
+        "/" +
+        widget.event.participants.length.toString());
+  }
+
+  buildOptions(Survey survey) {
+    int count = 0;
+    Text(survey.name);
+    for (List option in survey.options) {
+      count++;
+      Column(
+        children: [
+          RadioButton(
+            description: option[0].toString(),
+            value: "option" + count.toString(),
+            groupValue: _visibilityValue,
+            onChanged: (value) {
+              setState(() {
+                _visibilityValue = value as String;
+              });
+            },
+          ),
+        ],
+      );
+    }
+    ElevatedButton(
+        onPressed: () {
+          // VOTACION DEL USUSARIO
+        },
+        child: Text("Votar"));
   }
 }

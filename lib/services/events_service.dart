@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/location_service.dart';
@@ -70,7 +71,7 @@ class EventService extends Service {
     }
     print(query);
     Uri url = Uri.http(this.url, '/search', query);
-    print("URL ${url}");
+    print("URL $url");
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
@@ -183,4 +184,41 @@ class EventService extends Service {
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;
   }
+
+  Future<bool> postSurvey(Survey survey, int eventId) async {
+    final query = { 'event': eventId };
+    Uri url = Uri.http(this.url, '/surveys', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final response = await http.post(url, headers: headers,
+        body: jsonEncode(survey.toJson()));
+    return response.statusCode == 200;
+  }
+
+  Future<bool> postSurveyVote(
+      int eventId, String surveyId, String option, String userId) async {
+    final query = {
+      'event': eventId,
+      'survey': surveyId,
+      'option': option,
+      'user': userId
+    };
+    Uri url = Uri.http(this.url, '/votes', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
+  }
+
+  Future<List<Survey>> getSurveys(int eventId, String userId) async {
+    final query = {
+      'event': eventId,
+      'user': userId
+    };
+    Uri url = Uri.http(this.url, '/surveys', query);
+    final localhostResponse = await http.get(url);
+    final data = await json.decode(localhostResponse.body);
+    final list = data as List;
+    List<Survey> surveys = list.map((survey) => Survey.fromJson(survey)).toList();
+    return surveys;
+  }
+
 }

@@ -1,14 +1,12 @@
 import 'package:eventy_front/objects/event.dart';
-import 'package:eventy_front/objects/poll.dart';
+import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateSurvey extends StatefulWidget {
-  final String eventId;
-
-  const CreateSurvey(this.eventId) : super();
+  const CreateSurvey() : super();
 
   @override
   _CreateSurveyState createState() => _CreateSurveyState();
@@ -215,11 +213,10 @@ class _CreateSurveyState extends State<CreateSurvey> {
 
   void createEvent(BuildContext context) async {
     if (_formKey.currentState!.validate() && validateFields(context)) {
-      String userId =
-          await MySharedPreferences.instance.getStringValue("userId");
-      final Poll poll = Poll(
-        -1,
+      final Survey survey = Survey(
+        '',
         _surveyNameController.text,
+        0,
         options,
         startDate.toIso8601String(),
         finishDate.toIso8601String(),

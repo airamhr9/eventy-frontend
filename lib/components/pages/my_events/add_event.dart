@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/components/pages/my_events/create_event.dart';
+import 'package:eventy_front/components/pages/my_events/create_survey.dart';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
@@ -496,6 +497,17 @@ class _AddEventState extends State<AddEvent> {
         )
       ],
     );
+  }
+
+  Widget buildButtonSurveyDate(BuildContext context) {
+    return ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return CreateSurvey();
+          }));
+        },
+        icon: Icon(Icons.calendar_today_rounded),
+        label: Text("Encuesta"));
   }
 
   bool validateFields(BuildContext context) {
