@@ -9,4 +9,9 @@ class GroupRequest {
   factory GroupRequest.fromJson(Map<String, dynamic> json) {
     return GroupRequest(User.fromJson(json["groupCreator"]), json["group"]);
   }
+
+  @override
+  String toString() {
+    return "Request from $groupId";
+  }
 }

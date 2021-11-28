@@ -11,4 +11,9 @@ class Group {
     return Group(json["id"], json["creator"],
         (json["users"] as List).map((e) => UserGroup.fromJson(e)).toList());
   }
+
+  @override
+  String toString() {
+    return "Group $id";
+  }
 }

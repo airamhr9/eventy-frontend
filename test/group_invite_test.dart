@@ -4,7 +4,7 @@ import 'package:eventy_front/services/group_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('A group should be created and user invited', () async {
+  test('Se crea un grupo y se envía la invitación', () async {
     GroupService groupService = GroupService();
     String user1 = "8qQpJyOmcCRAh9pZ4yFvntVu4oq2";
     String user2 = "Xamie8BQKCdD6mup0ew5KlQFBiI2";

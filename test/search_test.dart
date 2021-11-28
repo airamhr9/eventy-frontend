@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:eventy_front/components/pages/search/search_result.dart';
 import 'package:eventy_front/components/root.dart';
 import 'package:eventy_front/navigation/navigation.dart';
