@@ -204,7 +204,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Casa Luz Mª. Valencia"),
+                    Text(widget.event.address),
                     TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -871,7 +871,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         print("DENTRO DEL ELSE");
         return buildOptions(survey);
       }
-      print("WHAAATTTT");
     }
   }
 
