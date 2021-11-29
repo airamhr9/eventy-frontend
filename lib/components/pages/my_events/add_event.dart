@@ -3,6 +3,7 @@ import 'package:eventy_front/components/pages/my_events/create_event.dart';
 import 'package:eventy_front/components/pages/my_events/create_survey.dart';
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
@@ -37,6 +38,7 @@ class _AddEventState extends State<AddEvent> {
   late List scores;
   late double averageScore;
   ///////////////////
+  List<Survey> surveyList = [];
   String _visibilityValue = "Público";
   bool hasMaxAssistants = false;
 
@@ -499,7 +501,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget buildButtonSurveyDate(BuildContext context) {
+  /*Widget buildButtonSurveyDate(BuildContext context) {
     return ElevatedButton.icon(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -508,7 +510,7 @@ class _AddEventState extends State<AddEvent> {
         },
         icon: Icon(Icons.calendar_today_rounded),
         label: Text("Encuesta"));
-  }
+  }*/
 
   bool validateFields(BuildContext context) {
     if (imageFiles.isEmpty) {
@@ -548,25 +550,24 @@ class _AddEventState extends State<AddEvent> {
           ? 0
           : double.parse(_priceController.text);
       final Event event = Event(
-        -1,
-        _descriptionController.text,
-        startDate.toIso8601String(),
-        finishDate.toIso8601String(),
-        imageFiles.map((e) => basename(e.file.path)).toList(),
-        eventLocation!.latitude,
-        eventLocation!.longitude,
-        (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
-        [userId],
-        _eventNameController.text,
-        userId,
-        precio,
-        (_visibilityValue == "Público") ? false : true,
-        _summaryController.text,
-        tagsEvent,
-        ///////////////
-        scores = List.empty(growable: true), // userId, puntuación
-        averageScore = 0,
-      );
+          -1,
+          _descriptionController.text,
+          startDate.toIso8601String(),
+          finishDate.toIso8601String(),
+          imageFiles.map((e) => basename(e.file.path)).toList(),
+          eventLocation!.latitude,
+          eventLocation!.longitude,
+          (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
+          [userId],
+          _eventNameController.text,
+          userId,
+          precio,
+          (_visibilityValue == "Público") ? false : true,
+          _summaryController.text,
+          tagsEvent,
+          scores = List.empty(growable: true), // userId, puntuación
+          averageScore = 0,
+          );
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return CreateEvent(event, imageFiles);

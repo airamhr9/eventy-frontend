@@ -1,20 +1,22 @@
 class Survey {
   String id;
-  String name;
+  String question;
   int numVotes;
   List<dynamic> options;
+  bool userHasVoted;
   String startDate;
   String finishDate;
 
-  Survey(this.id, this.name, this.numVotes, this.options, this.startDate,
-      this.finishDate);
+  Survey(this.id, this.question, this.numVotes, this.options, this.userHasVoted,
+      this.startDate, this.finishDate);
 
   factory Survey.fromJson(Map<String, dynamic> json) {
     return Survey(
       json['id'],
-      json['name'],
+      json['question'],
       json['numVotes'],
       (json['options'] as List).cast<dynamic>(),
+      json['userHasVoted'],
       json['startDate'],
       json['finishDate'],
     );
@@ -22,9 +24,10 @@ class Survey {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'name': name,
+        'question': question,
         'numVotes': numVotes,
         'options': options,
+        'userHasVoted': userHasVoted,
         'startDate': startDate,
         'finishDate': finishDate,
       };

@@ -223,7 +223,7 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<List<Survey>> getSurveys(int eventId) async {
+  Future<List<Survey>> getSurveys(String eventId) async {
     final query = {
       'event': eventId,
       'user': await MySharedPreferences.instance.getStringValue("userId")

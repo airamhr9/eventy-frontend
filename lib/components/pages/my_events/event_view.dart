@@ -67,6 +67,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
+    EventService()
+        .getSurveys(widget.event.id.toString())
+        .then((value) => setState(() {
+              surveysList = value;
+            }));
   }
 
   _fetch() async {
@@ -215,6 +220,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                         ))
                   ],
                 ),
+                buildSurveys(),
                 SizedBox(
                   height: 20,
                 ),
@@ -820,6 +826,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
+    print("LISTA DE ENCUESTAS:");
+    print(surveysList.length);
     if ((surveysList.isNotEmpty &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
@@ -854,43 +862,33 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveyDataOrOptionsToVote() {
-    bool userAlreadyVote = false;
-    int count = 0;
     for (Survey survey in surveysList) {
-      for (List<String> userVoteList
-          in survey.options[count] <= survey.options.length) {
-        count++;
-        if (userVoteList.contains(userId)) {
-          userAlreadyVote = true;
-          break;
-        }
-        /*if (count == survey.options.length) { // Si ya no hay mas opciones
-          break;
-        }*/
-      }
-      if (userAlreadyVote == true) {
-        // Si el usuario ha votado alguna opcion
-        buildDataOption(survey);
+      print("DENTRO DEL FOR");
+      if (survey.userHasVoted == true) {
+        print("DENTRO DEL IF");
+        return buildDataOption(survey);
       } else {
-        // Si el usuario NO ha votado
-        buildOptions(survey);
+        print("DENTRO DEL ELSE");
+        return buildOptions(survey);
       }
+      print("WHAAATTTT");
     }
   }
 
   buildDataOption(Survey survey) {
-    Text(survey.name);
-    for (List option in survey.options) {
-      Column(
+    Text(survey.question);
+    for (Map<String, dynamic> option in survey.options) {
+      num percentage = option['percentage'];
+      return Column(
         children: [
-          Text(option[0].toString()),
+          Text(option['text'].toString()),
           Row(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: LinearProgressIndicator(
                   color: Colors.orange,
-                  value: option[2],
+                  value: percentage.toDouble(),
                 ),
               ),
             ],
@@ -906,13 +904,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   buildOptions(Survey survey) {
     int count = 0;
-    Text(survey.name);
-    for (List option in survey.options) {
+    Text(survey.question);
+    print("OPCIONES:");
+    print(survey.options);
+    for (Map<String, dynamic> option in survey.options) {
       count++;
       Column(
         children: [
           RadioButton(
-            description: option[0].toString(),
+            description: option['text'].toString(),
             value: "option" + count.toString(),
             groupValue: _visibilityValue,
             onChanged: (value) {

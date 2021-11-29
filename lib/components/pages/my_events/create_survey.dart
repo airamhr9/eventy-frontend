@@ -1,6 +1,7 @@
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
   DateTime startDate = DateTime.now().add(Duration(days: 1));
   DateTime finishDate = DateTime.now().add(Duration(days: 2));
   List<String> options = [];
+  late Survey survey;
 
   @override
   void initState() {
@@ -127,7 +129,15 @@ class _CreateSurveyState extends State<CreateSurvey> {
                           separatorBuilder: (context, index) {
                             return Divider();
                           },
-                          itemCount: options.length)
+                          itemCount: options.length),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            createSurvey(context);
+                          },
+                          child: Text("Crear encuesta"))
                     ],
                   ))))),
     );
@@ -211,20 +221,17 @@ class _CreateSurveyState extends State<CreateSurvey> {
     return true;
   }
 
-  void createEvent(BuildContext context) async {
+  void createSurvey(BuildContext context) async {
     if (_formKey.currentState!.validate() && validateFields(context)) {
-      final Survey survey = Survey(
+      survey = Survey(
         '',
         _surveyNameController.text,
         0,
         options,
+        false,
         startDate.toIso8601String(),
         finishDate.toIso8601String(),
       );
-
-      /*Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return CreateEvent(event, imageFiles);
-      }));*/
     }
   }
 }
