@@ -6,6 +6,7 @@ class Event {
   List<String> images;
   double latitude; //Solo String temporalmente
   double longitude; //Solo String temporalmente
+  String address;
   int maxParticipants;
   List<String> participants;
   String name;
@@ -18,51 +19,51 @@ class Event {
   num averageScore;
 
   Event(
-    this.id,
-    this.description,
-    this.startDate,
-    this.finishDate,
-    this.images,
-    this.latitude,
-    this.longitude,
-    this.maxParticipants,
-    this.participants,
-    this.name,
-    this.ownerId,
-    this.price,
-    this.private,
-    this.summary,
-    this.tags,
-    this.scores,
-    this.averageScore,
-  );
+      this.id,
+      this.description,
+      this.startDate,
+      this.finishDate,
+      this.images,
+      this.latitude,
+      this.longitude,
+      this.address,
+      this.maxParticipants,
+      this.participants,
+      this.name,
+      this.ownerId,
+      this.price,
+      this.private,
+      this.summary,
+      this.tags,
+      this.scores,
+      this.averageScore);
 
   factory Event.fromJson(Map<String, dynamic> json) {
     print("TYPE:" + json['scores'].runtimeType.toString());
     print("SCORES" + json['scores'].toString());
     return Event(
-      json['id'],
-      json['description'],
-      json['startDate'],
-      json['finishDate'],
-      (json['images'] as List).cast<String>(),
-      json['latitude'],
-      json['longitude'],
-      json['maxParticipants'],
-      (json['participants'] != null)
-          ? (json['participants'] as List).cast<String>()
-          : [],
-      json['name'],
-      json['owner'],
-      json['price'].toDouble(),
-      json['private'],
-      json['summary'],
-      (json['tags'] as List).cast<String>(),
-      (json['scores'] != null) ? json['scores'] as List<dynamic> : [],
-      (json['averageScore'] != null)
-          ? double.parse(json['averageScore'].toString())
-          : -1,
-    );
+        json['id'],
+        json['description'],
+        json['startDate'],
+        json['finishDate'],
+        (json['images'] as List).cast<String>(),
+        json['latitude'],
+        json['longitude'],
+        json['address'],
+        json['maxParticipants'],
+        (json['participants'] != null)
+            ? (json['participants'] as List).cast<String>()
+            : [],
+        json['name'],
+        json['owner'],
+        json['price'].toDouble(),
+        json['private'],
+        json['summary'],
+        (json['tags'] as List).cast<String>(),
+        (json['scores'] != null) ? json['scores'] as List<dynamic> : [],
+        (json['averageScore'] != null)
+            ? double.parse(json['averageScore'].toString())
+            : -1);
   }
 
   Map toJson() {
@@ -74,6 +75,7 @@ class Event {
       'images': this.images,
       'latitude': this.latitude,
       'longitude': this.longitude,
+      'address': this.address,
       'maxParticipants': this.maxParticipants,
       'participants': this.participants,
       'name': this.name,
@@ -83,7 +85,7 @@ class Event {
       'summary': this.summary,
       'tags': this.tags,
       'scores': this.scores,
-      'averageSocre': this.averageScore,
+      'averageSocre': this.averageScore
     };
     return result;
   }

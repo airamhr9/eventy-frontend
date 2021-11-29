@@ -557,6 +557,7 @@ class _AddEventState extends State<AddEvent> {
           imageFiles.map((e) => basename(e.file.path)).toList(),
           eventLocation!.latitude,
           eventLocation!.longitude,
+          _addressController.text,
           (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
           [userId],
           _eventNameController.text,
