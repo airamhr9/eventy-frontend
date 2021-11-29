@@ -8,7 +8,7 @@ class FilledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: () => this.onPressed,
+        onPressed: () => this.onPressed(),
         child: Text(this.text),
         style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 35, vertical: 15),

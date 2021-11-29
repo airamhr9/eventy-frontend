@@ -43,8 +43,7 @@ class _RootState extends State<Root> {
       appBar: AppBar(
         key: ValueKey("appbar"),
         title: Text(
-          title,
-          //style: TextStyle(color: Colors.black87),
+          "OnPoint",
         ),
         elevation: 0,
         actions: (currentSelectedIndex == EventsNavigation.NAV_HOME)
@@ -53,23 +52,19 @@ class _RootState extends State<Root> {
                     onPressed: () {
                       (body as Home).homeState.saveEvent();
                     },
-                    icon: Icon(Icons.bookmark_add_rounded))
+                    icon: Icon(Icons.bookmark_add))
               ]
             : [],
         //backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        backgroundColor: Color(0xFFFAFAFA),
+        foregroundColor: Colors.black,
       ),
       body: Container(
-          color: Theme.of(context).primaryColor,
-          child: Material(
-              elevation: 0,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-              color: Color(0xFFFAFAFA),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: body,
-              ))),
+          decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.black, width: 1))),
+          padding: EdgeInsets.only(top: 5),
+          child: body),
       drawer: CustomBottomDrawer(),
       drawerEnableOpenDragGesture: false,
       bottomNavigationBar: BottomAppBar(

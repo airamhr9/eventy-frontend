@@ -1,6 +1,7 @@
 import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/components/pages/login/login.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
+import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
@@ -37,15 +38,35 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return events.length > 0
-        ? TikTokStyleFullPageScroller(
-            contentSize: events.length,
-            swipePositionThreshold: 0.1,
-            swipeVelocityThreshold: 500,
-            animationDuration: const Duration(milliseconds: 200),
-            builder: (BuildContext context, int index) {
-              return RecommendedEvent(events[index]);
-            },
-            onScrollEvent: _handleCallbackEvent,
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  height: 40,
+                ),
+                SizedBox(
+                  height: 55,
+                  child: MovingTitle("Eventos para ti"),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: TikTokStyleFullPageScroller(
+                    contentSize: events.length,
+                    swipePositionThreshold: 0.1,
+                    swipeVelocityThreshold: 500,
+                    animationDuration: const Duration(milliseconds: 200),
+                    builder: (BuildContext context, int index) {
+                      return RecommendedEvent(events[index]);
+                    },
+                    onScrollEvent: _handleCallbackEvent,
+                  ),
+                ),
+              ],
+            ),
           )
         : Center(
             child: CircularProgressIndicator(),

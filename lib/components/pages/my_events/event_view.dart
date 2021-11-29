@@ -56,8 +56,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       _fetch();
       waitToCheck();
     });
-    priceText =
-        (widget.event.price > 0) ? widget.event.price.toString() : "Gratis";
+    priceText = (widget.event.price > 0)
+        ? widget.event.price.toString() + "\$"
+        : "Gratis";
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
     plazasText = (widget.event.maxParticipants != -1)
@@ -101,7 +102,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ),
         body: Container(
           decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.black, width: .8))),
+              border: Border(top: BorderSide(color: Colors.black, width: 1))),
           padding: EdgeInsets.only(top: 5),
           child: SingleChildScrollView(child: buildTop()),
         ),
@@ -149,39 +150,38 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             height: 55,
             child: MovingTitle(widget.event.name),
           ),
+          SizedBox(
+            height: 20,
+          ),
+          FilledButton(text: "Unirse", onPressed: () => showEventDialog()),
+          SizedBox(
+            height: 30,
+          ),
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 230.0,
+              viewportFraction: 1,
+              enableInfiniteScroll: false,
+            ),
+            items: widget.event.images.map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: ClipRRect(
+                        child: Image.network(
+                          i,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ));
+                },
+              );
+            }).toList(),
+          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                SizedBox(
-                  height: 20,
-                ),
-                FilledButton(text: "Unirse", onPressed: showEventDialog),
-                SizedBox(
-                  height: 30,
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 200.0,
-                    viewportFraction: 1,
-                    enableInfiniteScroll: false,
-                  ),
-                  items: widget.event.images.map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                i,
-                                fit: BoxFit.fill,
-                              ),
-                            ));
-                      },
-                    );
-                  }).toList(),
-                ),
                 SizedBox(
                   height: 30,
                 ),
@@ -252,7 +252,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                               date.substring(0, 10),
                               style: TextStyle(
                                   fontFamily: 'Tiny',
-                                  fontSize: 45,
+                                  fontSize: 20,
                                   color: Colors.black),
                             ),
                             Divider(
@@ -263,7 +263,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                               date.substring(10, date.length),
                               style: TextStyle(
                                   fontFamily: 'Tiny',
-                                  fontSize: 45,
+                                  fontSize: 20,
                                   color: Colors.black),
                             ),
                           ],
@@ -291,7 +291,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                       priceText,
                       style: TextStyle(
                           fontFamily: 'Tiny',
-                          fontSize: 80,
+                          fontSize: 35,
                           color: Colors.black),
                     ),
                     BorderButton(
@@ -343,7 +343,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 Text(
                   "Hablemos",
                   style: TextStyle(
-                      fontFamily: 'Tiny', fontSize: 80, color: Colors.black),
+                      fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
                 ),
                 TextButton(
                     child: Text(
@@ -611,7 +611,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   }
                 });
               },
-              icon: Icon(Icons.bookmark_add_rounded))
+              icon: Icon(Icons.bookmark_add))
         ],
       );
     } else {
@@ -627,28 +627,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               }
             });
           },
-          icon: Icon(Icons.bookmark_add_rounded));
-    }
-  }
-
-  buildFlotaingButton() {
-    if (isMember == true) {
-      return FloatingActionButton.extended(
-        icon: Icon(Icons.chat_rounded),
-        label: Text("Chat"),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChatEvent(widget.event)));
-        },
-      );
-    } else {
-      return FloatingActionButton.extended(
-        icon: Icon(Icons.person_add),
-        label: Text("Unirse"),
-        onPressed: () {
-          showEventDialog();
-        },
-      );
+          icon: Icon(Icons.bookmark_add));
     }
   }
 
@@ -664,7 +643,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   margin: const EdgeInsets.all(10.0),
                   alignment: Alignment.topLeft,
                   width: 150,
-                  height: 249,
+                  height: 255,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -702,8 +681,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                         endIndent: 1,
                       ),
                       TextButton.icon(
-                          icon: Icon(Icons.av_timer_rounded,
-                              color: Colors.orangeAccent),
+                          icon:
+                              Icon(Icons.av_timer, color: Colors.orangeAccent),
                           onPressed: () {
                             addMemberToEvent("false");
                             Navigator.of(context).pop();
@@ -719,8 +698,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                         endIndent: 1,
                       ),
                       TextButton.icon(
-                          icon: Icon(Icons.cancel_rounded,
-                              color: Colors.redAccent),
+                          icon: Icon(Icons.cancel, color: Colors.redAccent),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

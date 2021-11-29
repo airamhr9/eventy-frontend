@@ -62,7 +62,7 @@ flutter:
   fonts:
     - family: Tiny
       fonts:
-        - asset: fonts/dotty.ttf
+        - asset: fonts/TTFirsNeue-Regular.ttf
     - family: FirsNeue
       fonts:
         - asset: fonts/TTFirsNeue-Regular.ttf
