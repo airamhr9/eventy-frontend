@@ -29,7 +29,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'FirsNeue'),
+      theme: ThemeData(fontFamily: 'FirsNeue', primaryColor: Colors.black),
       title: 'Flutter Demo',
       home: (isLoggedIn)
           ? Root(selectedPage: EventsNavigation.NAV_HOME)

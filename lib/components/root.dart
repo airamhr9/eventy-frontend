@@ -1,3 +1,4 @@
+import 'package:custom_line_indicator_bottom_navbar/custom_line_indicator_bottom_navbar.dart';
 import 'package:eventy_front/components/pages/communities/add_communities.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
 import 'package:eventy_front/components/pages/login/login.dart';
@@ -63,9 +64,29 @@ class _RootState extends State<Root> {
       body: Container(
           decoration: BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black, width: 1))),
-          padding: EdgeInsets.only(top: 5),
           child: body),
-      drawer: CustomBottomDrawer(),
+      bottomNavigationBar: CustomLineIndicatorBottomNavbar(
+        unselectedFontSize: 0,
+        selectedFontSize: 0,
+        enableLineIndicator: true,
+        customBottomBarItems: [
+          CustomBottomBarItems(icon: Icons.home, label: ""),
+          CustomBottomBarItems(icon: Icons.search, label: ""),
+          CustomBottomBarItems(icon: Icons.dashboard, label: ""),
+          CustomBottomBarItems(icon: Icons.add_box, label: "")
+        ],
+        selectedColor: Colors.black,
+        unSelectedColor: Colors.black38,
+        currentIndex: currentSelectedIndex,
+        onTap: (index) {
+          setState(() {
+            currentSelectedIndex = index;
+            body = EventsNavigation.getNavItem(index);
+            title = EventsNavigation.titles[index];
+          });
+        },
+      ),
+      /*  drawer: CustomBottomDrawer(),
       drawerEnableOpenDragGesture: false,
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -95,7 +116,7 @@ class _RootState extends State<Root> {
             RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
       ),
       floatingActionButton: getCurrentFab(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked, */
     );
   }
 

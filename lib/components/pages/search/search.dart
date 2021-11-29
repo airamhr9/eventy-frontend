@@ -1,6 +1,7 @@
 import 'package:eventy_front/components/pages/my_events/map_view.dart';
 import 'package:eventy_front/components/pages/search/community_search_result.dart';
 import 'package:eventy_front/components/pages/search/search_result.dart';
+import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/services/communities_service.dart';
@@ -93,10 +94,9 @@ class _SearchState extends State<Search> {
       }
     } else {
       return Center(
-        child: Text(
-          searchHint,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
+        child: FilledButton(
+          text: searchHint,
+          onPressed: () => openBottomDrawer(),
         ),
       );
     }
@@ -105,10 +105,6 @@ class _SearchState extends State<Search> {
   void openBottomDrawer() {
     showModalBottomSheet(
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-        ),
         context: context,
         builder: (context) {
           return StatefulBuilder(
@@ -134,13 +130,15 @@ class _SearchState extends State<Search> {
                               setState(() {
                                 searching = false;
                                 searchEvents = !searchEvents;
+                                advancedFilters = false;
                                 if (!searchEvents)
                                   searchHint = "Busca comunidades";
+                                else
+                                  searchHint = "Busca eventos";
                               });
                             },
-                            borderRadius: BorderRadius.circular(15),
                             selectedColor: Colors.white,
-                            fillColor: Theme.of(context).primaryColor,
+                            fillColor: Colors.black,
                           ),
                         ]),
                     SizedBox(
@@ -152,9 +150,9 @@ class _SearchState extends State<Search> {
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search_rounded),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        filled: true,
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1)),
                         hintText: "Concierto, quedada...",
                       ),
                       onChanged: (text) {
@@ -189,22 +187,33 @@ class _SearchState extends State<Search> {
                                       spacing: 5,
                                       runSpacing: 3,
                                       children: [
-                                        ...tagList.map((tag) => FilterChip(
-                                              label: Text(tag),
-                                              selected:
-                                                  filterTags.contains(tag),
-                                              selectedColor:
-                                                  Colors.lightBlue[100],
-                                              onSelected: (bool selected) {
-                                                setModalState(() {
-                                                  if (selected) {
-                                                    filterTags.add(tag);
-                                                  } else {
-                                                    filterTags.remove(tag);
-                                                  }
-                                                });
-                                              },
-                                            ))
+                                        ...tagList.map((tag) {
+                                          bool selected =
+                                              filterTags.contains(tag);
+                                          return FilterChip(
+                                            label: Text(tag),
+                                            selected: selected,
+                                            side: BorderSide(
+                                                color: Colors.black, width: 1),
+                                            backgroundColor: Colors.transparent,
+                                            labelStyle: (selected)
+                                                ? TextStyle(color: Colors.white)
+                                                : TextStyle(),
+                                            checkmarkColor: (selected)
+                                                ? Colors.white
+                                                : Colors.black,
+                                            selectedColor: Colors.black,
+                                            onSelected: (bool selected) {
+                                              setModalState(() {
+                                                if (selected) {
+                                                  filterTags.add(tag);
+                                                } else {
+                                                  filterTags.remove(tag);
+                                                }
+                                              });
+                                            },
+                                          );
+                                        })
                                       ],
                                     ));
                                   } else
@@ -218,7 +227,10 @@ class _SearchState extends State<Search> {
                                         advancedFilters = !advancedFilters;
                                       });
                                     },
-                                    child: Text("Filtros avanzados"))
+                                    child: Text(
+                                      "Filtros avanzados",
+                                      style: TextStyle(color: Colors.black),
+                                    ))
                                 : SizedBox(
                                     height: 15,
                                   ),
@@ -230,6 +242,7 @@ class _SearchState extends State<Search> {
                                   CheckboxListTile(
                                       title: Text("Día único"),
                                       value: uniqueDay,
+                                      activeColor: Colors.black,
                                       onChanged: (value) {
                                         setModalState(() {
                                           uniqueDay = value!;
@@ -332,6 +345,7 @@ class _SearchState extends State<Search> {
                                         style: TextStyle(color: Colors.black54),
                                       ),
                                       Checkbox(
+                                          activeColor: Colors.black,
                                           value: _priceRange,
                                           onChanged: (value) {
                                             setModalState(() {
@@ -341,6 +355,7 @@ class _SearchState extends State<Search> {
                                     ],
                                   ),
                                   RangeSlider(
+                                      activeColor: Colors.black,
                                       values: _priceRangeValues,
                                       min: 0,
                                       max: 100,
@@ -370,6 +385,8 @@ class _SearchState extends State<Search> {
                                     minimumSize: Size(double.infinity,
                                         40), // double.infinity is the width and 30 is the height
                                     elevation: 0,
+                                    primary: Colors.black,
+                                    onPrimary: Colors.white,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(15))),
@@ -467,7 +484,7 @@ class _SearchState extends State<Search> {
             TextButton(
               child: Text(
                 "Cambiar",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               onPressed: () {
                 showPlacePicker(context, setModalState);

@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  custom_line_indicator_bottom_navbar:
+    dependency: "direct main"
+    description:
+      name: custom_line_indicator_bottom_navbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   dart_style:
     dependency: transitive
     description:

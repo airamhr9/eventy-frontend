@@ -1,10 +1,12 @@
 import 'package:eventy_front/components/pages/friends/friends.dart';
 import 'package:eventy_front/components/pages/friends/groups.dart';
+import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/services/tags_service.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Profile extends StatefulWidget {
   const Profile() : super();
@@ -56,91 +58,128 @@ class _ProfileState extends State<Profile> {
   Container buildProfile() {
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             width: double.infinity,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(user.profilePicture),
-                    radius: 80,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    user.userName,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 20,
+                  right: -40,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black,
+                    radius: 132,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.profilePicture),
+                      backgroundColor: Colors.black,
+                      radius: 130,
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      user.bio,
-                      style: TextStyle(color: Colors.black54),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 50),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          user.userName,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          child: Text(
+                            user.bio,
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Friends(userId)));
+                            },
+                            icon: Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            label: Text(
+                              "Mis amigos",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                        TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Groups(userId)));
+                            },
+                            icon: Icon(
+                              Icons.group,
+                              color: Colors.black,
+                            ),
+                            label: Text("Mis Grupos",
+                                style: TextStyle(color: Colors.black))),
+                        TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          ProfileEdit()));
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            label: Text("Editar perfil",
+                                style: TextStyle(color: Colors.black))),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            child: Wrap(
+                          spacing: 5,
+                          runSpacing: 3,
+                          children: [
+                            ...tags.map((tag) => FilterChip(
+                                label: Text(tag),
+                                onSelected: (bool selected) {},
+                                side: BorderSide(color: Colors.black, width: 1),
+                                backgroundColor: Colors.transparent,
+                                labelStyle: TextStyle(color: Colors.black)))
+                          ],
+                        )),
 
-                  /* TextButton.icon(onPressed:
-                (){}, icon:  Icon(
-                    Icons.edit_rounded
-                ), label: Text(
-                    "Editar"
-                    
-                )),*/
-                ]),
+                        /* TextButton.icon(onPressed:
+                      (){}, icon:  Icon(
+                          Icons.edit_rounded
+                      ), label: Text(
+                          "Editar"
+                          
+                      )),*/
+                      ]),
+                ),
+              ],
+            ),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Mis preferencias",
-            style: TextStyle(color: Colors.black54),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-              child: Wrap(
-            spacing: 5,
-            runSpacing: 3,
-            children: [
-              ...tags.map((tag) => FilterChip(
-                    label: Text(tag),
-                    onSelected: (bool selected) {},
-                  ))
-            ],
-          )),
-          TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Friends(userId)));
-              },
-              icon: Icon(Icons.person_rounded),
-              label: Text("Mis amigos")),
-          TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Groups(userId)));
-              },
-              icon: Icon(Icons.group_rounded),
-              label: Text("Mis Grupos")),
+
           /*Wrap(
           children: List<Widget>.generate(
             options.length,
