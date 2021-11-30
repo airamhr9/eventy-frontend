@@ -59,32 +59,29 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-        headerSliverBuilder: (context, boolean) {
-          return [
-            SliverToBoxAdapter(
-              child: TabBar(
-                indicator: MaterialIndicator(
-                  color: Theme.of(context).primaryColor,
-                  horizontalPadding: 40,
-                  topLeftRadius: 20,
-                  topRightRadius: 20,
-                  paintingStyle: PaintingStyle.fill,
-                ),
-                labelColor: Colors.black87,
-                controller: _tabController,
-                isScrollable: false,
-                tabs: myTabs,
-              ),
-            ),
-          ];
-        },
-        body: Container(
-            child: TabBarView(controller: _tabController, children: [
+    return Column(children: [
+      SizedBox(height: 10),
+      TabBar(
+        indicator: MaterialIndicator(
+          color: Theme.of(context).primaryColor,
+          horizontalPadding: 40,
+          topLeftRadius: 20,
+          topRightRadius: 20,
+          paintingStyle: PaintingStyle.fill,
+        ),
+        labelColor: Colors.black87,
+        controller: _tabController,
+        isScrollable: false,
+        tabs: myTabs,
+      ),
+      Expanded(
+        child: TabBarView(controller: _tabController, children: [
           buildTabCurrent(),
           buildTabHistory(),
           buildTabSeeLater()
-        ])));
+        ]),
+      )
+    ]);
 /*     return (!hasResponse)
         ? Center(
             child: CircularProgressIndicator(),
@@ -116,9 +113,9 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   return EventCard(eventHistory[index]);
                 },
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Divider(),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                  thickness: 1,
                 ),
               )
             : Center(
@@ -137,9 +134,9 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   return EventCard(seeLater[index]);
                 },
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Divider(),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                  thickness: 1,
                 ),
               )
             : Center(
@@ -158,9 +155,9 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   return EventCard(futureEvents[index]);
                 },
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Divider(),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                  thickness: 1,
                 ),
               )
             : Center(
