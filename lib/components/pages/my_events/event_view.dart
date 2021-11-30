@@ -45,6 +45,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool hasComments = false;
   late User user;
   bool hasUser = false;
+  String optionVoted = "";
 
   @override
   void initState() {
@@ -830,7 +831,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
       return Container(
-        alignment: Alignment.centerLeft,
         child: Column(
           children: [
             Text(
@@ -890,14 +890,17 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               num percentage = option['percentage'];
               return Column(
                 children: [
-                  Text(option['text'].toString() +
-                      " " +
-                      percentage.toDouble().toString()),
+                  Text(option['text'].toString()),
                   Row(
                     children: [
-                      LinearProgressIndicator(
-                        color: Colors.orange,
-                        value: percentage.toDouble(),
+                      Container(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        height: 10,
+                        width: 300,
+                        child: LinearProgressIndicator(
+                          color: Colors.orange,
+                          value: percentage / 100,
+                        ),
                       ),
                       Text(percentage.toString())
                     ],
@@ -916,7 +919,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildOptions(Survey survey) {
-    String optionVoted = "";
     int count = 0;
     return Column(
       children: [
@@ -933,7 +935,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   setState(() {
                     _visibilityValue = value as String;
                     optionVoted = option['text'].toString();
-                    print("Opcion elegida: " + optionVoted);
                   });
                 },
               );
