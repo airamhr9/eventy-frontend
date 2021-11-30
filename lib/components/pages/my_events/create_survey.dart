@@ -36,7 +36,6 @@ class _CreateSurveyState extends State<CreateSurvey> {
       body: (SingleChildScrollView(
           child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(color: Colors.white),
               child: Form(
                   key: _formKey,
                   child: Column(

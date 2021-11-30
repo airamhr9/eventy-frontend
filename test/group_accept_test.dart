@@ -15,14 +15,10 @@ void main() {
     String newGroupId = await GroupService().createGroup(user1, [user2]);
     debugPrint(newGroupId);
 
-
-    //List<GroupRequest> userRequests = await groupService.getRequests(user2);
     Map<String, dynamic> filters = {};
     filters["userId"] = user2;
     filters["validPreferences"] = false;
     bool accepted = await groupService.updateUser(newGroupId, filters, userId: user2);
-
-
 
     List<Group> userGroups = await groupService.getGroups(user2);
 
@@ -33,3 +29,4 @@ void main() {
 
   });
 }
+

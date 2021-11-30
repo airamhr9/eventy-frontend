@@ -45,6 +45,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool hasComments = false;
   late User user;
   bool hasUser = false;
+  String optionVoted = "";
 
   @override
   void initState() {
@@ -435,7 +436,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ),
-          buildSurveys(),
           (!hasComments)
               ? CircularProgressIndicator()
               : Column(
@@ -485,6 +485,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ), */
+          buildSurveys(),
         ],
       ),
     );
@@ -832,7 +833,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       return Container(
         child: Column(
           children: [
-            Text("ENCUESTAS"),
+            Text(
+              "Encuestas",
+              style: TextStyle(
+                  fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+            ),
             buildButtonAddSurvey(),
             buildSurveyDataOrOptionsToVote(),
           ],
@@ -885,15 +890,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               num percentage = option['percentage'];
               return Column(
                 children: [
-                  Text(option['text'].toString() +
-                      " " +
-                      percentage.toDouble().toString()),
+                  Text(option['text'].toString()),
                   Row(
                     children: [
-                      LinearProgressIndicator(
+                      Container(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        height: 10,
+                        width: 300,
+                        child: LinearProgressIndicator(
                           color: Colors.orange,
-                          value: percentage.toDouble(),
+                          value: percentage / 100,
                         ),
+                      ),
                       Text(percentage.toString())
                     ],
                   ),
@@ -911,7 +919,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildOptions(Survey survey) {
-    String optionVoted = "";
     int count = 0;
     return Column(
       children: [
@@ -928,7 +935,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   setState(() {
                     _visibilityValue = value as String;
                     optionVoted = option['text'].toString();
-                    print("Opcion elegida: " + optionVoted);
                   });
                 },
               );
@@ -938,8 +944,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ElevatedButton(
             onPressed: () {
               EventService()
-                  .postSurveyVote(widget.event.id.toString(),
-                      survey.id.toString(), optionVoted)
+                  .postSurveyVote(
+                      widget.event.id.toString(), survey.id, optionVoted)
                   .then((value) => setState(() {}));
             },
             child: Text("Votar"))
