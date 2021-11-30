@@ -137,7 +137,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                 height: 10,
               ),
               Stack(
-                alignment: AlignmentDirectional.centerStart,
+                alignment: AlignmentDirectional.centerEnd,
                 children: [
                   Divider(
                     color: Colors.black,
@@ -171,7 +171,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
           ),
         ),
         Container(
-          alignment: AlignmentDirectional.centerEnd,
+          alignment: AlignmentDirectional.centerStart,
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
           child: Icon(Icons.arrow_downward),
         )
