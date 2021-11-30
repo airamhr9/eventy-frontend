@@ -1,5 +1,5 @@
 import 'dart:isolate';
-import 'package:eventy_front/components/pages/my_events/create_survey.dart';
+import 'package:eventy_front/components/pages/my_events/add_survey.dart';
 import 'package:eventy_front/components/widgets/comment.dart';
 import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
@@ -37,7 +37,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   late num score;
   late String userId;
   List<Survey> surveysList = [];
-  String _visibilityValue = "option1";
+  String _visibilityValue = "option0";
   late String priceText;
   late String plazasText;
   late String plazasCounter;
@@ -45,7 +45,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool hasComments = false;
   late User user;
   bool hasUser = false;
+
   String optionVoted = "";
+  bool reloadSurveys = false;
 
   @override
   void initState() {
@@ -827,11 +829,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    if ((surveysList.length != 0 &&
+    if ((surveysList.isNotEmpty &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
       return Container(
+        //alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Encuestas",
@@ -850,15 +855,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   buildButtonAddSurvey() {
     if (widget.event.ownerId == userId) {
-      return ElevatedButton(
-          onPressed: () {
-            // Llamada a creacion de encuesta
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CreateSurvey()));
-          },
-          child: Text("Añadir"));
+      return Container(
+          padding: const EdgeInsets.all(10.0),
+          alignment: Alignment.center,
+          child: FilledButton(
+              text: "Añadir",
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddSurvey(widget.event.id)))));
     } else {
-      return SizedBox(height: 1);
+      return SizedBox(height: 10);
     }
   }
 
@@ -876,34 +881,49 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ],
       );
     } else {
-      return SizedBox(height: 0);
+      return SizedBox(height: 15);
     }
   }
 
   Widget buildDataOption(Survey survey) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(survey.question),
+        Text(
+          survey.question,
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(
+          height: 10,
+        ),
         Column(
           children: [
             ...survey.options.map((option) {
               num percentage = option['percentage'];
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(option['text'].toString()),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        height: 10,
-                        width: 300,
+                        //padding: const EdgeInsets.all(10.0),
+                        height: 15,
+                        width: 320,
                         child: LinearProgressIndicator(
                           color: Colors.orange,
                           value: percentage / 100,
                         ),
                       ),
-                      Text(percentage.toString())
+                      Spacer(),
+                      Text(percentage.toString() + "%")
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                 ],
               );
@@ -921,8 +941,12 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   Widget buildOptions(Survey survey) {
     int count = 0;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(survey.question),
+        Text(survey.question, style: TextStyle(fontSize: 16)),
+        SizedBox(
+          height: 5,
+        ),
         Column(
           children: [
             ...survey.options.map((option) {
@@ -941,14 +965,29 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             }),
           ],
         ),
-        ElevatedButton(
-            onPressed: () {
-              EventService()
-                  .postSurveyVote(
-                      widget.event.id.toString(), survey.id, optionVoted)
-                  .then((value) => setState(() {}));
-            },
-            child: Text("Votar"))
+        Container(
+            padding: const EdgeInsets.all(10.0),
+            alignment: Alignment.center,
+            child: FilledButton(
+                text: "Votar",
+                onPressed: () {
+                  if (_visibilityValue != "option0") {
+                    EventService()
+                        .postSurveyVote(
+                            widget.event.id.toString(), survey.id, optionVoted)
+                        .then((value) => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    super.widget)));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Debe de elegir una opción"),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 1),
+                    ));
+                  }
+                }))
       ],
     );
   }
