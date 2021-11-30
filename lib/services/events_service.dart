@@ -241,7 +241,6 @@ class EventService extends Service {
     print(url);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
-    //print("aquiiiiiiiiiii" + response.statusCode.toString());
     return response.statusCode == 200;
   }
 
