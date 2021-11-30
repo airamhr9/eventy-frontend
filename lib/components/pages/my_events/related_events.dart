@@ -51,12 +51,14 @@ class _RelatedEventsState extends State<RelatedEvents> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (contex, index) =>
                             RelatedEvent(relatedEvents[index]),
-                        separatorBuilder: (context, int) => Transform.rotate(
-                            angle: .2,
-                            child: VerticalDivider(
-                              thickness: 1,
-                              color: Colors.black,
-                            )),
+                        separatorBuilder: (context, int) => Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 85.0, left: 10, right: 10),
+                              child: VerticalDivider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                            ),
                         itemCount: relatedEvents.length),
                   )
                 : Column(
