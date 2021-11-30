@@ -435,7 +435,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ),
-          buildSurveys(),
           (!hasComments)
               ? CircularProgressIndicator()
               : Column(
@@ -485,6 +484,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ), */
+          buildSurveys(),
         ],
       ),
     );
@@ -830,9 +830,14 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
       return Container(
+        alignment: Alignment.centerLeft,
         child: Column(
           children: [
-            Text("ENCUESTAS"),
+            Text(
+              "Encuestas",
+              style: TextStyle(
+                  fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+            ),
             buildButtonAddSurvey(),
             buildSurveyDataOrOptionsToVote(),
           ],
@@ -891,9 +896,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   Row(
                     children: [
                       LinearProgressIndicator(
-                          color: Colors.orange,
-                          value: percentage.toDouble(),
-                        ),
+                        color: Colors.orange,
+                        value: percentage.toDouble(),
+                      ),
                       Text(percentage.toString())
                     ],
                   ),
@@ -938,8 +943,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ElevatedButton(
             onPressed: () {
               EventService()
-                  .postSurveyVote(widget.event.id.toString(),
-                      survey.id.toString(), optionVoted)
+                  .postSurveyVote(
+                      widget.event.id.toString(), survey.id, optionVoted)
                   .then((value) => setState(() {}));
             },
             child: Text("Votar"))
