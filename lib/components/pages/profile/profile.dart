@@ -1,12 +1,11 @@
 import 'package:eventy_front/components/pages/friends/friends.dart';
 import 'package:eventy_front/components/pages/friends/groups.dart';
+import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:eventy_front/services/tags_service.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Profile extends StatefulWidget {
   const Profile() : super();
@@ -15,7 +14,7 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   List<String> tags = [];
 
   String userId = "";
@@ -52,7 +51,11 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return (SingleChildScrollView(child: buildProfile()));
+    return (NestedScrollView(
+      headerSliverBuilder: (context, _) =>
+          [SliverToBoxAdapter(child: buildProfile())],
+      body: MyEvents(),
+    ));
   }
 
   Container buildProfile() {
@@ -64,7 +67,7 @@ class _ProfileState extends State<Profile> {
             child: Stack(
               children: [
                 Positioned(
-                  top: 20,
+                  top: 10,
                   right: -40,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
@@ -78,7 +81,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 20.0, right: 20, top: 50),
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 30),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -89,22 +92,12 @@ class _ProfileState extends State<Profile> {
                           user.userName,
                           style: TextStyle(
                             color: Colors.black87,
+                            fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
                         ),
                         SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2 - 30,
-                          child: Text(
-                            user.bio,
-                            style: TextStyle(color: Colors.black54),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25,
+                          height: 15,
                         ),
                         TextButton.icon(
                             onPressed: () {
@@ -152,6 +145,17 @@ class _ProfileState extends State<Profile> {
                                 style: TextStyle(color: Colors.black))),
                         SizedBox(
                           height: 15,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          child: Text(
+                            user.bio,
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Container(
                             child: Wrap(

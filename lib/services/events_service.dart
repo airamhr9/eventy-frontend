@@ -211,6 +211,7 @@ class EventService extends Service {
 
   Future<bool> postSurveyVote(
       String eventId, String surveyId, String option) async {
+    print(option);
     final query = {
       'event': eventId,
       'survey': surveyId,
@@ -218,8 +219,10 @@ class EventService extends Service {
       'user': await MySharedPreferences.instance.getStringValue("userId")
     };
     Uri url = Uri.http(this.url, '/votes', query);
+    print(url);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
+    //print("aquiiiiiiiiiii" + response.statusCode.toString());
     return response.statusCode == 200;
   }
 

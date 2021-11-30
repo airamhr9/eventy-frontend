@@ -70,10 +70,11 @@ class _RootState extends State<Root> {
         selectedFontSize: 0,
         enableLineIndicator: true,
         customBottomBarItems: [
-          CustomBottomBarItems(icon: Icons.home, label: ""),
+          CustomBottomBarItems(icon: Icons.home_outlined, label: ""),
           CustomBottomBarItems(icon: Icons.search, label: ""),
-          CustomBottomBarItems(icon: Icons.dashboard, label: ""),
-          CustomBottomBarItems(icon: Icons.add_box, label: "")
+          CustomBottomBarItems(icon: Icons.add_box_outlined, label: ""),
+          CustomBottomBarItems(icon: Icons.space_dashboard_outlined, label: ""),
+          CustomBottomBarItems(icon: Icons.people_outline, label: "")
         ],
         selectedColor: Colors.black,
         unSelectedColor: Colors.black38,

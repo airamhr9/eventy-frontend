@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 class EventsNavigation {
   static const NAV_HOME = 0;
   static const NAV_SEARCH = 1;
-  static const NAV_PROFILE = 2;
-  static const NAV_COMMUNITY = 3;
-  static const NAV_MY_EVENTS = 4;
+  static const NAV_MY_EVENTS = 2;
+  static const NAV_PROFILE = 3;
+  static const NAV_COMMUNITY = 4;
   static const titles = [
     "Eventos para ti",
     "Búsqueda",
