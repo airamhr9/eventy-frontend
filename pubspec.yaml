@@ -78,6 +78,7 @@ flutter:
   assets: 
     - mock_data/events.json
     - mock_data/communities.json
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
