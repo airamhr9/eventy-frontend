@@ -1,5 +1,7 @@
 import 'dart:isolate';
 import 'package:eventy_front/components/pages/my_events/create_survey.dart';
+import 'package:eventy_front/components/pages/my_events/related_event_card.dart';
+import 'package:eventy_front/components/pages/my_events/related_events.dart';
 import 'package:eventy_front/components/widgets/comment.dart';
 import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
@@ -438,9 +440,25 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           ),
           (!hasComments)
               ? CircularProgressIndicator()
-              : Column(
-                  children: [...comments.map((e) => Comment(e))],
-                ),
+              : (comments.length > 0)
+                  ? Column(
+                      children: [...comments.map((e) => Comment(e))],
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text("No hay comentarios aún"),
+                      ],
+                    ),
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(height: 250, child: RelatedEvents(widget.event)),
+          SizedBox(
+            height: 30,
+          ),
           /*  Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(

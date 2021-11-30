@@ -127,7 +127,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                       ],
                     ),
                     Text(
-                      "● Cauce del Río, Valencia",
+                      "● ${widget.event.address}",
                       style: TextStyle(fontSize: 15, color: Colors.black54),
                     ),
                   ],

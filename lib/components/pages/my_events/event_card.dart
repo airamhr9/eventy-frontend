@@ -39,8 +39,7 @@ class _EventCardState extends State<EventCard> {
           SizedBox(width: 10),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 10.0, right: 15.0, bottom: 10.0, left: 5.0),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

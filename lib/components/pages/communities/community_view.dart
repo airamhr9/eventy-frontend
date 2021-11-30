@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_community.dart';
 import 'package:eventy_front/components/pages/communities/add_new_post.dart';
 import 'package:eventy_front/components/pages/communities/post.dart';
+import 'package:eventy_front/components/widgets/filled_button.dart';
+import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/post.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
@@ -9,6 +11,7 @@ import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/muro_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class CommunityView extends StatefulWidget {
@@ -25,7 +28,6 @@ class _CommunitiesState extends State<CommunityView>
   final List<Widget> myTabs = [
     Tab(text: 'Muro'),
     Tab(text: 'Eventos'),
-    Tab(text: 'Detalles'),
   ];
   String userId = "";
   List<PostObject> muro = [];
@@ -34,7 +36,7 @@ class _CommunitiesState extends State<CommunityView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
 
     _fetchMuro();
   }
@@ -54,71 +56,109 @@ class _CommunitiesState extends State<CommunityView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.community.name),
+        title: Text("OnPoint"),
         elevation: 0,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChatCommunity(widget.community)));
-              },
-              icon: Icon(Icons.chat))
-        ],
         automaticallyImplyLeading: true,
+        backgroundColor: Color(0xFFFAFAFA),
+        foregroundColor: Colors.black,
       ),
       body: Container(
-          color: Theme.of(context).primaryColor,
-          child: Material(
-              elevation: 0,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-              color: Color(0xFFFAFAFA),
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
-                child: Container(
-                  padding: EdgeInsets.only(top: 5),
-                  child: NestedScrollView(
-                      headerSliverBuilder: (context, boolean) {
-                        return [
-                          SliverToBoxAdapter(child: buildTop()),
-                          SliverToBoxAdapter(
-                            child: TabBar(
-                              indicator: MaterialIndicator(
-                                color: Theme.of(context).primaryColor,
-                                horizontalPadding: 40,
-                                topLeftRadius: 20,
-                                topRightRadius: 20,
-                                paintingStyle: PaintingStyle.fill,
-                              ),
-                              labelColor: Colors.black87,
-                              controller: _tabController,
-                              isScrollable: false,
-                              tabs: myTabs,
-                            ),
-                          ),
-                        ];
-                      },
-                      body: Container(
-                          child: TabBarView(
-                              controller: _tabController,
-                              children: [
-                            buildTabMuro(),
-                            buildTabEventos(),
-                            buildTabDetalles()
-                          ]))),
+        decoration: BoxDecoration(
+            border: Border(
+          top: BorderSide(color: Colors.blue, width: 5),
+        )),
+        padding: EdgeInsets.only(top: 5),
+        child: NestedScrollView(
+            headerSliverBuilder: (context, boolean) {
+              return [
+                SliverToBoxAdapter(child: buildTop()),
+                SliverToBoxAdapter(
+                  child: TabBar(
+                    indicator: MaterialIndicator(
+                      color: Theme.of(context).primaryColor,
+                      horizontalPadding: 40,
+                      topLeftRadius: 20,
+                      topRightRadius: 20,
+                      paintingStyle: PaintingStyle.fill,
+                    ),
+                    labelColor: Colors.black87,
+                    controller: _tabController,
+                    isScrollable: false,
+                    tabs: myTabs,
+                  ),
                 ),
-              ))),
-      floatingActionButton: buildAddToCommunityButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              ];
+            },
+            body: Container(
+                child: TabBarView(controller: _tabController, children: [
+              buildTabMuro(),
+              buildTabEventos(),
+            ]))),
+      ),
+/*       floatingActionButton: buildAddToCommunityButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, */
     );
   }
 
   Widget buildTop() {
     return Column(
       children: [
+        SizedBox(
+          height: 30,
+        ),
+        SizedBox(
+          height: 80,
+          child: MovingTitle(widget.community.name),
+        ),
+        (!isMember)
+            ? Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  Divider(
+                    thickness: 1,
+                    height: 0,
+                    color: Colors.black,
+                  ),
+                  FilledButton(
+                      text: "Unirse",
+                      onPressed: () {
+                        CommunityService().sendNewMember(
+                            widget.community.id.toString(), userId);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Te has unido con exito",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.black87),
+                                ),
+                                actionsPadding: EdgeInsets.only(left: 10),
+                                actionsAlignment: MainAxisAlignment.start,
+                                actions: [
+                                  TextButton(
+                                      child: Text(
+                                        "Aceptar",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          isMember = true;
+                                        });
+                                      })
+                                ],
+                              );
+                            });
+                      })
+                ],
+              )
+            : SizedBox(),
+        SizedBox(
+          height: 20,
+        ),
         CarouselSlider(
           options: CarouselOptions(
             height: 200.0,
@@ -130,12 +170,10 @@ class _CommunitiesState extends State<CommunityView>
               builder: (BuildContext context) {
                 return Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
                       child: Image.network(
                         i,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.fitWidth,
                       ),
                     ));
               },
@@ -146,37 +184,89 @@ class _CommunitiesState extends State<CommunityView>
           height: 20,
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Spacer(),
-              Icon(Icons.people, size: 24),
-              buildTextMembers(),
-              Spacer()
+              Text(
+                widget.community.name.toUpperCase(),
+                style: TextStyle(
+                    fontWeight: FontWeight.w100, color: Colors.black54),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(widget.community.description)
             ],
           ),
         ),
         SizedBox(
           height: 20,
         ),
-        ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
-                // double.infinity is the width and 30 is the height
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddNewPost(widget.community.id)),
-              );
-            },
-            icon: Icon(Icons.add_circle_rounded),
-            label: Text("Nueva publicación")),
+        Divider(
+          thickness: 1,
+          color: Colors.black,
+        ),
         SizedBox(
           height: 20,
+        ),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 5,
+                runSpacing: 3,
+                children: [
+                  ...widget.community.tags.map((tag) => FilterChip(
+                      label: Text(tag),
+                      onSelected: (bool selected) {},
+                      side: BorderSide(color: Colors.black, width: 1),
+                      backgroundColor: Colors.transparent,
+                      labelStyle: TextStyle(color: Colors.black)))
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "${widget.community.members.length} miembrxs",
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Wrap(
+                spacing: 5,
+                runSpacing: 3,
+                children: [
+                  ...widget.community.members.map((member) => CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.blue,
+                      ))
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextButton.icon(
+                  style:
+                      TextButton.styleFrom(elevation: 0, primary: Colors.black),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AddNewPost(widget.community.id)),
+                    );
+                  },
+                  icon: Icon(Icons.create_outlined),
+                  label: Text("Nueva publicación")),
+            ],
+          ),
         ),
       ],
     );

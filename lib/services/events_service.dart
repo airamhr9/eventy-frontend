@@ -97,6 +97,25 @@ class EventService extends Service {
     return events;
   }
 
+  Future<List<Event>> getRelatedEvents(
+      int eventId, List<String> tags, double latitud, double longitud) async {
+    final query = {
+      'eventId': eventId.toString(),
+      'lat': latitud.toString(),
+      'long': longitud.toString(),
+      'tags': tags
+    };
+    Uri url = Uri.http(this.url, '/related', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    //print("RESPONSE " + localhostResponse.body.toString());
+    final data = await json.decode(localhostResponse.body);
+    print(data);
+    final list = data['items'] as List;
+    List<Event> events = list.map((event) => Event.fromJson(event)).toList();
+    return events;
+  }
+
   Future<bool> sendImage(FileImage image) async {
     final query = {'type': 'event', 'name': basename(image.file.path)};
     Uri url = Uri.http(this.url, '/images', query);
