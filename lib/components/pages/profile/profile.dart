@@ -154,6 +154,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             textAlign: TextAlign.left,
                           ),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                             child: Wrap(
                           spacing: 5,

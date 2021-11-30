@@ -162,7 +162,79 @@ class _LoginPageState extends State<LoginPage> {
                 height: 15,
               ),
               buildRegisterText(),
-              Spacer()
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[
+                    GestureDetector(
+                        onTap: () {
+                          //Registro Login
+
+                        }, // handle your image tap here
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              child: CircleAvatar(
+
+                                backgroundImage: Image.asset('assets/images/facebook.png').image,
+                                radius: 30,
+                              ),
+                            ),
+
+                          ],
+                        )),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          //Registro Login
+
+                        }, // handle your image tap here
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+
+                              child: CircleAvatar(
+                                backgroundImage: Image.asset('assets/images/google.png').image,
+                                radius: 30,
+                              ),
+                            ),
+
+                          ],
+                        )),
+
+                    SizedBox(
+                      width: 30,
+                    ),
+
+                    GestureDetector(
+                        onTap: () {
+                          //Registro Login
+
+                        }, // handle your image tap here
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+
+                              child: CircleAvatar(
+                                backgroundImage: Image.asset('assets/images/twitter.png').image,
+                                radius: 30,
+                              ),
+                            ),
+
+                          ],
+                        )),
+                  ]
+              ),
+              SizedBox(
+                height: 45,
+              ),
             ],
           ),
         ),
