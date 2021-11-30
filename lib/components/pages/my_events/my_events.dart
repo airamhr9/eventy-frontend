@@ -116,6 +116,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
                   thickness: 1,
+                  height: 0,
                 ),
               )
             : Center(
@@ -137,6 +138,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
                   thickness: 1,
+                  height: 0,
                 ),
               )
             : Center(
@@ -158,6 +160,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
                   thickness: 1,
+                  height: 0,
                 ),
               )
             : Center(
