@@ -1,7 +1,4 @@
-import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/survey.dart';
-import 'package:eventy_front/persistence/my_shared_preferences.dart';
-import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -221,7 +218,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
     return true;
   }
 
-  void createSurvey(BuildContext context) async {
+  void createSurvey(BuildContext context) {
     if (_formKey.currentState!.validate() && validateFields(context)) {
       survey = Survey(
         '',

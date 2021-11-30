@@ -220,7 +220,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                         ))
                   ],
                 ),
-                buildSurveys(),
                 SizedBox(
                   height: 20,
                 ),
@@ -436,6 +435,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ),
+          buildSurveys(),
           (!hasComments)
               ? CircularProgressIndicator()
               : Column(
@@ -826,9 +826,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    print("LISTA DE ENCUESTAS:");
-    print(surveysList.length);
-    if ((surveysList.isNotEmpty &&
+    if ((surveysList.length != 0 &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
       return Container(
@@ -850,10 +848,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       return ElevatedButton(
           onPressed: () {
             // Llamada a creacion de encuesta
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-              return CreateSurvey();
-            }));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CreateSurvey()));
           },
           child: Text("Añadir"));
     } else {
@@ -861,72 +857,93 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  buildSurveyDataOrOptionsToVote() {
-    for (Survey survey in surveysList) {
-      print("DENTRO DEL FOR");
-      if (survey.userHasVoted == true) {
-        print("DENTRO DEL IF");
-        return buildDataOption(survey);
-      } else {
-        print("DENTRO DEL ELSE");
-        return buildOptions(survey);
-      }
-    }
-  }
-
-  buildDataOption(Survey survey) {
-    Text(survey.question);
-    for (Map<String, dynamic> option in survey.options) {
-      num percentage = option['percentage'];
+  Widget buildSurveyDataOrOptionsToVote() {
+    if (surveysList.isNotEmpty) {
       return Column(
         children: [
-          Text(option['text'].toString()),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: LinearProgressIndicator(
-                  color: Colors.orange,
-                  value: percentage.toDouble(),
-                ),
-              ),
-            ],
-          ),
+          ...surveysList.map((survey) {
+            if (survey.userHasVoted == true) {
+              return buildDataOption(survey);
+            } else {
+              return buildOptions(survey);
+            }
+          })
         ],
       );
+    } else {
+      return SizedBox(height: 0);
     }
-    Text("Han votado " +
-        survey.numVotes.toString() +
-        "/" +
-        widget.event.participants.length.toString());
   }
 
-  buildOptions(Survey survey) {
+  Widget buildDataOption(Survey survey) {
+    return Column(
+      children: [
+        Text(survey.question),
+        Column(
+          children: [
+            ...survey.options.map((option) {
+              num percentage = option['percentage'];
+              return Column(
+                children: [
+                  Text(option['text'].toString() +
+                      " " +
+                      percentage.toDouble().toString()),
+                  Row(
+                    children: [
+                      LinearProgressIndicator(
+                          color: Colors.orange,
+                          value: percentage.toDouble(),
+                        ),
+                      Text(percentage.toString())
+                    ],
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
+        Text("Han votado " +
+            survey.numVotes.toString() +
+            "/" +
+            widget.event.participants.length.toString())
+      ],
+    );
+  }
+
+  Widget buildOptions(Survey survey) {
+    String optionVoted = "";
     int count = 0;
-    Text(survey.question);
-    print("OPCIONES:");
-    print(survey.options);
-    for (Map<String, dynamic> option in survey.options) {
-      count++;
-      Column(
-        children: [
-          RadioButton(
-            description: option['text'].toString(),
-            value: "option" + count.toString(),
-            groupValue: _visibilityValue,
-            onChanged: (value) {
-              setState(() {
-                _visibilityValue = value as String;
-              });
+    return Column(
+      children: [
+        Text(survey.question),
+        Column(
+          children: [
+            ...survey.options.map((option) {
+              count++;
+              return RadioButton(
+                description: option['text'].toString(),
+                value: "option" + count.toString(),
+                groupValue: _visibilityValue,
+                onChanged: (value) {
+                  setState(() {
+                    _visibilityValue = value as String;
+                    optionVoted = option['text'].toString();
+                    print("Opcion elegida: " + optionVoted);
+                  });
+                },
+              );
+            }),
+          ],
+        ),
+        ElevatedButton(
+            onPressed: () {
+              EventService()
+                  .postSurveyVote(widget.event.id.toString(),
+                      survey.id.toString(), optionVoted)
+                  .then((value) => setState(() {}));
             },
-          ),
-        ],
-      );
-    }
-    ElevatedButton(
-        onPressed: () {
-          // VOTACION DEL USUSARIO
-        },
-        child: Text("Votar"));
+            child: Text("Votar"))
+      ],
+    );
   }
 }

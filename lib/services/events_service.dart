@@ -200,7 +200,7 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<bool> postSurvey(Survey survey, int eventId) async {
+  Future<bool> postSurvey(Survey survey, String eventId) async {
     final query = {'event': eventId};
     Uri url = Uri.http(this.url, '/surveys', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
@@ -210,7 +210,7 @@ class EventService extends Service {
   }
 
   Future<bool> postSurveyVote(
-      int eventId, String surveyId, String option) async {
+      String eventId, String surveyId, String option) async {
     final query = {
       'event': eventId,
       'survey': surveyId,
