@@ -6,6 +6,7 @@ import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class Profile extends StatefulWidget {
   const Profile() : super();
@@ -16,7 +17,12 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   List<String> tags = [];
-
+  late TabController _tabController = TabController(length: 3, vsync: this);
+  final List<Widget> myTabs = [
+    Tab(text: 'Próximamente'),
+    Tab(text: 'Historial'),
+    Tab(text: 'Ver más tarde'),
+  ];
   String userId = "";
   User user = User(
       "-1",
@@ -52,9 +58,29 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return (NestedScrollView(
-      headerSliverBuilder: (context, _) =>
-          [SliverToBoxAdapter(child: buildProfile())],
-      body: MyEvents(),
+      headerSliverBuilder: (context, _) => [
+        SliverToBoxAdapter(child: buildProfile()),
+        SliverAppBar(
+            primary: false,
+            toolbarHeight: 0,
+            backgroundColor: Color(0xFFFAFAFA),
+            elevation: 0,
+            pinned: true,
+            bottom: TabBar(
+              indicator: MaterialIndicator(
+                color: Theme.of(context).primaryColor,
+                horizontalPadding: 40,
+                topLeftRadius: 20,
+                topRightRadius: 20,
+                paintingStyle: PaintingStyle.fill,
+              ),
+              labelColor: Colors.black87,
+              controller: _tabController,
+              isScrollable: false,
+              tabs: myTabs,
+            )),
+      ],
+      body: MyEvents(_tabController),
     ));
   }
 

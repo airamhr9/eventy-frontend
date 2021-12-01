@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class MyEvents extends StatefulWidget {
-  const MyEvents() : super();
+  final TabController _tabController;
+  const MyEvents(this._tabController) : super();
 
   @override
   _MyEventsState createState() => _MyEventsState();
@@ -19,18 +20,9 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   List<Event> seeLater = [];
   bool seeLaterResponse = false;
 
-  late TabController _tabController;
-  final List<Widget> myTabs = [
-    Tab(text: 'Próximamente'),
-    Tab(text: 'Historial'),
-    Tab(text: 'Ver más tarde'),
-  ];
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-
     _fetchEvents();
   }
 
@@ -60,22 +52,8 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      SizedBox(height: 10),
-      TabBar(
-        indicator: MaterialIndicator(
-          color: Theme.of(context).primaryColor,
-          horizontalPadding: 40,
-          topLeftRadius: 20,
-          topRightRadius: 20,
-          paintingStyle: PaintingStyle.fill,
-        ),
-        labelColor: Colors.black87,
-        controller: _tabController,
-        isScrollable: false,
-        tabs: myTabs,
-      ),
       Expanded(
-        child: TabBarView(controller: _tabController, children: [
+        child: TabBarView(controller: widget._tabController, children: [
           buildTabCurrent(),
           buildTabHistory(),
           buildTabSeeLater()
