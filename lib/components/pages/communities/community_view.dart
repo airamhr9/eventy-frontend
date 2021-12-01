@@ -27,7 +27,7 @@ class _CommunitiesState extends State<CommunityView>
   late TabController _tabController;
   final List<Widget> myTabs = [
     Tab(text: 'Muro'),
-    Tab(text: 'Eventos'),
+    Tab(text: 'Hablemos'),
   ];
   String userId = "";
   List<PostObject> muro = [];
@@ -35,10 +35,13 @@ class _CommunitiesState extends State<CommunityView>
 
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    MySharedPreferences.instance
+        .getStringValue("userId")
+        .then((value) => userId = value);
 
     _fetchMuro();
+    super.initState();
   }
 
   void _fetchMuro() {
@@ -67,33 +70,33 @@ class _CommunitiesState extends State<CommunityView>
             border: Border(
           top: BorderSide(color: Colors.blue, width: 5),
         )),
-        padding: EdgeInsets.only(top: 5),
         child: NestedScrollView(
             headerSliverBuilder: (context, boolean) {
               return [
                 SliverToBoxAdapter(child: buildTop()),
-                SliverToBoxAdapter(
-                  child: TabBar(
-                    indicator: MaterialIndicator(
-                      color: Theme.of(context).primaryColor,
-                      horizontalPadding: 40,
-                      topLeftRadius: 20,
-                      topRightRadius: 20,
-                      paintingStyle: PaintingStyle.fill,
-                    ),
-                    labelColor: Colors.black87,
-                    controller: _tabController,
-                    isScrollable: false,
-                    tabs: myTabs,
-                  ),
-                ),
               ];
             },
-            body: Container(
+            body: Column(children: [
+              TabBar(
+                indicator: MaterialIndicator(
+                  color: Theme.of(context).primaryColor,
+                  horizontalPadding: 40,
+                  topLeftRadius: 20,
+                  topRightRadius: 20,
+                  paintingStyle: PaintingStyle.fill,
+                ),
+                labelColor: Colors.black87,
+                controller: _tabController,
+                isScrollable: false,
+                tabs: myTabs,
+              ),
+              Expanded(
                 child: TabBarView(controller: _tabController, children: [
-              buildTabMuro(),
-              buildTabEventos(),
-            ]))),
+                  buildTabMuro(),
+                  buildTabEventos(),
+                ]),
+              ),
+            ])),
       ),
 /*       floatingActionButton: buildAddToCommunityButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, */
@@ -144,6 +147,9 @@ class _CommunitiesState extends State<CommunityView>
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       onPressed: () {
+                                        CommunityService().sendNewMember(
+                                            widget.community.id.toString(),
+                                            userId);
                                         Navigator.of(context).pop();
                                         setState(() {
                                           isMember = true;
@@ -252,19 +258,6 @@ class _CommunitiesState extends State<CommunityView>
               SizedBox(
                 height: 20,
               ),
-              TextButton.icon(
-                  style:
-                      TextButton.styleFrom(elevation: 0, primary: Colors.black),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewPost(widget.community.id)),
-                    );
-                  },
-                  icon: Icon(Icons.create_outlined),
-                  label: Text("Nueva publicación")),
             ],
           ),
         ),
@@ -304,7 +297,30 @@ class _CommunitiesState extends State<CommunityView>
         ? (muro.length > 0)
             ? ListView.separated(
                 itemBuilder: (BuildContext context, int index) {
-                  return Post(muro[index]);
+                  if (index == 0) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextButton.icon(
+                            style: TextButton.styleFrom(
+                                elevation: 0, primary: Colors.black),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddNewPost(widget.community.id)),
+                              );
+                            },
+                            icon: Icon(Icons.create_outlined),
+                            label: Text("Nueva publicación")),
+                        Post(muro[index])
+                      ],
+                    );
+                  } else
+                    return Post(muro[index]);
                 },
                 separatorBuilder: (BuildContext context, int index) {
                   return Divider();

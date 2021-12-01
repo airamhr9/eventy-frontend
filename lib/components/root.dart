@@ -55,7 +55,20 @@ class _RootState extends State<Root> {
                     },
                     icon: Icon(Icons.bookmark_add))
               ]
-            : [],
+            : (currentSelectedIndex == EventsNavigation.NAV_PROFILE)
+                ? [
+                    PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text("Cerrar sesión"),
+                          onTap: () {
+                            logOut();
+                          },
+                        )
+                      ],
+                    )
+                  ]
+                : [],
         //backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         backgroundColor: Color(0xFFFAFAFA),

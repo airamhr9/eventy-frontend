@@ -77,6 +77,7 @@ class CommunityService extends Service {
   }
 
   Future<bool> sendNewMember(String communityId, String userId) async {
+    print("COMM ID $communityId USERID $userId");
     final query = {'communityId': communityId, 'userId': userId};
     Uri url = Uri.http(this.url, '/joinCommunity', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
