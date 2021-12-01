@@ -24,25 +24,39 @@ class _CommunitySearchResultState extends State<CommunitySearchResult> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 15, left: 20, right: 20),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CommunityView(widget.community)));
+      },
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Text(
+                widget.community.name,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 22,
+                    color: Colors.black87),
+              ),
+            ),
             Container(
                 height: 200,
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
                   child: Image.network(
                     widget.community.images.first,
                     fit: BoxFit.cover,
                   ),
                 )),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -50,36 +64,17 @@ class _CommunitySearchResultState extends State<CommunitySearchResult> {
                     height: 15,
                   ),
                   Text(
-                    "${widget.community.members.length} miembros",
+                    "● ${widget.community.members.length} miembros",
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    widget.community.name,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Colors.black87),
-                  ),
                 ],
               ),
             ),
-            Row(
-              children: [
-                Spacer(),
-                TextButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CommunityView(widget.community)));
-                    },
-                    label: Text("Saber más"),
-                    icon: Icon(Icons.add_rounded)),
-              ],
+            SizedBox(
+              height: 15,
             )
           ],
         ),

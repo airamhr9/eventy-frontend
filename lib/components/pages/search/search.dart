@@ -28,7 +28,7 @@ class _SearchState extends State<Search> {
   List<Event> events = [];
   List<Community> communities = [];
   bool searching = false;
-  String searchHint = "Busca eventos";
+  String searchHint = "Buscar";
   List<bool> _selectedSearch = [true, false];
   bool advancedFilters = false;
   bool uniqueDay = false;
@@ -63,15 +63,41 @@ class _SearchState extends State<Search> {
             child: CircularProgressIndicator(),
           );
         } else {
-          return ListView.separated(
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              return SearchResult(events[index]);
-            },
-            separatorBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(),
-            ),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "●  ${events.length} resultados",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    TextButton(
+                      onPressed: openBottomDrawer,
+                      child: Text(
+                        "Buscar",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: TextButton.styleFrom(primary: Colors.black54),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    return SearchResult(events[index]);
+                  },
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
+                ),
+              ),
+            ],
           );
         }
       } else {
@@ -80,15 +106,41 @@ class _SearchState extends State<Search> {
             child: CircularProgressIndicator(),
           );
         } else {
-          return ListView.separated(
-            itemCount: communities.length,
-            itemBuilder: (context, index) {
-              return CommunitySearchResult(communities[index]);
-            },
-            separatorBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(),
-            ),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${communities.length} resultados",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    TextButton(
+                      onPressed: openBottomDrawer,
+                      child: Text(
+                        "Buscar",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: TextButton.styleFrom(primary: Colors.black54),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: communities.length,
+                  itemBuilder: (context, index) {
+                    return CommunitySearchResult(communities[index]);
+                  },
+                  separatorBuilder: (context, index) => Divider(
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
+                ),
+              ),
+            ],
           );
         }
       }
@@ -96,7 +148,7 @@ class _SearchState extends State<Search> {
       return Center(
         child: FilledButton(
           text: searchHint,
-          onPressed: () => openBottomDrawer(),
+          onPressed: openBottomDrawer,
         ),
       );
     }
@@ -131,10 +183,6 @@ class _SearchState extends State<Search> {
                                 searching = false;
                                 searchEvents = !searchEvents;
                                 advancedFilters = false;
-                                if (!searchEvents)
-                                  searchHint = "Busca comunidades";
-                                else
-                                  searchHint = "Busca eventos";
                               });
                             },
                             selectedColor: Colors.white,

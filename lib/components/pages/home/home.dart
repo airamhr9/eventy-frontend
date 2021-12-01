@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
                 ),
                 SizedBox(
                   height: 55,
-                  child: MovingTitle("Eventos para ti"),
+                  child: MovingTitle("● Eventos para ti"),
                 ),
                 SizedBox(
                   height: 10,
