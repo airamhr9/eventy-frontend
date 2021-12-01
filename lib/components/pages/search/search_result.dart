@@ -68,9 +68,12 @@ class _SearchResultState extends State<SearchResult> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "● ${widget.event.address}",
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        child: Text(
+                          "● ${widget.event.address}",
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
                       ),
                       Text(
                         this.date,
