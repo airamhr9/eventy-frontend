@@ -28,7 +28,7 @@ class _SearchState extends State<Search> {
   List<Event> events = [];
   List<Community> communities = [];
   bool searching = false;
-  String searchHint = "Buscar";
+  String searchHint = "Encuentra eventos y comunidades a tu gusto";
   List<bool> _selectedSearch = [true, false];
   bool advancedFilters = false;
   bool uniqueDay = false;
@@ -145,11 +145,30 @@ class _SearchState extends State<Search> {
         }
       }
     } else {
-      return Center(
-        child: FilledButton(
-          text: searchHint,
-          onPressed: openBottomDrawer,
-        ),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 130,
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Image.asset('assets/images/search.png')),
+          SizedBox(
+            height: 60,
+          ),
+          Text(
+            searchHint,
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          FilledButton(
+            text: "Comienza a buscar",
+            onPressed: openBottomDrawer,
+          ),
+        ],
       );
     }
   }
