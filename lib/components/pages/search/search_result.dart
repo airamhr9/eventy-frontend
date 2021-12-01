@@ -69,7 +69,7 @@ class _SearchResultState extends State<SearchResult> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        width: MediaQuery.of(context).size.width / 2 - 40,
                         child: Text(
                           "● ${widget.event.address}",
                           style: TextStyle(fontSize: 16, color: Colors.black54),
