@@ -129,7 +129,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         body: Container(
           decoration: BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black, width: 1))),
-          padding: EdgeInsets.only(top: 5),
           child: SingleChildScrollView(child: buildTop()),
         ),
       );
@@ -470,17 +469,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   : Column(
                       children: [
                         SizedBox(
-                          height: 15,
+                          height: 20,
                         ),
                         Text("No hay comentarios aún"),
                       ],
                     ),
+          buildSurveys(),
           SizedBox(
             height: 20,
           ),
           SizedBox(height: 250, child: RelatedEvents(widget.event)),
           SizedBox(
-            height: 30,
+            height: 10,
           ),
           /*  Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -526,7 +526,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               ],
             ),
           ), */
-          buildSurveys(),
         ],
       ),
     );
@@ -870,18 +869,22 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   buildSurveys() {
     if ((surveysList.isNotEmpty && participantsId.contains(userId)) ||
         widget.event.ownerId == userId) {
-      print("ESTOY DENTRO!!!!!!!");
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Encuestas",
-              style: TextStyle(
-                  fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Encuestas",
+                  style: TextStyle(
+                      fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+                ),
+                buildButtonAddSurvey(),
+              ],
             ),
-            buildButtonAddSurvey(),
             buildSurveyDataOrOptionsToVote(),
           ],
         ),
@@ -896,8 +899,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       return Container(
           padding: const EdgeInsets.all(10.0),
           alignment: Alignment.center,
-          child: FilledButton(
-              text: "Añadir",
+          child: TextButton(
+              child: Text(
+                "Añadir",
+                style: TextStyle(color: Colors.black54, fontSize: 20),
+              ),
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -921,7 +927,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ],
       );
     } else {
-      return SizedBox(height: 15);
+      return Container(
+          alignment: AlignmentDirectional.center,
+          child: (Text("No hay encuestas aún")));
     }
   }
 
@@ -940,26 +948,30 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           children: [
             ...survey.options.map((option) {
               num percentage = option['percentage'];
+              print("${percentage} PERCENTAGE AAAAAAAAAAAA;");
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(option['text'].toString()),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
-                  Row(
+                  Stack(
+                    alignment: AlignmentDirectional.centerEnd,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10.0),
-                        height: 15,
-                        width: 320,
+                        height: 20,
+                        width: MediaQuery.of(context).size.width,
                         child: LinearProgressIndicator(
                           color: Colors.orange,
                           value: percentage / 100,
                         ),
                       ),
-                      Spacer(),
-                      Text(percentage.toString() + "%")
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child:
+                            Container(child: Text(percentage.toString() + "%")),
+                      )
                     ],
                   ),
                   SizedBox(
@@ -1007,9 +1019,12 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ),
         Container(
             padding: const EdgeInsets.all(10.0),
-            alignment: Alignment.center,
-            child: FilledButton(
-                text: "Votar",
+            alignment: Alignment.centerRight,
+            child: TextButton(
+                child: Text(
+                  "Votar",
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
                 onPressed: () {
                   if (_visibilityValue != "option0") {
                     EventService()
