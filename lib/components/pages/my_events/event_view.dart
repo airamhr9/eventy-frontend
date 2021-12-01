@@ -950,7 +950,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                   Row(
                     children: [
                       Container(
-                        //padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10.0),
                         height: 15,
                         width: 320,
                         child: LinearProgressIndicator(
