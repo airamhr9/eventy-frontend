@@ -497,17 +497,18 @@ class _AddEventState extends State<AddEvent> {
               },
             ),
           ],
-        )
+        ),
+        buildButtonSurveyDate(context)
       ],
     );
   }
 
-  /*Widget buildButtonSurveyDate(BuildContext context) {
+  Widget buildButtonSurveyDate(BuildContext context) {
     return FilledButton(
-              text: "Encuesta",
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddSurvey(widget.event.id))));
-  }*/
+        text: "Encuesta",
+        onPressed: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AddSurvey(-1))));
+  }
 
   bool validateFields(BuildContext context) {
     if (imageFiles.isEmpty) {
@@ -547,25 +548,25 @@ class _AddEventState extends State<AddEvent> {
           ? 0
           : double.parse(_priceController.text);
       final Event event = Event(
-          -1,
-          _descriptionController.text,
-          startDate.toIso8601String(),
-          finishDate.toIso8601String(),
-          imageFiles.map((e) => basename(e.file.path)).toList(),
-          eventLocation!.latitude,
-          eventLocation!.longitude,
-          _addressController.text,
-          (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
-          [userId],
-          _eventNameController.text,
-          userId,
-          precio,
-          (_visibilityValue == "Público") ? false : true,
-          _summaryController.text,
-          tagsEvent,
-          scores = List.empty(growable: true), // userId, puntuación
-          averageScore = 0,
-          );
+        -1,
+        _descriptionController.text,
+        startDate.toIso8601String(),
+        finishDate.toIso8601String(),
+        imageFiles.map((e) => basename(e.file.path)).toList(),
+        eventLocation!.latitude,
+        eventLocation!.longitude,
+        _addressController.text,
+        (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
+        [userId],
+        _eventNameController.text,
+        userId,
+        precio,
+        (_visibilityValue == "Público") ? false : true,
+        _summaryController.text,
+        tagsEvent,
+        scores = List.empty(growable: true), // userId, puntuación
+        averageScore = 0,
+      );
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return CreateEvent(event, imageFiles);

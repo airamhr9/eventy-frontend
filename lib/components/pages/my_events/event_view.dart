@@ -50,6 +50,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   String optionVoted = "";
   bool reloadSurveys = false;
+  List<List<User>> participantsList = [];
+  bool loading = true;
+  List<String> participantsId = [];
 
   @override
   void initState() {
@@ -72,6 +75,19 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
+    EventService().getParticipants(widget.event.id.toString()).then((value) {
+      setState(() {
+        participantsList = value;
+        loading = false;
+      });
+      for (User user in participantsList[0]) {
+        participantsId.add(user.id);
+      }
+      for (User user in participantsList[1]) {
+        participantsId.add(user.id);
+      }
+      waitToCheck();
+    });
     EventService()
         .getSurveys(widget.event.id.toString())
         .then((value) => setState(() {
@@ -118,8 +134,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ),
       );
     else
-      return Center(
-        child: CircularProgressIndicator(),
+      return Container(
+        color: Colors.white,
+        child: Center(child: CircularProgressIndicator()),
       );
   }
 
@@ -135,7 +152,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     } else {
       setState(() {
         isMember = false;
-        waitComplete = true;
+        if (loading == false) {
+          waitComplete = true;
+        }
       });
     }
   }
@@ -144,7 +163,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     EventService()
         .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
         .then((list) => setState(() {
-              waitComplete = true;
+              if (loading == false) {
+                waitComplete = true;
+              }
               isMember = true;
               score = list[0];
               widget.event.averageScore = list[1];
@@ -847,11 +868,10 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    if ((surveysList.isNotEmpty &&
-            widget.event.participants.contains(userId)) ||
+    if ((surveysList.isNotEmpty && participantsId.contains(userId)) ||
         widget.event.ownerId == userId) {
+      print("ESTOY DENTRO!!!!!!!");
       return Container(
-        //alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
