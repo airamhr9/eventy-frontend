@@ -1,8 +1,6 @@
 import 'package:eventy_front/components/pages/communities/my_communities.dart';
-import 'package:eventy_front/components/pages/my_events/add_event.dart';
-import 'package:eventy_front/components/pages/communities/community_view.dart';
+import 'package:eventy_front/components/pages/create/create.dart';
 import 'package:eventy_front/components/pages/home/home.dart';
-import 'package:eventy_front/components/pages/my_events/my_events.dart';
 import 'package:eventy_front/components/pages/profile/profile.dart';
 
 import 'package:eventy_front/components/pages/search/search.dart';
@@ -33,7 +31,7 @@ class EventsNavigation {
       case NAV_PROFILE:
         return Profile();
       case NAV_MY_EVENTS:
-        return MyEvents();
+        return Create();
       default:
         return Home();
     }
