@@ -12,6 +12,7 @@ class MyCommunities extends StatefulWidget {
 
 class _MyCommunitiesState extends State<MyCommunities> {
   List<Community> myCommunitiesList = [];
+  bool hasCommunitiesResponse = false;
   String userId = "";
 
   @override
@@ -19,51 +20,56 @@ class _MyCommunitiesState extends State<MyCommunities> {
     super.initState();
     CommunityService().get().then((value) => setState(() {
           myCommunitiesList = value;
+          hasCommunitiesResponse = true;
           print(myCommunitiesList.length);
         }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return myCommunitiesList.length > 0
-        ? ListView.separated(
-            itemCount: myCommunitiesList.length,
-            itemBuilder: (context, position) {
-              return Container(
-                  child: ListTile(
-                title: Text(
-                  myCommunitiesList[position].name,
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                ),
-                subtitle: buildTextMembers(
-                    myCommunitiesList[position].members.length),
-                leading: Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            myCommunitiesList[position].logo,
-                          )),
-                    )),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              CommunityView(myCommunitiesList[position])));
+    return (hasCommunitiesResponse)
+        ? myCommunitiesList.length > 0
+            ? ListView.separated(
+                itemCount: myCommunitiesList.length,
+                itemBuilder: (context, position) {
+                  return Container(
+                      child: ListTile(
+                    title: Text(
+                      myCommunitiesList[position].name,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                    subtitle: buildTextMembers(
+                        myCommunitiesList[position].members.length),
+                    leading: Container(
+                        width: 45,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                myCommunitiesList[position].logo,
+                              )),
+                        )),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CommunityView(myCommunitiesList[position])));
+                    },
+                  ));
                 },
-              ));
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                color: Colors.black,
-                thickness: 1,
-              );
-            },
-          )
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    color: Colors.black,
+                    thickness: 1,
+                  );
+                },
+              )
+            : Center(
+                child: Text("No te has unido a ninguna comunidad"),
+              )
         : Center(
             child: CircularProgressIndicator(),
           );
