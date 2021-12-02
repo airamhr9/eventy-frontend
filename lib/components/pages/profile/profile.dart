@@ -181,7 +181,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         Container(
                             child: Wrap(

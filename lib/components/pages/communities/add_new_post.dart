@@ -7,7 +7,6 @@ import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class AddNewPost extends StatefulWidget {
   final int cId;
   const AddNewPost(this.cId) : super();
@@ -17,13 +16,11 @@ class AddNewPost extends StatefulWidget {
 }
 
 class _AddNewPostState extends State<AddNewPost> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _postNameController =
-  TextEditingController();
+  final TextEditingController _postNameController = TextEditingController();
   final TextEditingController _postDescriptionController =
-  TextEditingController();
+      TextEditingController();
   String date = DateTime.now().toIso8601String();
   ImagePicker picker = ImagePicker();
   ImageProvider imageProviders = NetworkImage("");
@@ -51,10 +48,8 @@ class _AddNewPostState extends State<AddNewPost> {
 
       print("id" + userId);
       UserService().getUser(userId).then((value) => setState(() {
-        user = value;
-      }));
-
-
+            user = value;
+          }));
     });
   }
 
@@ -64,6 +59,11 @@ class _AddNewPostState extends State<AddNewPost> {
       appBar: AppBar(
         title: Text("Crear Publicación"),
         automaticallyImplyLeading: true,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black, width: 1)),
+        backgroundColor: Colors.white,
       ),
       body: (SingleChildScrollView(
           child: Container(
@@ -88,8 +88,8 @@ class _AddNewPostState extends State<AddNewPost> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Título de la publicación"),
                       ),
                       SizedBox(
@@ -107,8 +107,8 @@ class _AddNewPostState extends State<AddNewPost> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Descripcion"),
                       ),
                       SizedBox(
@@ -128,10 +128,10 @@ class _AddNewPostState extends State<AddNewPost> {
                                     style: BorderStyle.solid)),
                             child: Container(
                               height: 100,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: imageProviders,
-                                        fit: BoxFit.fitWidth)),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: imageProviders,
+                                      fit: BoxFit.fitWidth)),
                               child: Center(
                                   child: Icon(Icons.photo_camera_rounded,
                                       color: Theme.of(context).primaryColor)),
@@ -140,27 +140,26 @@ class _AddNewPostState extends State<AddNewPost> {
                       SizedBox(
                         height: 20,
                       ),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 50),
+                              primary: Colors.black,
                               // double.infinity is the width and 30 is the height
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
                           onPressed: () {
-                          sendPost();
-
+                            sendPost();
                           },
-                          icon: Icon(Icons.add_circle_rounded),
-                          label: Text("Publicar")),
+                          child: Text("Publicar")),
                     ],
                   ))))),
     );
-
   }
+
   _imgFromGallery() async {
     XFile? image =
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     String path = "";
     if (image != null) {
       path = image.path;
@@ -172,44 +171,44 @@ class _AddNewPostState extends State<AddNewPost> {
   }
 
   sendPost() async {
-     PostObject sendingPost = PostObject(
-         widget.cId.toString(),
-         _postNameController.text,
-         _postDescriptionController.text,
-         date,
-         user.userName,
-         0, 0, 0, imageFiles.path.split('/').last);
-     print(sendingPost.toJson());
-      MuroService().newPost(sendingPost,widget.cId.toString() );
-      MuroService().sendImage(FileImage(imageFiles));
+    PostObject sendingPost = PostObject(
+        widget.cId.toString(),
+        _postNameController.text,
+        _postDescriptionController.text,
+        date,
+        user.userName,
+        0,
+        0,
+        0,
+        imageFiles.path.split('/').last);
+    print(sendingPost.toJson());
+    MuroService().newPost(sendingPost, widget.cId.toString());
+    MuroService().sendImage(FileImage(imageFiles));
 
-     showDialog(
-         context: context,
-         builder: (BuildContext context) {
-           return AlertDialog(
-             title: Text(
-               "Tu post ha sido creado correctamente",
-               style: TextStyle(
-                   fontWeight: FontWeight.w500,
-                   fontSize: 20,
-                   color: Colors.black87),
-             ),
-             content: Text(
-                 "Se te devolverá a la ventana de tu comunidad"),
-             actions: [
-               TextButton(
-                   onPressed: () {
-                     Navigator.pop(context);
-                     Navigator.of(context).pop();
-
-                   },
-                   child: Text(
-                     "Vale",
-                     style: TextStyle(color: Colors.lightBlue),
-                   ))
-             ],
-           );
-         });
-
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Tu post ha sido creado correctamente",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black87),
+            ),
+            content: Text("Se te devolverá a la ventana de tu comunidad"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Vale",
+                    style: TextStyle(color: Colors.lightBlue),
+                  ))
+            ],
+          );
+        });
   }
 }

@@ -54,83 +54,84 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text("Mis amigos"),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
         ),
-        backgroundColor: Colors.blue[500],
         body: Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          color: Colors.white,
           child: NestedScrollView(
             headerSliverBuilder: (context, boolean) {
               return [
                 SliverToBoxAdapter(
-                    child: Column(
-                  children: [
-                    TextField(
-                      controller: _searchController,
-                      onSubmitted: (value) => searchFriends(value),
-                      decoration: InputDecoration(
-                        suffixIcon: (_searchController.text.length > 0)
-                            ? IconButton(
-                                icon: Icon(Icons.close_rounded),
-                                onPressed: () => setState(() {
-                                  _searchController.text = "";
-                                  searching = false;
-                                }),
-                              )
-                            : null,
-                        prefixIcon: Icon(Icons.search_rounded),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none),
-                        filled: true,
-                        hintText: "Buscar usuarios",
-                      ),
-                      onChanged: (text) {
-                        setState(() {
-                          searchText = _searchController.text;
-                        });
-                        if (text == "") {
+                    child: Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.black))),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _searchController,
+                        onSubmitted: (value) => searchFriends(value),
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          suffixIcon: (_searchController.text.length > 0)
+                              ? IconButton(
+                                  icon: Icon(Icons.close_rounded),
+                                  onPressed: () => setState(() {
+                                    _searchController.text = "";
+                                    searching = false;
+                                  }),
+                                )
+                              : null,
+                          prefixIcon: Icon(Icons.search_rounded),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.black)),
+                          hintText: "Buscar usuarios",
+                        ),
+                        onChanged: (text) {
                           setState(() {
-                            searching = false;
+                            searchText = _searchController.text;
                           });
-                        }
-                      },
-                    ),
-                    (!searching)
-                        ? TabBar(
-                            indicator: MaterialIndicator(
-                              color: Theme.of(context).primaryColor,
-                              horizontalPadding: 50,
-                              topLeftRadius: 20,
-                              topRightRadius: 20,
-                              paintingStyle: PaintingStyle.fill,
-                            ),
-                            labelColor: Colors.black87,
-                            controller: _tabController,
-                            isScrollable: false,
-                            tabs: myTabs,
-                          )
-                        : SizedBox(),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                          if (text == "") {
+                            setState(() {
+                              searching = false;
+                            });
+                          }
+                        },
+                      ),
+                      (!searching)
+                          ? TabBar(
+                              indicator: MaterialIndicator(
+                                color: Theme.of(context).primaryColor,
+                                horizontalPadding: 50,
+                                topLeftRadius: 20,
+                                topRightRadius: 20,
+                                paintingStyle: PaintingStyle.fill,
+                              ),
+                              labelColor: Colors.black87,
+                              controller: _tabController,
+                              isScrollable: false,
+                              tabs: myTabs,
+                            )
+                          : SizedBox(),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
                 )),
               ];
             },
             body: (!searching)
                 ? Container(
+                    color: Colors.white,
                     child: TabBarView(controller: _tabController, children: [
-                    buildTabFriends(),
-                    buildTabRequests(),
-                  ]))
+                      buildTabFriends(),
+                      buildTabRequests(),
+                    ]))
                 : (!hasResults)
                     ? Center(
                         child: CircularProgressIndicator(),
@@ -222,10 +223,6 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
 
     showModalBottomSheet(
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-        ),
         context: context,
         builder: (context) {
           return StatefulBuilder(
@@ -269,8 +266,9 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                                 TextStyle(color: Colors.black54, fontSize: 16),
                           ),
                         ]),
-                    ElevatedButton.icon(
+                    ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          primary: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           elevation: 0,
@@ -297,8 +295,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                                         Groups(widget.userId)));
                           }
                         },
-                        icon: Icon(Icons.add_rounded),
-                        label: Text(requestMessage)),
+                        child: Text(requestMessage)),
                     SizedBox(
                       height: 10,
                     )
@@ -463,6 +460,7 @@ class _FriendsState extends State<Friends> with TickerProviderStateMixin {
                   },
                   child: Text(
                     "Cancelar",
+                    style: TextStyle(color: Colors.black),
                   )),
               TextButton(
                   onPressed: () {

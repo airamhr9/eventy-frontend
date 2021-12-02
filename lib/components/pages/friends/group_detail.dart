@@ -87,20 +87,19 @@ class _GroupDetailState extends State<GroupDetail> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
           elevation: 0,
         ),
         backgroundColor: Colors.blue[500],
         body: Container(
             width: double.infinity,
-            padding: EdgeInsets.only(top: 15, right: 10, left: 10),
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+              border: Border(top: BorderSide(color: Colors.black, width: 1)),
+              color: Colors.white,
+            ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListView(
                 children: [
                   Column(
@@ -110,31 +109,40 @@ class _GroupDetailState extends State<GroupDetail> {
                           children: [
                             Text(
                               "Participantes",
-                              style: TextStyle(fontSize: 17),
+                              style: TextStyle(fontSize: 20),
                             ),
-                            TextButton.icon(
+                            TextButton(
                               onPressed: () {
                                 showFriendsDialog();
                               },
-                              icon: Icon(Icons.person_add_rounded),
-                              label: Text("Invitar"),
+                              child: Text(
+                                "Invitar",
+                                style: TextStyle(
+                                    color: Colors.black54, fontSize: 18),
+                              ),
                             )
                           ]),
                       ...widget.group.users.map((e) => buildParticipantTile(e)),
-                      Divider(),
+                      Divider(
+                        color: Colors.black,
+                        thickness: 1,
+                      ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Tus preferencias",
-                              style: TextStyle(fontSize: 17),
+                              style: TextStyle(fontSize: 20),
                             ),
-                            TextButton.icon(
+                            TextButton(
                               onPressed: () {
                                 savePreferences();
                               },
-                              icon: Icon(Icons.save_rounded),
-                              label: Text("Guardar"),
+                              child: Text(
+                                "Guardar",
+                                style: TextStyle(
+                                    color: Colors.black54, fontSize: 18),
+                              ),
                             )
                           ]),
                       SizedBox(
@@ -172,8 +180,9 @@ class _GroupDetailState extends State<GroupDetail> {
                                         Icon(Icons.calendar_today_rounded),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none),
-                                    filled: true,
+                                        borderSide:
+                                            BorderSide(color: Colors.black)),
+                                    filled: false,
                                     hintText: "Mínima"),
                                 controller: minDateController),
                           ),
@@ -210,8 +219,9 @@ class _GroupDetailState extends State<GroupDetail> {
                                         Icon(Icons.calendar_today_rounded),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none),
-                                    filled: true,
+                                        borderSide:
+                                            BorderSide(color: Colors.black)),
+                                    filled: false,
                                     hintText: "Máxima"),
                                 controller: maxDateController),
                           )
@@ -225,6 +235,8 @@ class _GroupDetailState extends State<GroupDetail> {
                           Text("Presupuesto"),
                           Expanded(
                             child: Slider(
+                              inactiveColor: Colors.black12,
+                              activeColor: Colors.black,
                               value: _currentPriceValue,
                               min: 0,
                               max: 100,
@@ -255,20 +267,32 @@ class _GroupDetailState extends State<GroupDetail> {
                                 spacing: 5,
                                 runSpacing: 3,
                                 children: [
-                                  ...tagList.map((tag) => FilterChip(
-                                        label: Text(tag),
-                                        selected: filterTags.contains(tag),
-                                        selectedColor: Colors.lightBlue[100],
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            if (selected) {
-                                              filterTags.add(tag);
-                                            } else {
-                                              filterTags.remove(tag);
-                                            }
-                                          });
-                                        },
-                                      ))
+                                  ...tagList.map((tag) {
+                                    bool selected = filterTags.contains(tag);
+                                    return FilterChip(
+                                      label: Text(tag),
+                                      selected: selected,
+                                      side: BorderSide(
+                                          color: Colors.black, width: 1),
+                                      backgroundColor: Colors.transparent,
+                                      labelStyle: (selected)
+                                          ? TextStyle(color: Colors.white)
+                                          : TextStyle(),
+                                      checkmarkColor: (selected)
+                                          ? Colors.white
+                                          : Colors.black,
+                                      selectedColor: Colors.black,
+                                      onSelected: (bool selected) {
+                                        setState(() {
+                                          if (selected) {
+                                            filterTags.add(tag);
+                                          } else {
+                                            filterTags.remove(tag);
+                                          }
+                                        });
+                                      },
+                                    );
+                                  })
                                 ],
                               ));
                             } else
@@ -282,6 +306,7 @@ class _GroupDetailState extends State<GroupDetail> {
                               minimumSize: Size(double.infinity,
                                   40), // double.infinity is the width and 30 is the height
                               elevation: 0,
+                              primary: Colors.black,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
                           onPressed: () {

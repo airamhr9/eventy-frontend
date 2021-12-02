@@ -146,7 +146,6 @@ class _SearchState extends State<Search> {
       }
     } else {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             height: 130,
@@ -160,6 +159,7 @@ class _SearchState extends State<Search> {
           Text(
             searchHint,
             style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
           ),
           SizedBox(
             height: 20,
@@ -422,6 +422,7 @@ class _SearchState extends State<Search> {
                                     ],
                                   ),
                                   RangeSlider(
+                                      inactiveColor: Colors.black12,
                                       activeColor: Colors.black,
                                       values: _priceRangeValues,
                                       min: 0,

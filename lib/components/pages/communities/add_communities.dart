@@ -77,49 +77,50 @@ class _AddCommunityState extends State<AddCommunity> {
         automaticallyImplyLeading: true,
         foregroundColor: Colors.black,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.black, width: 1)),
         backgroundColor: Colors.white,
       ),
-      body: (SingleChildScrollView(
-          child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Imágenes",
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            _imgFromGallery();
-                          }, // handle your image tap here
-                          child: Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                    style: BorderStyle.solid)),
-                            child: Container(
-                              height: 100,
-                              child: Center(
-                                  child: Icon(Icons.photo_camera_rounded,
-                                      color: Theme.of(context).primaryColor)),
-                            ),
-                          )),
-                      Container(
-                        child: Wrap(
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.black, width: 1)),
+        ),
+        child: (SingleChildScrollView(
+            child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Imágenes",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _imgFromGallery();
+                            }, // handle your image tap here
+                            child: Card(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 2,
+                                      style: BorderStyle.solid)),
+                              child: Container(
+                                height: 100,
+                                child: Center(
+                                    child: Icon(Icons.photo_camera_rounded,
+                                        color: Theme.of(context).primaryColor)),
+                              ),
+                            )),
+                        Wrap(
                           spacing: 15,
                           runSpacing: 3,
                           children: [
@@ -152,166 +153,165 @@ class _AddCommunityState extends State<AddCommunity> {
                                 ))
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        //Nombre de la comunidad
-                        controller: _communityNameController,
-                        validator: (value) {
-                          return (value!.isEmpty)
-                              ? 'La comunidad debe tener nombre'
-                              : null;
-                        },
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            filled: false,
-                            hintText: "Nombre"),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Logo",
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            _imgLogoFromGallery();
-                          }, // handle your image tap here
-                          child: Card(
-                            //Logo
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                    style: BorderStyle.solid)),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(image: imageLogo),
-                              ),
-                              height: 100,
-                              width: 100,
-                              child: Center(
-                                  child: Icon(Icons.photo_camera_rounded,
-                                      color: Theme.of(context).primaryColor)),
-                            ),
-                          )),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        minLines: 8,
-                        maxLines: 20,
-                        controller: _descriptionCommunityController,
-                        validator: (value) {
-                          return (value!.isEmpty)
-                              ? 'La comunidad debe tener descripcion'
-                              : null;
-                        },
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            filled: false,
-                            hintText: "Descripcion"),
-                      ),
-                      /*SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Añadir Evento",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity,
-                              40), // double.infinity is the width and 40 is the height
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddEvent()));
-                      },
-                      icon: Icon(Icons.add_circle_rounded),
-                      label: Text("")),*/
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Etiquetas",
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                          child: Wrap(
-                        spacing: 5,
-                        runSpacing: 3,
-                        children: [
-                          ...tags.map((tag) {
-                            bool selected = tagsCommunity.contains(tag);
-                            return FilterChip(
-                              label: Text(tag),
-                              side: BorderSide(color: Colors.black, width: 1),
-                              backgroundColor: Colors.transparent,
-                              labelStyle: (selected)
-                                  ? TextStyle(color: Colors.white)
-                                  : TextStyle(),
-                              checkmarkColor:
-                                  (selected) ? Colors.white : Colors.black,
-                              selectedColor: Colors.black,
-                              selected: selected,
-                              onSelected: (bool selected) {
-                                setState(() {
-                                  if (selected) {
-                                    tagsCommunity.add(tag);
-                                  } else {
-                                    tagsCommunity.remove(tag);
-                                  }
-                                });
-                              },
-                            );
-                          })
-                        ],
-                      )),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      buildVisibilityRadioGroup(context),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity,
-                                  50), // double.infinity is the width and 30 is the height
-                              primary: Colors.black,
-                              onPrimary: Colors.white,
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          //Nombre de la comunidad
+                          controller: _communityNameController,
+                          validator: (value) {
+                            return (value!.isEmpty)
+                                ? 'La comunidad debe tener nombre'
+                                : null;
+                          },
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.black)),
+                              filled: false,
+                              hintText: "Nombre"),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Logo",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _imgLogoFromGallery();
+                            }, // handle your image tap here
+                            child: Card(
+                              //Logo
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                          onPressed: () {
-                            createCommunity(context);
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 2,
+                                      style: BorderStyle.solid)),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(image: imageLogo),
+                                ),
+                                height: 100,
+                                width: 100,
+                                child: Center(
+                                    child: Icon(Icons.photo_camera_rounded,
+                                        color: Theme.of(context).primaryColor)),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          minLines: 8,
+                          maxLines: 20,
+                          controller: _descriptionCommunityController,
+                          validator: (value) {
+                            return (value!.isEmpty)
+                                ? 'La comunidad debe tener descripcion'
+                                : null;
                           },
-                          child: Text("Crear comunidad")),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ))))),
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.black)),
+                              filled: false,
+                              hintText: "Descripcion"),
+                        ),
+                        /*SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Añadir Evento",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity,
+                                40), // double.infinity is the width and 40 is the height
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddEvent()));
+                        },
+                        icon: Icon(Icons.add_circle_rounded),
+                        label: Text("")),*/
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Etiquetas",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Wrap(
+                          spacing: 5,
+                          runSpacing: 3,
+                          children: [
+                            ...tags.map((tag) {
+                              bool selected = tagsCommunity.contains(tag);
+                              return FilterChip(
+                                label: Text(tag),
+                                side: BorderSide(color: Colors.black, width: 1),
+                                backgroundColor: Colors.transparent,
+                                labelStyle: (selected)
+                                    ? TextStyle(color: Colors.white)
+                                    : TextStyle(),
+                                checkmarkColor:
+                                    (selected) ? Colors.white : Colors.black,
+                                selectedColor: Colors.black,
+                                selected: selected,
+                                onSelected: (bool selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      tagsCommunity.add(tag);
+                                    } else {
+                                      tagsCommunity.remove(tag);
+                                    }
+                                  });
+                                },
+                              );
+                            })
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        buildVisibilityRadioGroup(context),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity,
+                                    50), // double.infinity is the width and 30 is the height
+                                primary: Colors.black,
+                                onPrimary: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                            onPressed: () {
+                              createCommunity(context);
+                            },
+                            child: Text("Crear comunidad")),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ))))),
+      ),
     );
   }
 

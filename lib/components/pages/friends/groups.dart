@@ -61,28 +61,32 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           elevation: 0,
           title: Text("Mis grupos"),
+          foregroundColor: Colors.black,
           actions: [
-            IconButton(
-                onPressed: updateGroups, icon: Icon(Icons.refresh_rounded))
+            IconButton(onPressed: updateGroups, icon: Icon(Icons.refresh))
           ],
         ),
         backgroundColor: Colors.blue[500],
         body: Container(
             width: double.infinity,
-            padding: EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+            padding: EdgeInsets.only(right: 10, left: 10, bottom: 15),
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Colors.black, width: 1)),
+            ),
             child: NestedScrollView(
                 headerSliverBuilder: (context, boolean) {
                   return [
-                    SliverToBoxAdapter(
-                      child: TabBar(
+                    SliverAppBar(
+                      primary: false,
+                      toolbarHeight: 0,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      pinned: true,
+                      bottom: TabBar(
                         indicator: MaterialIndicator(
                           color: Theme.of(context).primaryColor,
                           horizontalPadding: 50,

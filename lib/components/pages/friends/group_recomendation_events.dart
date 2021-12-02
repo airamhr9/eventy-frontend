@@ -55,13 +55,21 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
       appBar: AppBar(
         title: Text("Eventos recomendados"),
         automaticallyImplyLeading: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
-      body: (SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: BoxDecoration(color: Colors.white),
-            child: buildRecomendedEventList()),
-      )),
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.black, width: 1)),
+          color: Colors.white,
+        ),
+        child: (SingleChildScrollView(
+          child: Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: buildRecomendedEventList()),
+        )),
+      ),
     );
   }
 
@@ -83,9 +91,18 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
     return Column(
       children: [
         ...events.map((event) => Column(children: [
+              Divider(
+                height: 0,
+                color: Colors.black,
+                thickness: 1,
+              ),
               EventCard(event),
+              Divider(
+                height: 0,
+                color: Colors.black,
+                thickness: 1,
+              ),
               buildButtonAddMembers(event.id),
-              Divider()
             ]))
       ],
     );
@@ -98,17 +115,37 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
       if (eventsSinStartDate.isNotEmpty) {
         return Column(
           children: [
-            Text(
-              "Eventos sin filtro de fecha de inicio",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Eventos sin filtro de fecha de inicio",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black87),
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             ...eventsSinStartDate.map((event) => Column(children: [
+                  Divider(
+                    height: 0,
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   EventCard(event),
+                  Divider(
+                    height: 0,
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   buildButtonAddMembers(event.id),
-                  Divider()
                 ]))
           ],
         );
@@ -116,17 +153,37 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
       if (eventsSinFinishDate.isNotEmpty) {
         return Column(
           children: [
-            Text(
-              "Eventos sin filtro de fecha de finalización",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Eventos sin filtro de fecha de finalización",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black87),
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             ...eventsSinFinishDate.map((event) => Column(children: [
+                  Divider(
+                    height: 0,
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   EventCard(event),
+                  Divider(
+                    height: 0,
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   buildButtonAddMembers(event.id),
-                  Divider()
                 ]))
           ],
         );
@@ -134,17 +191,36 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
       if (eventsSinPrice.isNotEmpty) {
         return Column(
           children: [
-            Text(
-              "Eventos sin filtro de precio",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Eventos sin filtro de precio",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black87),
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             ...eventsSinPrice.map((event) => Column(children: [
+                  Divider(
+                    height: 0,
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   EventCard(event),
+                  Divider(
+                    color: Colors.black,
+                    thickness: 1,
+                  ),
                   buildButtonAddMembers(event.id),
-                  Divider()
                 ]))
           ],
         );
@@ -155,19 +231,18 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
   }
 
   buildTextNoEvents() {
-    return Container(
-        child: Center(
+    return Center(
       child: Text(
         "No se han encontrado eventos con esos filtros",
         style: TextStyle(
             fontWeight: FontWeight.w500, fontSize: 16, color: Colors.black87),
       ),
-    ));
+    );
   }
 
   buildButtonAddMembers(int eventId) {
     if (widget.userIsGroupLider == true) {
-      return ElevatedButton.icon(
+      return ElevatedButton(
           onPressed: () {
             bool allMembersOk = true;
             for (UserGroup user in widget.group.users) {
@@ -183,7 +258,7 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text(
-                        "Miembros añadidos con exito!",
+                        "¡Miembros añadidos con exito!",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 20,
@@ -225,8 +300,11 @@ class _GroupRecomendedEventsState extends State<GroupRecomendedEvents> {
                   });
             }
           },
-          icon: Icon(Icons.add_rounded),
-          label: Text("Añadir miembros del grupo al evento"));
+          style: ElevatedButton.styleFrom(
+              primary: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+          child: Text("Inscribir miembros del grupo"));
     } else {
       return SizedBox(
         height: 0,
