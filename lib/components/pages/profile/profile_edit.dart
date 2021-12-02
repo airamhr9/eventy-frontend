@@ -31,7 +31,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       "userImage.jpg");
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _userName = TextEditingController();
+  //final TextEditingController _userName = TextEditingController();
   final TextEditingController _bio = TextEditingController();
 
   @override
@@ -46,7 +46,6 @@ class _ProfileEditState extends State<ProfileEdit> {
       UserService().getUser(userId).then((value) => setState(() {
             user = value;
             _img = NetworkImage(user.profilePicture);
-            _userName.text = user.userName;
             _bio.text = user.bio;
             _imgFile =
                 File((user.profilePicture.split('%2F').last).split('?').first);
@@ -86,7 +85,7 @@ class _ProfileEditState extends State<ProfileEdit> {
         _imgFile.path.split('/').last,
         user.email,
         selectedTags,
-        _userName.text,
+        user.userName,
         user.password,
         _bio.text,
         user.birthdate,
@@ -153,21 +152,28 @@ class _ProfileEditState extends State<ProfileEdit> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      minLines: 1,
-                      controller: _userName,
-                      validator: (value) {
-                        return (value!.isEmpty)
-                            ? 'El nombre de usuario no puede estar vacio'
-                            : null;
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.black)),
-                          filled: false,
-                          hintText: "Nombre de Usuario"),
-                    ),
+                    /*TextFormField(
+                    minLines: 1,
+                    controller: _userName,
+
+                    validator: (value) {
+                      return (value!.isEmpty)
+                          ? 'El nombre de usuario no puede estar vacio'
+                          : null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        hintText: "Nombre de Usuario"),
+                  ),*/
+                    Text(user.userName,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        )),
                     SizedBox(
                       height: 20,
                     ),
@@ -182,31 +188,26 @@ class _ProfileEditState extends State<ProfileEdit> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.black)),
-                          filled: false,
+                              borderSide: BorderSide.none),
+                          filled: true,
                           hintText: "Biografía"),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                      height: 50,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Text(
-                        "Editar preferencias",
-                        style: TextStyle(color: Colors.black54),
-                      ),
                     ),
                     SizedBox(
                       height: 5,
                     ),
-                    Wrap(
-                      spacing: 5,
-                      runSpacing: 3,
-                      children: [
+                    Divider(indent: 16),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Editar preferencias",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      child: Wrap(spacing: 5, runSpacing: 3, children: [
                         ...tags.map((tag) {
                           bool selected = selectedTags.contains(tag);
                           return FilterChip(
@@ -231,7 +232,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                             },
                           );
                         })
-                      ],
+                      ]),
                     ),
                     SizedBox(
                       height: 20,

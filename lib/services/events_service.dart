@@ -143,9 +143,18 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<bool> sendEvent(Event event) async {
+  Future<bool> postEvent(Event event) async {
     Uri url = Uri.http(this.url, '/events');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(event.toJson()));
+    return response.statusCode == 200;
+  }
+
+  Future<bool> putEvent(Event event) async {
+    final query = { 'event': event.id };
+    Uri url = Uri.http(this.url, '/events', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
     final response = await http.post(url,
         headers: headers, body: jsonEncode(event.toJson()));
     return response.statusCode == 200;
@@ -226,6 +235,15 @@ class EventService extends Service {
     final response = await http.post(url,
         headers: headers, body: jsonEncode(survey.toJson()));
     return response.statusCode == 200;
+  }
+
+  Future<int> postDateSurvey(Survey survey) async {
+    final query = { 'newEvent': 'true' };
+    Uri url = Uri.http(this.url, '/surveys', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(survey.toJson()));
+    return int.parse(response.body);
   }
 
   Future<bool> postSurveyVote(

@@ -185,6 +185,10 @@ class _AddEventState extends State<AddEvent> {
                         ),
                         buildDatePickers("Fecha de final", false, context),
                         SizedBox(
+                          height: 10,
+                        ),
+                        buildButtonSurveyDate(context),
+                        SizedBox(
                           height: 20,
                         ),
                         buildMapPicker(context),
@@ -206,6 +210,46 @@ class _AddEventState extends State<AddEvent> {
                               filled: false,
                               hintText: "Resumen"),
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          minLines: 8,
+                          maxLines: 20,
+                          controller: _descriptionController,
+                          validator: (value) {
+                            return (value!.isEmpty)
+                                ? 'El evento debe tener descripcion'
+                                : null;
+                          },
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.black)),
+                              filled: false,
+                              hintText: "Descripcion"),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        buildVisibilityRadioGroup(context),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                            width: 180,
+                            child: TextFormField(
+                              maxLength: 10,
+                              controller: _priceController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                  filled: false,
+                                  hintText: "Resumen"),
+                            )),
                         SizedBox(
                           height: 20,
                         ),
@@ -523,16 +567,17 @@ class _AddEventState extends State<AddEvent> {
             ),
           ],
         ),
-        buildButtonSurveyDate(context)
       ],
     );
   }
 
   Widget buildButtonSurveyDate(BuildContext context) {
-    return FilledButton(
-        text: "Encuesta",
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddSurvey(-1))));
+    return Container(
+        alignment: Alignment.center,
+        child: FilledButton(
+            text: "Votación de fechas",
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddSurvey(-1)))));
   }
 
   bool validateFields(BuildContext context) {

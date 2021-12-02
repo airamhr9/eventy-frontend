@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:isolate';
 import 'package:eventy_front/components/pages/my_events/related_event_card.dart';
 import 'package:eventy_front/components/pages/my_events/related_events.dart';
@@ -23,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:intl/intl.dart';
+
+import 'event_memories.dart';
 
 class EventView extends StatefulWidget {
   final Event event;
@@ -1045,5 +1048,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 }))
       ],
     );
+  }
+
+  buildRecuerdos() {
+    if (widget.event.finishDate.compareTo(TimeOfDay.now().toString()) > 0) {
+      return EventsMemories(widget.event.id.toString());
+    } else {
+      return SizedBox(
+        height: 5,
+      );
+    }
   }
 }
