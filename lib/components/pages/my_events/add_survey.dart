@@ -36,6 +36,11 @@ class _AddSurveyState extends State<AddSurvey> {
         appBar: AppBar(
           title: Text("Crear encuesta"),
           automaticallyImplyLeading: true,
+          foregroundColor: Colors.black,
+          elevation: 0,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.black, width: 1)),
         ),
         body: (SingleChildScrollView(
           child: Container(
@@ -55,8 +60,8 @@ class _AddSurveyState extends State<AddSurvey> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Nombre"),
                       ),
                       SizedBox(
@@ -76,8 +81,9 @@ class _AddSurveyState extends State<AddSurvey> {
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none),
-                                  filled: true,
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                  filled: false,
                                   hintText: "Opción"),
                             ),
                           ),
@@ -177,7 +183,7 @@ class _AddSurveyState extends State<AddSurvey> {
             TextButton(
               child: Text(
                 "Cambiar",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               onPressed: () {
                 FocusScope.of(context).unfocus();

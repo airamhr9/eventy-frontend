@@ -83,11 +83,18 @@ class _AddEventState extends State<AddEvent> {
       appBar: AppBar(
         title: Text("Crear evento"),
         automaticallyImplyLeading: true,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black, width: 1)),
       ),
       body: (SingleChildScrollView(
           child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
               child: Form(
                   key: _formKey,
                   child: Column(
@@ -162,8 +169,7 @@ class _AddEventState extends State<AddEvent> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
                             hintText: "Nombre"),
                       ),
                       SizedBox(
@@ -192,8 +198,8 @@ class _AddEventState extends State<AddEvent> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Resumen"),
                       ),
                       SizedBox(
@@ -211,8 +217,8 @@ class _AddEventState extends State<AddEvent> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Descripcion"),
                       ),
                       SizedBox(
@@ -232,8 +238,8 @@ class _AddEventState extends State<AddEvent> {
                               suffixIcon: Icon(Icons.euro_rounded),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none),
-                              filled: true,
+                                  borderSide: BorderSide(color: Colors.black)),
+                              filled: false,
                               hintText: "Precio"),
                         ),
                       ),
@@ -250,30 +256,41 @@ class _AddEventState extends State<AddEvent> {
                         spacing: 5,
                         runSpacing: 3,
                         children: [
-                          ...tags.map((tag) => FilterChip(
-                                label: Text(tag),
-                                backgroundColor: Color(0xFFF1F1F1),
-                                selected: tagsEvent.contains(tag),
-                                selectedColor: Colors.lightBlue[100],
-                                onSelected: (bool selected) {
-                                  setState(() {
-                                    if (selected) {
-                                      tagsEvent.add(tag);
-                                    } else {
-                                      tagsEvent.remove(tag);
-                                    }
-                                  });
-                                },
-                              ))
+                          ...tags.map((tag) {
+                            bool selected = tagsEvent.contains(tag);
+                            return FilterChip(
+                              label: Text(tag),
+                              side: BorderSide(color: Colors.black, width: 1),
+                              backgroundColor: Colors.transparent,
+                              labelStyle: (selected)
+                                  ? TextStyle(color: Colors.white)
+                                  : TextStyle(),
+                              checkmarkColor:
+                                  (selected) ? Colors.white : Colors.black,
+                              selectedColor: Colors.black,
+                              selected: selected,
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  if (selected) {
+                                    tagsEvent.add(tag);
+                                  } else {
+                                    tagsEvent.remove(tag);
+                                  }
+                                });
+                              },
+                            );
+                          })
                         ],
                       )),
                       SizedBox(
                         height: 20,
                       ),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 50),
                               // double.infinity is the width and 30 is the height
+                              primary: Colors.black,
+                              onPrimary: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
@@ -288,8 +305,7 @@ class _AddEventState extends State<AddEvent> {
                         } */
                             createEvent(context);
                           },
-                          icon: Icon(Icons.add_rounded),
-                          label: Text("Publicar evento"))
+                          child: Text("Publicar evento"))
                     ],
                   ))))),
     );
@@ -320,6 +336,7 @@ class _AddEventState extends State<AddEvent> {
               style: TextStyle(color: Colors.black54),
             ),
             Checkbox(
+                activeColor: Colors.black,
                 value: hasMaxAssistants,
                 onChanged: (value) {
                   setState(() {
@@ -345,8 +362,8 @@ class _AddEventState extends State<AddEvent> {
                   prefixIcon: Icon(Icons.person_rounded),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none),
-                  filled: true,
+                      borderSide: BorderSide(color: Colors.black)),
+                  filled: false,
                   hintText: "Asistentes")),
         ),
       ],
@@ -369,6 +386,7 @@ class _AddEventState extends State<AddEvent> {
                 description: "Público",
                 value: "Público",
                 groupValue: _visibilityValue,
+                activeColor: Colors.black,
                 onChanged: (value) {
                   setState(() {
                     _visibilityValue = value as String;
@@ -378,6 +396,7 @@ class _AddEventState extends State<AddEvent> {
                 description: "Privado",
                 value: "Privado",
                 groupValue: _visibilityValue,
+                activeColor: Colors.black,
                 onChanged: (value) {
                   setState(() {
                     _visibilityValue = value as String;
@@ -414,7 +433,7 @@ class _AddEventState extends State<AddEvent> {
             TextButton(
               child: Text(
                 "Cambiar",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               onPressed: () {
                 showPlacePicker(context);
@@ -437,8 +456,8 @@ class _AddEventState extends State<AddEvent> {
                   prefixIcon: Icon(Icons.location_city_rounded),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none),
-                  filled: true,
+                      borderSide: BorderSide(color: Colors.black)),
+                  filled: false,
                   hintText: "Dirección")),
         )
       ],
@@ -470,7 +489,7 @@ class _AddEventState extends State<AddEvent> {
             TextButton(
               child: Text(
                 "Cambiar",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               onPressed: () {
                 FocusScope.of(context).unfocus();

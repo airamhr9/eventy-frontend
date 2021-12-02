@@ -33,17 +33,10 @@ class _MyCommunitiesState extends State<MyCommunities> {
                   child: ListTile(
                 title: Text(
                   myCommunitiesList[position].name,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black87),
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
-                subtitle: Row(
-                  children: [
-                    Icon(Icons.people, size: 18),
-                    buildTextMembers(myCommunitiesList[position].members.length)
-                  ],
-                ),
+                subtitle: buildTextMembers(
+                    myCommunitiesList[position].members.length),
                 leading: Container(
                     width: 45,
                     height: 45,
@@ -65,9 +58,9 @@ class _MyCommunitiesState extends State<MyCommunities> {
               ));
             },
             separatorBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Divider(),
+              return Divider(
+                color: Colors.black,
+                thickness: 1,
               );
             },
           )
@@ -79,10 +72,12 @@ class _MyCommunitiesState extends State<MyCommunities> {
   buildTextMembers(int numMembers) {
     if (numMembers > 1) {
       return Text(
-          "  " + numMembers.toString() + " miembros",);
+        numMembers.toString() + " miembros",
+      );
     } else {
       return Text(
-          "  " + numMembers.toString() + " miembro",);
+        numMembers.toString() + " miembro",
+      );
     }
   }
 

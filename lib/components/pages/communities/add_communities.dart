@@ -75,11 +75,18 @@ class _AddCommunityState extends State<AddCommunity> {
       appBar: AppBar(
         title: Text("Crear comunidad"),
         automaticallyImplyLeading: true,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black, width: 1)),
+        backgroundColor: Colors.white,
       ),
       body: (SingleChildScrollView(
           child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
               child: Form(
                   key: _formKey,
                   child: Column(
@@ -160,8 +167,8 @@ class _AddCommunityState extends State<AddCommunity> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Nombre"),
                       ),
                       SizedBox(
@@ -213,8 +220,8 @@ class _AddCommunityState extends State<AddCommunity> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none),
-                            filled: true,
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: false,
                             hintText: "Descripcion"),
                       ),
                       /*SizedBox(
@@ -254,20 +261,30 @@ class _AddCommunityState extends State<AddCommunity> {
                         spacing: 5,
                         runSpacing: 3,
                         children: [
-                          ...tags.map((tag) => FilterChip(
-                                label: Text(tag),
-                                selected: tagsCommunity.contains(tag),
-                                selectedColor: Colors.lightBlue[100],
-                                onSelected: (bool selected) {
-                                  setState(() {
-                                    if (selected) {
-                                      tagsCommunity.add(tag);
-                                    } else {
-                                      tagsCommunity.remove(tag);
-                                    }
-                                  });
-                                },
-                              ))
+                          ...tags.map((tag) {
+                            bool selected = tagsCommunity.contains(tag);
+                            return FilterChip(
+                              label: Text(tag),
+                              side: BorderSide(color: Colors.black, width: 1),
+                              backgroundColor: Colors.transparent,
+                              labelStyle: (selected)
+                                  ? TextStyle(color: Colors.white)
+                                  : TextStyle(),
+                              checkmarkColor:
+                                  (selected) ? Colors.white : Colors.black,
+                              selectedColor: Colors.black,
+                              selected: selected,
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  if (selected) {
+                                    tagsCommunity.add(tag);
+                                  } else {
+                                    tagsCommunity.remove(tag);
+                                  }
+                                });
+                              },
+                            );
+                          })
                         ],
                       )),
                       SizedBox(
@@ -277,18 +294,19 @@ class _AddCommunityState extends State<AddCommunity> {
                       SizedBox(
                         height: 20,
                       ),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity,
                                   50), // double.infinity is the width and 30 is the height
+                              primary: Colors.black,
+                              onPrimary: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
                           onPressed: () {
                             createCommunity(context);
                           },
-                          icon: Icon(Icons.add),
-                          label: Text("Crear comunidad")),
+                          child: Text("Crear comunidad")),
                       SizedBox(
                         height: 20,
                       ),
@@ -351,6 +369,7 @@ class _AddCommunityState extends State<AddCommunity> {
           children: [
             RadioButton(
               description: "Pública",
+              activeColor: Colors.black,
               value: "Público",
               groupValue: _visibilityValue,
               onChanged: (value) {
@@ -361,6 +380,7 @@ class _AddCommunityState extends State<AddCommunity> {
             ),
             RadioButton(
                 description: "Privada",
+                activeColor: Colors.black,
                 value: "Privado",
                 groupValue: _visibilityValue,
                 onChanged: (value) {
