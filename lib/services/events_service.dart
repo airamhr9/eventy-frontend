@@ -228,6 +228,15 @@ class EventService extends Service {
     return response.statusCode == 200;
   }
 
+  Future<int> postDateSurvey(Survey survey) async {
+    final query = { 'newEvent': 'true' };
+    Uri url = Uri.http(this.url, '/surveys', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(survey.toJson()));
+    return int.parse(response.body);
+  }
+
   Future<bool> postSurveyVote(
       String eventId, String surveyId, String option) async {
     print(option);
