@@ -181,6 +181,10 @@ class _AddEventState extends State<AddEvent> {
                       ),
                       buildDatePickers("Fecha de final", false, context),
                       SizedBox(
+                        height: 10,
+                      ),
+                      buildButtonSurveyDate(context),
+                      SizedBox(
                         height: 20,
                       ),
                       buildMapPicker(context),
@@ -517,16 +521,17 @@ class _AddEventState extends State<AddEvent> {
             ),
           ],
         ),
-        buildButtonSurveyDate(context)
       ],
     );
   }
 
   Widget buildButtonSurveyDate(BuildContext context) {
-    return FilledButton(
-        text: "Encuesta",
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddSurvey(-1))));
+    return Container(
+        alignment: Alignment.center,
+        child: FilledButton(
+            text: "Votación de fechas",
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddSurvey(-1)))));
   }
 
   bool validateFields(BuildContext context) {
