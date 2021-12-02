@@ -1,9 +1,3 @@
-import 'package:eventy_front/objects/community.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-
-import 'event.dart';
-
 class User {
   String id;
   String profilePicture;
@@ -14,8 +8,6 @@ class User {
   String bio;
   String birthdate;
   String? profilePictureName;
-  //List<Event> events;
-  //List<Community> communities;
 
   User(
       this.id,
@@ -27,8 +19,6 @@ class User {
       this.bio,
       this.birthdate,
       this.profilePictureName
-      //this.events,
-      //this.communities,
       );
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -44,8 +34,6 @@ class User {
         json['bio'],
         json['birthdate'],
         json['imageName']
-        //(json['events'] as List).cast<Event>(),
-        //(json['communities'] as List).cast<Community>(),
         );
   }
 
@@ -59,7 +47,7 @@ class User {
       'password': this.password,
       'bio': this.bio,
       'birthdate': this.birthdate,
-      'imageName': this.profilePictureName
+      'image': this.profilePictureName
     };
     return result;
   }

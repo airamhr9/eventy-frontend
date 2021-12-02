@@ -22,11 +22,11 @@ class _ProfileEditState extends State<ProfileEdit> {
   ImageProvider _img = NetworkImage("");
   File _imgFile = File("");
   String userId = "";
- User user = User("-1","https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fusers%2FuserImg.jpg?alt=media&token=9a12a294-94c9-4e76-8eae-86a17054bbe0"
+  User user = User("-1","https://firebasestorage.googleapis.com/v0/b/eventy-a8e4c.appspot.com/o/images%2Fusers%2FuserImg.jpg?alt=media&token=9a12a294-94c9-4e76-8eae-86a17054bbe0"
       ,"A",[],"TEST","000","A","0","userImage.jpg");
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _userName = TextEditingController();
+  //final TextEditingController _userName = TextEditingController();
   final TextEditingController _bio = TextEditingController();
 
 @override
@@ -42,7 +42,6 @@ void initState() {
   UserService().getUser(userId).then((value) => setState(() {
     user = value;
     _img = NetworkImage(user.profilePicture);
-    _userName.text = user.userName;
     _bio.text = user.bio;
     _imgFile = File((user.profilePicture.split('%2F').last).split('?').first);
   }));
@@ -85,15 +84,15 @@ void initState() {
 
 
     final User finalUser = User(
-    userId,
+      userId,
       _imgFile.path.split('/').last,
-    user.email,
-    selectedTags,
-    _userName.text,
-    user.password,
-    _bio.text,
-    user.birthdate,
-        _imgFile.path.split('/').last
+      user.email,
+      selectedTags,
+      user.userName,
+      user.password,
+      _bio.text,
+      user.birthdate,
+      _imgFile.path.split('/').last
     );
    // print("user creado" + finalUser.toString());
     UserService().updateUser(finalUser );
@@ -153,7 +152,7 @@ void initState() {
                   SizedBox(
                     height: 20,
                   ),
-                  TextFormField(
+                  /*TextFormField(
                     minLines: 1,
                     controller: _userName,
 
@@ -168,6 +167,14 @@ void initState() {
                             borderSide: BorderSide.none),
                         filled: true,
                         hintText: "Nombre de Usuario"),
+                  ),*/
+                  Text(
+                    user.userName,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )
                   ),
                   SizedBox(
                     height: 20,
