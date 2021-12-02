@@ -21,7 +21,7 @@ class _CreateEventState extends State<CreateEvent> {
   void initState() {
     super.initState();
     final eventService = EventService();
-    eventService.sendEvent(widget.event).then((value) {
+    eventService.postEvent(widget.event).then((value) {
       if (value == false)
         setState(() {
           error = true;
