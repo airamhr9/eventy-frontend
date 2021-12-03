@@ -1,6 +1,6 @@
 import 'package:eventy_front/components/pages/my_events/memories_card.dart';
 import 'package:eventy_front/components/widgets/filled_button.dart';
-import 'package:eventy_front/objects/memorie.dart';
+import 'package:eventy_front/objects/memory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -13,7 +13,7 @@ class EventsMemories extends StatefulWidget {
 }
 
 class _EventsMemoriesState extends State<EventsMemories> {
-  List<Memorie> memories = [];
+  List<Memory> memories = [];
   bool hasMemories = false;
 
   @override

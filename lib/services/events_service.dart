@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventy_front/objects/memory.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
@@ -275,4 +276,43 @@ class EventService extends Service {
         list.map((survey) => Survey.fromJson(survey)).toList();
     return surveys;
   }
+
+  Future<bool> postMemory(int eventId, Memory memory) async {
+    final query = {
+      'eventId': eventId,
+      'text': memory.description,
+      'author': await MySharedPreferences.instance.getStringValue("userId"),
+      'images': memory.description
+    };
+    Uri url = Uri.http(this.url, '/memories', query);
+    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final response = await http.post(url, headers: headers);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> sendMemoryImage(FileImage image) async {
+    final query = {
+      'type': 'memory',
+      'name': basename(image.file.path)
+    };
+    Uri url = Uri.http(this.url, '/images', query);
+    final request = http.MultipartRequest("POST", url);
+    final imageToSend =
+      await http.MultipartFile.fromPath('photo', image.file.path);
+    request.files.add(imageToSend);
+    var response = await request.send();
+    return response.statusCode == 200;
+  }
+
+  Future<List<Memory>> getEventMemories(int eventId) async {
+    final query = { 'eventId': eventId };
+    Uri url = Uri.http(this.url, '/memories', query);
+    final localhostResponse = await http.get(url);
+    final data = await json.decode(localhostResponse.body);
+    final list = data as List;
+    List<Memory> memories =
+      list.map((memory) => Memory.fromJson(memory)).toList();
+    return memories;
+  }
+
 }
