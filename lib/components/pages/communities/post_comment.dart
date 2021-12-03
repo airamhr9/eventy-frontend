@@ -43,8 +43,9 @@ class PostComment extends StatelessWidget {
           height: 10,
         ),
         Divider(
-          indent: 15,
-          endIndent: 15,
+          color: Colors.black,
+          indent: 10,
+          endIndent: 10,
         )
       ],
     );

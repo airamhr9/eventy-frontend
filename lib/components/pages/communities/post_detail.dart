@@ -55,16 +55,15 @@ class _PostDetailsState extends State<PostDetails>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         elevation: 0,
       ),
-      backgroundColor: Colors.blue[500],
+      backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            border: Border(top: BorderSide(color: Colors.black, width: 1))),
         child: Column(
           children: [
             Expanded(
@@ -72,81 +71,70 @@ class _PostDetailsState extends State<PostDetails>
                     headerSliverBuilder: (context, boolean) {
                       return [
                         SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                (widget.post.images.length > 0)
-                                    ? Column(
-                                        children: [
-                                          Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 5.0),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                child: Image.network(
-                                                  widget.post.images,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              )),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              (widget.post.images.length > 0)
+                                  ? Column(
+                                      children: [
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ClipRRect(
+                                              child: Image.network(
+                                                widget.post.images,
+                                                fit: BoxFit.fitWidth,
+                                              ),
+                                            )),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.post.title,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF373737),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: 'Por ',
+                                        style: TextStyle(color: Colors.black54),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: widget.post.author,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(text: ' a $formattedDate'),
                                         ],
-                                      )
-                                    : SizedBox(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.post.title,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF373737),
-                                        ),
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          text: 'Por ',
-                                          style:
-                                              TextStyle(color: Colors.black54),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: widget.post.author,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(text: ' a $formattedDate'),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        widget.post.text,
-                                        style:
-                                            TextStyle(color: Color(0xFF484848)),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      widget.post.text,
+                                      style:
+                                          TextStyle(color: Color(0xFF484848)),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         )
                       ];
@@ -154,7 +142,10 @@ class _PostDetailsState extends State<PostDetails>
                     body: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Divider(),
+                          Divider(
+                            color: Colors.black,
+                            thickness: 1,
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0, top: 10),
                             child: Text(
@@ -192,7 +183,7 @@ class _PostDetailsState extends State<PostDetails>
                           ),
                         ]))),
             Container(
-                color: Colors.blue,
+                color: Colors.black,
                 width: double.infinity,
                 height: 60,
                 padding: EdgeInsets.all(8),
@@ -205,7 +196,7 @@ class _PostDetailsState extends State<PostDetails>
                         decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.only(bottom: 25, left: 15),
-                            fillColor: Colors.white70,
+                            fillColor: Colors.white,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide.none),

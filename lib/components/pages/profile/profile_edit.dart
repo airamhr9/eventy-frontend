@@ -41,23 +41,8 @@ class _ProfileEditState extends State<ProfileEdit> {
       setState(() {
         userId = value;
       });
-
       print("id" + userId);
-      UserService().getUser(userId).then((value) => setState(() {
-            user = value;
-            _img = NetworkImage(user.profilePicture);
-            _bio.text = user.bio;
-            _imgFile =
-                File((user.profilePicture.split('%2F').last).split('?').first);
-          }));
-
-      UserService().getUserPreferences(userId, "").then((value) => setState(() {
-            print("Here " + userId);
-            selectedTags = value;
-          }));
-      TagsService().get().then((value) => setState(() {
-            tags = value;
-          }));
+      _fetchData();
     });
   }
 
@@ -73,6 +58,24 @@ class _ProfileEditState extends State<ProfileEdit> {
       _img = FileImage(_imgFile);
       print(_imgFile.path.split('/').last);
     });
+  }
+
+  _fetchData() async {
+    UserService().getUser(userId).then((value) => setState(() {
+          user = value;
+          _img = NetworkImage(user.profilePicture);
+          _bio.text = user.bio;
+          _imgFile =
+              File((user.profilePicture.split('%2F').last).split('?').first);
+        }));
+
+    UserService().getUserPreferences(userId, "").then((value) => setState(() {
+          print("Here " + userId);
+          selectedTags = value;
+        }));
+    TagsService().get().then((value) => setState(() {
+          tags = value;
+        }));
   }
 
   void updateUser(BuildContext context) async {
@@ -275,21 +278,22 @@ class _ProfileEditState extends State<ProfileEdit> {
             actions: [
               TextButton(
                   onPressed: () {
-                    updateUser(context);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Aceptar",
-                    style: TextStyle(color: Colors.lightBlue),
-                  )),
-              TextButton(
-                  onPressed: () {
                     Navigator.of(context).pop();
                   },
                   child: Text(
                     "Cancelar",
-                    style: TextStyle(color: Colors.lightBlue),
-                  ))
+                    style: TextStyle(color: Colors.black54),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    updateUser(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Actualizar",
+                    style: TextStyle(color: Colors.black),
+                  )),
             ],
           );
         });
