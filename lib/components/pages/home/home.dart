@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/components/pages/login/login.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
@@ -6,7 +8,10 @@ import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
+import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:tiktoklikescroller/tiktoklikescroller.dart';
 
 class Home extends StatefulWidget {
@@ -18,12 +23,21 @@ class Home extends StatefulWidget {
   }
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   List<Color> colors = [Colors.black, Colors.red, Colors.blue, Colors.green];
   List<Event> events = [];
   late Event currentEvent;
   List<User> participants = [];
   List<User> possiblyParticipants = [];
+  late TabController _tabController = TabController(length: 2, vsync: this);
+  final List<Widget> myTabs = [
+    Tab(text: 'Tarjetas'),
+    Tab(text: 'Mapa'),
+  ];
+  Completer<GoogleMapController> _controller = Completer();
+  LatLng selectedLocation = LatLng(37.42796133580664, 1.085749655962);
+  List<Marker> myMarker = [];
+  late final initialPos;
 
   @override
   void initState() {
@@ -32,6 +46,15 @@ class _HomeState extends State<Home> {
           print("Here");
           events = value;
           currentEvent = events.first;
+          initialPos = CameraPosition(
+            target: LatLng(events.first.latitude, events.first.longitude),
+            zoom: 14.4746,
+          );
+          myMarker = events
+              .map((e) => Marker(
+                  markerId: MarkerId(e.id.toString()),
+                  position: LatLng(e.latitude, e.longitude)))
+              .toList();
         }));
   }
 
@@ -44,33 +67,111 @@ class _HomeState extends State<Home> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 SizedBox(
-                  height: 40,
-                ),
-                SizedBox(
-                  height: 55,
-                  child: MovingTitle("● Eventos para ti"),
-                ),
-                SizedBox(
                   height: 10,
                 ),
-                Expanded(
-                  child: TikTokStyleFullPageScroller(
-                    contentSize: events.length,
-                    swipePositionThreshold: 0.1,
-                    swipeVelocityThreshold: 500,
-                    animationDuration: const Duration(milliseconds: 200),
-                    builder: (BuildContext context, int index) {
-                      return RecommendedEvent(events[index]);
-                    },
-                    onScrollEvent: _handleCallbackEvent,
+                TabBar(
+                  indicator: MaterialIndicator(
+                    color: Theme.of(context).primaryColor,
+                    horizontalPadding: 60,
+                    topLeftRadius: 20,
+                    topRightRadius: 20,
+                    paintingStyle: PaintingStyle.fill,
                   ),
+                  labelColor: Colors.black87,
+                  controller: _tabController,
+                  isScrollable: false,
+                  tabs: myTabs,
                 ),
+                Expanded(
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: _tabController,
+                    children: [
+                      buildRecomendationsTab(),
+                      buildMapRecomendations()
+                    ],
+                  ),
+                )
               ],
             ),
           )
         : Center(
             child: CircularProgressIndicator(),
           );
+  }
+
+  Widget buildMapRecomendations() {
+    return Column(children: [
+      SizedBox(
+        height: 400,
+        child: GoogleMap(
+          markers: Set.from(myMarker),
+          mapType: MapType.normal,
+          initialCameraPosition: initialPos,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          onTap: _onMapTapped,
+        ),
+      ),
+      Expanded(
+        child: Column(
+          children: [],
+        ),
+      )
+    ]);
+  }
+
+  _onMapTapped(LatLng location) {
+    print(location);
+    setState(() {
+      selectedLocation = location;
+      myMarker = [];
+      myMarker.add(
+          Marker(markerId: MarkerId(location.toString()), position: location));
+    });
+  }
+
+  Future<void> goToUserPos(LatLng coords) async {
+    final newPos = CameraPosition(
+      target: coords,
+      zoom: 15,
+    );
+    setState(() {
+      selectedLocation = coords;
+      myMarker = [];
+      myMarker
+          .add(Marker(markerId: MarkerId(coords.toString()), position: coords));
+    });
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
+    print("hi");
+  }
+
+  Widget buildRecomendationsTab() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 55,
+          child: MovingTitle("● Eventos para ti"),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: TikTokStyleFullPageScroller(
+            contentSize: events.length,
+            swipePositionThreshold: 0.1,
+            swipeVelocityThreshold: 500,
+            animationDuration: const Duration(milliseconds: 200),
+            builder: (BuildContext context, int index) {
+              return RecommendedEvent(events[index]);
+            },
+            onScrollEvent: _handleCallbackEvent,
+          ),
+        ),
+      ],
+    );
   }
 
   void _handleCallbackEvent(ScrollEventType type, {int? currentIndex}) {
