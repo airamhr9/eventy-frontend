@@ -1,8 +1,8 @@
-import 'package:eventy_front/objects/memorie.dart';
+import 'package:eventy_front/objects/memory.dart';
 import 'package:flutter/material.dart';
 
 class MemoriesCard extends StatelessWidget {
-  final Memorie memorie;
+  final Memory memorie;
   const MemoriesCard(this.memorie) : super();
 
   @override
