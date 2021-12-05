@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eventy_front/components/pages/home/recomendation.dart';
 import 'package:eventy_front/components/pages/login/login.dart';
+import 'package:eventy_front/components/pages/my_events/event_card.dart';
 import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/objects/event.dart';
@@ -27,6 +28,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   List<Color> colors = [Colors.black, Colors.red, Colors.blue, Colors.green];
   List<Event> events = [];
   late Event currentEvent;
+  late Event currentMapEvent;
   List<User> participants = [];
   List<User> possiblyParticipants = [];
   late TabController _tabController = TabController(length: 2, vsync: this);
@@ -46,6 +48,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           print("Here");
           events = value;
           currentEvent = events.first;
+          currentMapEvent = events.first;
           initialPos = CameraPosition(
             target: LatLng(events.first.latitude, events.first.longitude),
             zoom: 14.4746,
@@ -53,7 +56,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           myMarker = events
               .map((e) => Marker(
                   markerId: MarkerId(e.id.toString()),
-                  position: LatLng(e.latitude, e.longitude)))
+                  position: LatLng(e.latitude, e.longitude),
+                  onTap: () => setState(() {
+                        currentMapEvent = e;
+                      })))
               .toList();
         }));
   }
@@ -72,7 +78,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 TabBar(
                   indicator: MaterialIndicator(
                     color: Theme.of(context).primaryColor,
-                    horizontalPadding: 60,
+                    horizontalPadding: 80,
                     topLeftRadius: 20,
                     topRightRadius: 20,
                     paintingStyle: PaintingStyle.fill,
@@ -103,6 +109,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget buildMapRecomendations() {
     return Column(children: [
       SizedBox(
+        height: 20,
+      ),
+      SizedBox(
         height: 400,
         child: GoogleMap(
           markers: Set.from(myMarker),
@@ -116,7 +125,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       Expanded(
         child: Column(
-          children: [],
+          children: [EventCard(currentMapEvent)],
         ),
       )
     ]);
@@ -126,26 +135,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     print(location);
     setState(() {
       selectedLocation = location;
-      myMarker = [];
-      myMarker.add(
-          Marker(markerId: MarkerId(location.toString()), position: location));
     });
-  }
-
-  Future<void> goToUserPos(LatLng coords) async {
-    final newPos = CameraPosition(
-      target: coords,
-      zoom: 15,
-    );
-    setState(() {
-      selectedLocation = coords;
-      myMarker = [];
-      myMarker
-          .add(Marker(markerId: MarkerId(coords.toString()), position: coords));
-    });
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
-    print("hi");
   }
 
   Widget buildRecomendationsTab() {
