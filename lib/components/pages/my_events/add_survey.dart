@@ -8,10 +8,14 @@ import 'package:intl/intl.dart';
 
 class AddSurvey extends StatefulWidget {
   final int eventId;
+  //final _AddSurveyState addSurveyState = _AddSurveyState();
   const AddSurvey(this.eventId) : super();
 
   @override
   _AddSurveyState createState() => _AddSurveyState();
+  /*_AddSurveyState createState() {
+    return addSurveyState;
+  }*/
 }
 
 class _AddSurveyState extends State<AddSurvey> {
@@ -24,6 +28,7 @@ class _AddSurveyState extends State<AddSurvey> {
   DateTime finishDate = DateTime.now().add(Duration(days: 2));
   List<String> options = [];
   late Survey survey;
+  int eventIdSurveyDate = -1;
 
   @override
   void initState() {
@@ -272,9 +277,23 @@ class _AddSurveyState extends State<AddSurvey> {
                                 startDate.toIso8601String(),
                                 finishDate.toIso8601String(),
                               );
-                              EventService()
-                                  .postSurvey(survey, widget.eventId.toString())
-                                  .then((value) => Navigator.of(context).pop());
+                              if (widget.eventId == -1) {
+                                EventService()
+                                    .postDateSurvey(survey)
+                                    .then((value) {
+                                  setState(() {
+                                    eventIdSurveyDate = value;
+                                    Navigator.pop(context, eventIdSurveyDate);
+                                    Navigator.of(context).pop();
+                                  });
+                                });
+                              } else {
+                                EventService()
+                                    .postSurvey(
+                                        survey, widget.eventId.toString())
+                                    .then(
+                                        (value) => Navigator.of(context).pop());
+                              }
                             },
                             label: Text(
                               "Aceptar",

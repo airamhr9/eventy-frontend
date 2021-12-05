@@ -25,6 +25,7 @@ class AddEvent extends StatefulWidget {
 }
 
 class _AddEventState extends State<AddEvent> {
+  dynamic eventId = -1;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -576,8 +577,15 @@ class _AddEventState extends State<AddEvent> {
         alignment: Alignment.center,
         child: FilledButton(
             text: "Votación de fechas",
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddSurvey(-1)))));
+            onPressed: () {
+              //eventId = await
+              _navigatorResult(context);
+            }));
+  }
+
+  _navigatorResult(context) async {
+    eventId = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddSurvey(-1)));
   }
 
   bool validateFields(BuildContext context) {
