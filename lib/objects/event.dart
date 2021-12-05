@@ -85,7 +85,7 @@ class Event {
       'summary': this.summary,
       'tags': this.tags,
       'scores': this.scores,
-      'averageSocre': this.averageScore
+      'averageScore': this.averageScore
     };
     return result;
   }

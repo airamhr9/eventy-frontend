@@ -156,8 +156,8 @@ class EventService extends Service {
     final query = {'event': event.id.toString()};
     Uri url = Uri.http(this.url, '/events', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    final response = await http.post(url,
-        headers: headers, body: jsonEncode(event.toJson()));
+    final response =
+        await http.put(url, headers: headers, body: jsonEncode(event.toJson()));
     return response.statusCode == 200;
   }
 
@@ -282,7 +282,7 @@ class EventService extends Service {
       'eventId': eventId,
       'text': memory.description,
       'author': await MySharedPreferences.instance.getStringValue("userId"),
-      'images': memory.description
+      'images': memory.image
     };
     Uri url = Uri.http(this.url, '/memories', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};

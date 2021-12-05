@@ -31,6 +31,7 @@ class _EventsMemoriesState extends State<EventsMemories> {
   ImagePicker picker = ImagePicker();
   ImageProvider _img = NetworkImage("");
   File _imgFile = File("");
+  String imgMemory = "";
 
   @override
   initState() {
@@ -54,6 +55,7 @@ class _EventsMemoriesState extends State<EventsMemories> {
       _imgFile = File(image!.path);
       print(_imgFile.path);
       _img = FileImage(_imgFile);
+      imgMemory = _imgFile.path.split('/').last;
       print(_imgFile.path.split('/').last);
     });
   }
@@ -88,7 +90,7 @@ class _EventsMemoriesState extends State<EventsMemories> {
                         validateFields(context)) {
                       Memory mem = Memory(
                         _descriptionController.text,
-                        _imgFile.path.split('/').last,
+                        imgMemory,
                       );
                       EventService()
                           .postMemory(widget.event.id.toString(), mem)
@@ -115,7 +117,16 @@ class _EventsMemoriesState extends State<EventsMemories> {
             ? (memories.length > 0)
                 ? Container(
                     child: Column(children: [
-                    ...memories.map((memory) => MemoriesCard(memory))
+                    ...memories.map((memory) {
+                      return Column(
+                        children: [
+                          MemoriesCard(memory),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      );
+                    })
                   ]))
                 : Column(
                     children: [
@@ -196,13 +207,16 @@ class _EventsMemoriesState extends State<EventsMemories> {
   }
 
   Widget buildImg() {
-    if (_img.toString() != "") {
+    if (_imgFile.path.isNotEmpty) {
       return CircleAvatar(
+        backgroundColor: Colors.white,
         backgroundImage: _img,
         radius: 80,
       );
     } else {
-      return Icon(Icons.photo_camera_rounded);
+      return Center(
+          child: Icon(Icons.photo_camera_rounded,
+              color: Theme.of(context).primaryColor));
     }
   }
 

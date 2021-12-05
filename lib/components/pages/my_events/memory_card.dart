@@ -24,9 +24,6 @@ class MemoriesCard extends StatelessWidget {
                 Text(memory.description),
               ],
             ),
-            SizedBox(
-              width: 10,
-            ),
           ],
         ));
   }

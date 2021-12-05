@@ -60,6 +60,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    print(widget.event.scores);
     MySharedPreferences.instance.getStringValue("userId").then((value) {
       setState(() {
         userId = value;
@@ -171,6 +172,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               isMember = true;
               score = list[0];
               widget.event.averageScore = list[1];
+              widget.event.averageScore = 0;
             }));
   }
 
@@ -1051,9 +1053,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildMemories() {
-    if (true
-      //widget.event.finishDate.compareTo(TimeOfDay.now().toString()) > 0
-      ) {
+    if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
       return EventsMemories(widget.event);
     } else {
       return SizedBox(
