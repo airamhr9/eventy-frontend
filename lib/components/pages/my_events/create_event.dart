@@ -21,16 +21,31 @@ class _CreateEventState extends State<CreateEvent> {
   void initState() {
     super.initState();
     final eventService = EventService();
-    eventService.postEvent(widget.event).then((value) {
-      if (value == false)
-        setState(() {
-          error = true;
-        });
+    if (widget.event.id == -1) {
+      print("HOLAA ID MAL");
+      eventService.postEvent(widget.event).then((value) {
+        if (value == false)
+          setState(() {
+            error = true;
+          });
 
-      setState(() {
-        requestCompleted = true;
+        setState(() {
+          requestCompleted = true;
+        });
       });
-    });
+    } else {
+      print("HOLAA ID BIEN");
+      eventService.putEvent(widget.event).then((value) {
+        if (value == false)
+          setState(() {
+            error = true;
+          });
+
+        setState(() {
+          requestCompleted = true;
+        });
+      });
+    }
     for (var image in widget.images) {
       eventService.sendImage(image).then((value) {
         if (!value) {

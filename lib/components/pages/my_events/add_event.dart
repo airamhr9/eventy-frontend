@@ -25,7 +25,7 @@ class AddEvent extends StatefulWidget {
 }
 
 class _AddEventState extends State<AddEvent> {
-  dynamic eventId = -1;
+  int eventId = -1;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -211,46 +211,6 @@ class _AddEventState extends State<AddEvent> {
                               filled: false,
                               hintText: "Resumen"),
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          minLines: 8,
-                          maxLines: 20,
-                          controller: _descriptionController,
-                          validator: (value) {
-                            return (value!.isEmpty)
-                                ? 'El evento debe tener descripcion'
-                                : null;
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.black)),
-                              filled: false,
-                              hintText: "Descripcion"),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        buildVisibilityRadioGroup(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                            width: 180,
-                            child: TextFormField(
-                              maxLength: 10,
-                              controller: _priceController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide:
-                                          BorderSide(color: Colors.black)),
-                                  filled: false,
-                                  hintText: "Resumen"),
-                            )),
                         SizedBox(
                           height: 20,
                         ),
@@ -572,20 +532,24 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
+  bool finishWait = false;
+
   Widget buildButtonSurveyDate(BuildContext context) {
     return Container(
         alignment: Alignment.center,
         child: FilledButton(
             text: "Votación de fechas",
             onPressed: () {
-              //eventId = await
-              _navigatorResult(context);
+              _awaitResult(context);
             }));
   }
 
-  _navigatorResult(context) async {
-    eventId = await Navigator.push(
+  _awaitResult(context) async {
+    final result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddSurvey(-1)));
+    setState(() {
+      eventId = int.parse(result);
+    });
   }
 
   bool validateFields(BuildContext context) {
@@ -625,8 +589,9 @@ class _AddEventState extends State<AddEvent> {
       double precio = (_priceController.text.isEmpty)
           ? 0
           : double.parse(_priceController.text);
+      print(eventId.toString());
       final Event event = Event(
-        -1,
+        eventId,
         _descriptionController.text,
         startDate.toIso8601String(),
         finishDate.toIso8601String(),
@@ -648,7 +613,7 @@ class _AddEventState extends State<AddEvent> {
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return CreateEvent(event, imageFiles);
-      }));
+      })).then((value) => null);
     }
   }
 }

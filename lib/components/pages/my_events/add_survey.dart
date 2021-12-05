@@ -28,7 +28,6 @@ class _AddSurveyState extends State<AddSurvey> {
   DateTime finishDate = DateTime.now().add(Duration(days: 2));
   List<String> options = [];
   late Survey survey;
-  int eventIdSurveyDate = -1;
 
   @override
   void initState() {
@@ -78,11 +77,11 @@ class _AddSurveyState extends State<AddSurvey> {
                             width: 250,
                             child: TextFormField(
                               controller: _optionsController,
-                              validator: (value) {
+                              /*validator: (value) {
                                 return (value!.isEmpty)
                                     ? 'No se puede dejar el campo en blanco'
                                     : null;
-                              },
+                              },*/
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -265,7 +264,7 @@ class _AddSurveyState extends State<AddSurvey> {
                               fontSize: 20,
                               color: Colors.black87),
                         ),
-                        TextButton.icon(
+                        ElevatedButton.icon(
                             icon: Icon(Icons.check, color: Colors.green),
                             onPressed: () {
                               survey = Survey(
@@ -281,11 +280,8 @@ class _AddSurveyState extends State<AddSurvey> {
                                 EventService()
                                     .postDateSurvey(survey)
                                     .then((value) {
-                                  setState(() {
-                                    eventIdSurveyDate = value;
-                                    Navigator.pop(context, eventIdSurveyDate);
-                                    Navigator.of(context).pop();
-                                  });
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop(value.toString());
                                 });
                               } else {
                                 EventService()

@@ -153,9 +153,9 @@ class EventService extends Service {
   }
 
   Future<bool> putEvent(Event event) async {
-    final query = { 'event': event.id };
+    final query = {'event': event.id.toString()};
     Uri url = Uri.http(this.url, '/events', query);
-    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url,
         headers: headers, body: jsonEncode(event.toJson()));
     return response.statusCode == 200;
@@ -239,9 +239,9 @@ class EventService extends Service {
   }
 
   Future<int> postDateSurvey(Survey survey) async {
-    final query = { 'newEvent': 'true' };
+    final query = {'newEvent': 'true'};
     Uri url = Uri.http(this.url, '/surveys', query);
-    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url,
         headers: headers, body: jsonEncode(survey.toJson()));
     return int.parse(response.body);
@@ -277,7 +277,7 @@ class EventService extends Service {
     return surveys;
   }
 
-  Future<bool> postMemory(int eventId, Memory memory) async {
+  Future<bool> postMemory(String eventId, Memory memory) async {
     final query = {
       'eventId': eventId,
       'text': memory.description,
@@ -285,34 +285,30 @@ class EventService extends Service {
       'images': memory.description
     };
     Uri url = Uri.http(this.url, '/memories', query);
-    final headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;
   }
 
   Future<bool> sendMemoryImage(FileImage image) async {
-    final query = {
-      'type': 'memory',
-      'name': basename(image.file.path)
-    };
+    final query = {'type': 'memory', 'name': basename(image.file.path)};
     Uri url = Uri.http(this.url, '/images', query);
     final request = http.MultipartRequest("POST", url);
     final imageToSend =
-      await http.MultipartFile.fromPath('photo', image.file.path);
+        await http.MultipartFile.fromPath('photo', image.file.path);
     request.files.add(imageToSend);
     var response = await request.send();
     return response.statusCode == 200;
   }
 
-  Future<List<Memory>> getEventMemories(int eventId) async {
-    final query = { 'eventId': eventId };
+  Future<List<Memory>> getEventMemories(String eventId) async {
+    final query = {'eventId': eventId};
     Uri url = Uri.http(this.url, '/memories', query);
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
     List<Memory> memories =
-      list.map((memory) => Memory.fromJson(memory)).toList();
+        list.map((memory) => Memory.fromJson(memory)).toList();
     return memories;
   }
-
 }

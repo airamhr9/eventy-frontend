@@ -367,6 +367,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 30,
           ),
+          buildMemories(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
@@ -534,7 +535,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     );
   }
 
-  buildTextParticipantsAndScoreEvent() {
+  /*buildTextParticipantsAndScoreEvent() {
     if (widget.event.averageScore != 0.0 &&
         widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
       return Row(
@@ -553,9 +554,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     } else {
       return buildTextParticipants();
     }
-  }
+  }*/
 
-  Widget buildTextParticipants() {
+  /*Widget buildTextParticipants() {
     return TextButton.icon(
       onPressed: () {
         Navigator.push(
@@ -574,9 +575,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         style: TextStyle(fontSize: 18),
       ),
     );
-  }
+  }*/
 
-  Widget buildTextDescription() {
+  /*Widget buildTextDescription() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -597,9 +598,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ))
       ],
     );
-  }
+  }*/
 
-  buidDateAndLocation() {
+  /*buidDateAndLocation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -637,7 +638,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ),
       ],
     );
-  }
+  }*/
 
   buildButtonsSaveEnventAndPoint() {
     if (isMember == true &&
@@ -951,7 +952,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           children: [
             ...survey.options.map((option) {
               num percentage = option['percentage'];
-              print("${percentage} PERCENTAGE AAAAAAAAAAAA;");
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1050,9 +1050,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     );
   }
 
-  buildRecuerdos() {
-    if (widget.event.finishDate.compareTo(TimeOfDay.now().toString()) > 0) {
-      return EventsMemories(widget.event.id.toString());
+  Widget buildMemories() {
+    if (true
+      //widget.event.finishDate.compareTo(TimeOfDay.now().toString()) > 0
+      ) {
+      return EventsMemories(widget.event);
     } else {
       return SizedBox(
         height: 5,
