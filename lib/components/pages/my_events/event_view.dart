@@ -79,19 +79,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
-    EventService().getParticipants(widget.event.id.toString()).then((value) {
-      setState(() {
-        participantsList = value;
-        loading = false;
-      });
-      for (User user in participantsList[0]) {
-        participantsId.add(user.id);
-      }
-      for (User user in participantsList[1]) {
-        participantsId.add(user.id);
-      }
-      waitToCheck();
-    });
     EventService()
         .getSurveys(widget.event.id.toString())
         .then((value) => setState(() {
@@ -155,9 +142,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     } else {
       setState(() {
         isMember = false;
-        if (loading == false) {
-          waitComplete = true;
-        }
+        waitComplete = true;
       });
     }
   }
@@ -876,7 +861,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   buildSurveys() {
-    if ((surveysList.isNotEmpty && participantsId.contains(userId)) ||
+    if ((surveysList.isNotEmpty &&
+            widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
