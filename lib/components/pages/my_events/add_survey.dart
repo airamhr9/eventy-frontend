@@ -264,7 +264,7 @@ class _AddSurveyState extends State<AddSurvey> {
                               fontSize: 20,
                               color: Colors.black87),
                         ),
-                        ElevatedButton.icon(
+                        TextButton.icon(
                             icon: Icon(Icons.check, color: Colors.green),
                             onPressed: () {
                               survey = Survey(
@@ -280,8 +280,11 @@ class _AddSurveyState extends State<AddSurvey> {
                                 EventService()
                                     .postDateSurvey(survey)
                                     .then((value) {
+                                  List result = [];
+                                  result.add(value);
+                                  result.add(_surveyNameController.text);
                                   Navigator.of(context).pop();
-                                  Navigator.of(context).pop(value.toString());
+                                  Navigator.of(context).pop(result);
                                 });
                               } else {
                                 EventService()

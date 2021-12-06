@@ -122,31 +122,24 @@ class _EventsMemoriesState extends State<EventsMemories> {
                         children: [
                           MemoriesCard(memory),
                           SizedBox(
-                            height: 10,
+                            height: 15,
                           )
                         ],
                       );
                     })
                   ]))
-                : Column(
+                : Row(
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text("No hay recuerdos"),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      Spacer(),
+                      Text("No hay recuerdos aún"),
+                      Spacer()
                     ],
                   )
             : CircularProgressIndicator(),
         SizedBox(
-          height: 30,
+          height: 5,
         ),
         buildAddMemory(),
-        SizedBox(
-          height: 20,
-        ),
       ]),
     );
   }
@@ -156,49 +149,67 @@ class _EventsMemoriesState extends State<EventsMemories> {
       return Container(
           child: Form(
               key: _formKey,
-              child: Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        _imgFromGallery();
-                      },
-                      child: Container(
-                          height: 140,
-                          width: 140,
-                          child: Card(
-                            elevation: 0,
-                            shape: CircleBorder(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                    style: BorderStyle.solid)),
-                            child: Container(
-                                height: 100, child: Center(child: buildImg())),
-                          ))),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                      height: 140,
-                      width: 220,
-                      child: TextFormField(
-                        minLines: 8,
-                        maxLines: 20,
-                        controller: _descriptionController,
-                        validator: (value) {
-                          return (value!.isEmpty)
-                              ? 'El recuerdo debe tener descripción'
-                              : null;
+              child: Column(children: [
+                Divider(
+                  thickness: 1.0,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          _imgFromGallery();
                         },
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            filled: false,
-                            hintText: "Escribe aquí..."),
-                      )),
-                ],
-              )));
+                        child: Container(
+                            height: 140,
+                            width: 140,
+                            child: Card(
+                              elevation: 0,
+                              shape: CircleBorder(
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 1,
+                                      style: BorderStyle.solid)),
+                              child: Container(
+                                  height: 100,
+                                  child: Center(child: buildImg())),
+                            ))),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                        height: 140,
+                        width: 220,
+                        child: TextFormField(
+                          minLines: 8,
+                          maxLines: 20,
+                          controller: _descriptionController,
+                          validator: (value) {
+                            return (value!.isEmpty)
+                                ? 'El recuerdo debe tener descripción'
+                                : null;
+                          },
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.black)),
+                              filled: false,
+                              hintText: "Escribe aquí..."),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Divider(
+                  thickness: 1.0,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ])));
     } else {
       return SizedBox(
         height: 1,

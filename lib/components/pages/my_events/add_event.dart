@@ -58,6 +58,8 @@ class _AddEventState extends State<AddEvent> {
   ImagePicker picker = ImagePicker();
   FileImage? imageToSend;
 
+  bool surveyDateCreated = false;
+
   _imgFromGallery() async {
     XFile? image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
@@ -532,23 +534,55 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  bool finishWait = false;
+  String surveyDateName = "";
 
   Widget buildButtonSurveyDate(BuildContext context) {
-    return Container(
-        alignment: Alignment.center,
-        child: FilledButton(
-            text: "Votación de fechas",
-            onPressed: () {
-              _awaitResult(context);
-            }));
+    if (surveyDateCreated == true) {
+      return Container(
+        width: double.maxFinite,
+        child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 0.5,
+                    style: BorderStyle.solid)),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Encuesta",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    surveyDateName,
+                    style: TextStyle(fontSize: 16),
+                  )
+                ],
+              ),
+            )),
+      );
+    } else {
+      return Container(
+          alignment: Alignment.center,
+          child: FilledButton(
+              text: "Encuesta para elección de fecha",
+              onPressed: () {
+                _awaitResult(context);
+              }));
+    }
   }
 
   _awaitResult(context) async {
     final result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddSurvey(-1)));
     setState(() {
-      eventId = int.parse(result);
+      eventId = result[0];
+      surveyDateName = result[1];
+      surveyDateCreated = true;
     });
   }
 

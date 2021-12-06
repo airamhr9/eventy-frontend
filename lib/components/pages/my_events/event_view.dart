@@ -369,7 +369,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 30,
           ),
-          buildMemories(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
@@ -481,6 +480,10 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                       ],
                     ),
           buildSurveys(),
+          SizedBox(
+            height: 20,
+          ),
+          buildMemories(),
           SizedBox(
             height: 20,
           ),
@@ -924,11 +927,19 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       return Column(
         children: [
           ...surveysList.map((survey) {
+            // NO BORRAR ESTE CODIGO
+            //if (survey.startDate.compareTo(DateTime.now().toString()) > 0 &&
+            //survey.finishDate.compareTo(DateTime.now().toString()) < 0) {
             if (survey.userHasVoted == true) {
               return buildDataOption(survey);
             } else {
               return buildOptions(survey);
             }
+            /*} else {
+              return SizedBox(
+                height: 0,
+              );
+            }*/
           })
         ],
       );
@@ -1053,7 +1064,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildMemories() {
-    if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
+    if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0 &&
+        widget.event.participants.contains(userId) == true) {
       return EventsMemories(widget.event);
     } else {
       return SizedBox(

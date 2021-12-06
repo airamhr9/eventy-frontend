@@ -19,7 +19,7 @@ class MemoriesCard extends StatelessWidget {
                   radius: 60,
                 ),
                 SizedBox(
-                  width: 40,
+                  width: 25,
                 ),
                 Text(memory.description),
               ],
