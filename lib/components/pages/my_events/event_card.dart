@@ -30,6 +30,7 @@ class _EventCardState extends State<EventCard> {
         if (s.question == "¿Qué fecha prefieres?") {
           setState(() {
             showDate = false;
+            print(showDate);
           });
           break;
         }

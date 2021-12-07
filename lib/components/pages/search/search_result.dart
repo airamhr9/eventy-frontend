@@ -2,7 +2,9 @@ import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/my_events/event_view.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
+import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -18,12 +20,31 @@ class SearchResult extends StatefulWidget {
 class _SearchResultState extends State<SearchResult> {
   late String date;
   late String userId;
+  bool showDate = false;
+  bool check = false;
 
   @override
   void initState() {
     super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
+    EventService().getSurveys(widget.event.id.toString()).then((value) {
+      for (Survey s in value) {
+        if (s.question == "¿Qué fecha prefieres?") {
+          check = true;
+          break;
+        }
+      }
+      if (check == true) {
+        setState(() {
+          showDate = false;
+        });
+      } else {
+        setState(() {
+          showDate = true;
+        });
+      }
+    });
   }
 
   @override
@@ -75,10 +96,7 @@ class _SearchResultState extends State<SearchResult> {
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                       ),
-                      Text(
-                        this.date,
-                        style: TextStyle(fontSize: 15, color: Colors.black54),
-                      ),
+                      buildTextDate(),
                     ],
                   ),
                   SizedBox(
@@ -91,5 +109,18 @@ class _SearchResultState extends State<SearchResult> {
         ),
       ),
     );
+  }
+
+  Widget buildTextDate() {
+    if (showDate == false) {
+      return SizedBox(
+        height: 0,
+      );
+    } else {
+      return Text(
+        this.date,
+        style: TextStyle(fontSize: 15, color: Colors.black54),
+      );
+    }
   }
 }

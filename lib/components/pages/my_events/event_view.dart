@@ -56,7 +56,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   String optionVoted = "";
   bool reloadSurveys = false;
   List<List<User>> participantsList = [];
-  bool loading = true;
+  //bool loading = true;
   List<String> participantsId = [];
 
   @override
@@ -80,19 +80,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
-    EventService().getParticipants(widget.event.id.toString()).then((value) {
-      setState(() {
-        participantsList = value;
-        loading = false;
-      });
-      for (User user in participantsList[0]) {
-        participantsId.add(user.id);
-      }
-      for (User user in participantsList[1]) {
-        participantsId.add(user.id);
-      }
-      waitToCheck();
-    });
     EventService().getSurveys(widget.event.id.toString()).then((value) {
       for (Survey s in value) {
         if (s.question == "¿Qué fecha prefieres?") {
@@ -161,9 +148,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     } else {
       setState(() {
         isMember = false;
-        if (loading == false) {
-          waitComplete = true;
-        }
+        waitComplete = true;
       });
     }
   }
@@ -172,9 +157,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     EventService()
         .getUserScoreAndEventAverage(widget.event.id.toString(), userId)
         .then((list) => setState(() {
-              if (loading == false) {
-                waitComplete = true;
-              }
+              waitComplete = true;
               isMember = true;
               score = list[0];
               widget.event.averageScore = list[1];
@@ -278,32 +261,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                             widget.event.description,
                             style: TextStyle(color: Colors.black54),
                           )),
-                      Transform.rotate(
-                        angle: -.2,
-                        child: VerticalDivider(
-                          thickness: 1,
-                          color: Colors.black,
-                        ),
-                      ),
-                      IntrinsicWidth(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            buildTextDate(),
-                            Divider(
-                              color: Colors.black,
-                              thickness: 1,
-                            ),
-                            Text(
-                              date.substring(10, date.length),
-                              style: TextStyle(
-                                  fontFamily: 'Tiny',
-                                  fontSize: 20,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
+                      buildTextDate(),
                     ],
                   ),
                 ),
@@ -1066,9 +1024,39 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildTextDate() {
     if (showDate == true) {
-      return Text(
-        date.substring(0, 10),
-        style: TextStyle(fontFamily: 'Tiny', fontSize: 20, color: Colors.black),
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Transform.rotate(
+            angle: -.2,
+            child: VerticalDivider(
+              thickness: 1,
+              color: Colors.black,
+            ),
+          ),
+          IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  date.substring(0, 10),
+                  style: TextStyle(
+                      fontFamily: 'Tiny', fontSize: 20, color: Colors.black),
+                ),
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                Text(
+                  date.substring(10, date.length),
+                  style: TextStyle(
+                      fontFamily: 'Tiny', fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+          )
+        ],
       );
     } else {
       return SizedBox(
@@ -1079,7 +1067,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildMemories() {
     if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0 &&
-        participantsId.contains(userId)) {
+        widget.event.participants.contains(userId)) {
       return EventsMemories(widget.event);
     } else {
       return SizedBox(
