@@ -47,7 +47,7 @@ class _AddEventState extends State<AddEvent> {
   String startDateLabel = "Sin seleccionar";
   String finishDateLabel = "Sin seleccionar";
   DateTime startDate = DateTime.now().add(Duration(days: 1));
-  DateTime finishDate = DateTime.now().add(Duration(days: 2));
+  DateTime finishDate = DateTime.now().add(Duration(days: 30));
 
   LatLng? eventLocation;
   String hasLocation = "Sin seleccionar";

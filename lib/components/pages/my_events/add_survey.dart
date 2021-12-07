@@ -54,20 +54,7 @@ class _AddSurveyState extends State<AddSurvey> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFormField(
-                        controller: _surveyNameController,
-                        validator: (value) {
-                          return (value!.isEmpty)
-                              ? 'La encuesta debe tener nombre'
-                              : null;
-                        },
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.black)),
-                            filled: false,
-                            hintText: "Nombre"),
-                      ),
+                      buildSurveyName(),
                       SizedBox(
                         height: 20,
                       ),
@@ -238,6 +225,30 @@ class _AddSurveyState extends State<AddSurvey> {
       return false;
     }
     return true;
+  }
+
+  Widget buildSurveyName() {
+    if (widget.eventId != -1) {
+      return TextFormField(
+        controller: _surveyNameController,
+        validator: (value) {
+          return (value!.isEmpty) ? 'La encuesta debe tener nombre' : null;
+        },
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.black)),
+            filled: false,
+            hintText: "Nombre"),
+      );
+    } else {
+      setState(() {
+        _surveyNameController.text = "¿Qué fecha prefieres?";
+      });
+      return SizedBox(
+        height: 0,
+      );
+    }
   }
 
   void createSurvey(BuildContext context) async {

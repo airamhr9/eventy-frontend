@@ -2,6 +2,8 @@ import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/my_events/event_view.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/objects/survey.dart';
+import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -16,12 +18,23 @@ class EventCard extends StatefulWidget {
 
 class _EventCardState extends State<EventCard> {
   late String date;
+  bool showDate = true;
 
   @override
   void initState() {
     super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
+    EventService().getSurveys(widget.event.id.toString()).then((value) {
+      for (Survey s in value) {
+        if (s.question == "¿Qué fecha prefieres?") {
+          setState(() {
+            showDate = false;
+          });
+          break;
+        }
+      }
+    });
   }
 
   @override
@@ -63,10 +76,7 @@ class _EventCardState extends State<EventCard> {
                                 color: Colors.black87),
                           ),
                         ),
-                        Text(
-                          this.date,
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        ),
+                        buildTextDate(),
                       ],
                     ),
                     Text(
@@ -81,5 +91,18 @@ class _EventCardState extends State<EventCard> {
         ),
       ),
     );
+  }
+
+  Widget buildTextDate() {
+    if (showDate == true) {
+      return Text(
+        this.date,
+        style: TextStyle(fontSize: 15, color: Colors.black),
+      );
+    } else {
+      return SizedBox(
+        height: 0,
+      );
+    }
   }
 }
