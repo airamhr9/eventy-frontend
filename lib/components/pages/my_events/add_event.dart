@@ -6,7 +6,6 @@ import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
-import 'package:eventy_front/services/events_service.dart';
 import 'package:eventy_front/services/tags_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,7 +28,6 @@ class _AddEventState extends State<AddEvent> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _summaryController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _assistantsController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -195,24 +193,6 @@ class _AddEventState extends State<AddEvent> {
                           height: 20,
                         ),
                         buildMapPicker(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          minLines: 1,
-                          controller: _summaryController,
-                          validator: (value) {
-                            return (value!.isEmpty)
-                                ? 'El evento debe tener resumen'
-                                : null;
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.black)),
-                              filled: false,
-                              hintText: "Resumen"),
-                        ),
                         SizedBox(
                           height: 20,
                         ),
@@ -639,7 +619,6 @@ class _AddEventState extends State<AddEvent> {
         userId,
         precio,
         (_visibilityValue == "Público") ? false : true,
-        _summaryController.text,
         tagsEvent,
         scores = List.empty(growable: true), // userId, puntuación
         averageScore = 0,

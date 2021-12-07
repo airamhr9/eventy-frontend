@@ -1,11 +1,11 @@
 class Event {
   int id;
   String description;
-  String startDate; //Solo String temporalmente
-  String finishDate; //Solo String temporalmente
+  String startDate;
+  String finishDate;
   List<String> images;
-  double latitude; //Solo String temporalmente
-  double longitude; //Solo String temporalmente
+  double latitude;
+  double longitude;
   String address;
   int maxParticipants;
   List<String> participants;
@@ -13,7 +13,6 @@ class Event {
   String ownerId;
   double price;
   bool private;
-  String summary;
   List<String> tags;
   List<dynamic> scores;
   num averageScore;
@@ -33,7 +32,6 @@ class Event {
       this.ownerId,
       this.price,
       this.private,
-      this.summary,
       this.tags,
       this.scores,
       this.averageScore);
@@ -58,7 +56,6 @@ class Event {
         json['owner'],
         json['price'].toDouble(),
         json['private'],
-        json['summary'],
         (json['tags'] as List).cast<String>(),
         (json['scores'] != null) ? json['scores'] as List<dynamic> : [],
         (json['averageScore'] != null)
@@ -82,7 +79,6 @@ class Event {
       'owner': this.ownerId,
       'price': this.price,
       'private': this.private,
-      'summary': this.summary,
       'tags': this.tags,
       'scores': this.scores,
       'averageScore': this.averageScore
