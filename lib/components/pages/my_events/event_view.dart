@@ -51,7 +51,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   String optionVoted = "";
   bool reloadSurveys = false;
-  List<List<User>> participantsList = [];
   List<String> participantsId = [];
 
   @override
@@ -501,8 +500,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildAddEventButton() {
-    if (userId == widget.event.ownerId ||
-        widget.event.participants.contains(userId)) {
+    if (userId == widget.event.ownerId || 
+        widget.event.participants.contains(userId) || widget.event.possiblyParticipants.contains(userId)) {
       return SizedBox(
         height: 0,
       );
@@ -857,8 +856,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildSurveys() {
-    if ((surveysList.isNotEmpty &&
-            widget.event.participants.contains(userId)) ||
+    if ((surveysList.isNotEmpty && (widget.event.participants.contains(userId) || widget.event.possiblyParticipants.contains(userId))) ||
         widget.event.ownerId == userId) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
