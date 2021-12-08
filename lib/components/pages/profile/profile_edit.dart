@@ -30,7 +30,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       "0",
       "userImage.jpg");
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //final TextEditingController _userName = TextEditingController();
   final TextEditingController _bio = TextEditingController();
 
@@ -107,7 +107,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Editar Perfil"),
+          title: Text("Editar perfil"),
           automaticallyImplyLeading: true,
           foregroundColor: Colors.black,
           elevation: 0,

@@ -153,7 +153,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                               Icons.group,
                               color: Colors.black,
                             ),
-                            label: Text("Mis Grupos",
+                            label: Text("Mis grupos",
                                 style: TextStyle(color: Colors.black))),
                         TextButton.icon(
                             onPressed: () {

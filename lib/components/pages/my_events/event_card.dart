@@ -1,11 +1,8 @@
-import 'package:eventy_front/components/pages/chat/chat_event.dart';
-import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/my_events/event_view.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/survey.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class EventCard extends StatefulWidget {
@@ -81,7 +78,7 @@ class _EventCardState extends State<EventCard> {
                       ],
                     ),
                     Text(
-                      widget.event.name,
+                      widget.event.address,
                       style: TextStyle(fontSize: 16, color: Colors.black54),
                     ),
                   ],
