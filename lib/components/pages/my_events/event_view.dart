@@ -81,14 +81,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
         : "";
     EventService().getSurveys(widget.event.id.toString()).then((value) {
-      for (Survey s in value) {
-        if (s.question == "¿Qué fecha prefieres?") {
-          setState(() {
+      setState(() {
+        surveysList = value;
+        for (Survey s in surveysList) {
+          if (s.question == "¿Qué fecha prefieres?") {
             showDate = false;
-          });
-          break;
+            break;
+          }
         }
-      }
+      });
     });
   }
 
@@ -833,7 +834,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  buildSurveys() {
+  Widget buildSurveys() {
     if ((surveysList.isNotEmpty &&
             widget.event.participants.contains(userId)) ||
         widget.event.ownerId == userId) {
