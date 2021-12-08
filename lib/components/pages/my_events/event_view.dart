@@ -52,7 +52,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   String optionVoted = "";
   bool reloadSurveys = false;
   List<List<User>> participantsList = [];
-  //bool loading = true;
   List<String> participantsId = [];
 
   @override
@@ -174,7 +173,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 20,
           ),
-          FilledButton(text: "Unirse", onPressed: () => showEventDialog(context)),
+          buildAddEventButton(),
           SizedBox(
             height: 30,
           ),
@@ -495,6 +494,18 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     );
   }
 
+  Widget buildAddEventButton() {
+    if (userId == widget.event.ownerId ||
+        widget.event.participants.contains(userId)) {
+      return SizedBox(
+        height: 0,
+      );
+    } else {
+      return FilledButton(
+          text: "Unirse", onPressed: () => showEventDialog(context));
+    }
+  }
+
   /*buildTextParticipantsAndScoreEvent() {
     if (widget.event.averageScore != 0.0 &&
         widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
@@ -728,8 +739,10 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));
     } else {
-      EventService().sendNewParticipant(widget.event.id.toString(),
-          await MySharedPreferences.instance.getStringValue("userId"), confirmed);
+      EventService().sendNewParticipant(
+          widget.event.id.toString(),
+          await MySharedPreferences.instance.getStringValue("userId"),
+          confirmed);
     }
   }
 
