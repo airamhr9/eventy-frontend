@@ -64,7 +64,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       waitToCheck();
     });
     priceText = (widget.event.price > 0)
-        ? widget.event.price.toString() + "\$"
+        ? widget.event.price.toString() + "€"
         : "Gratis";
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
