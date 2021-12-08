@@ -2,7 +2,7 @@
     package="com.example.eventy_front">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <application
-        android:label="eventy_front"
+        android:label="OnPoint"
         android:icon="@mipmap/ic_launcher">
         <meta-data
           android:name="com.google.android.geo.API_KEY"

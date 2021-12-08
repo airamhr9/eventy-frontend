@@ -30,7 +30,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'FirsNeue', primaryColor: Colors.black),
-      title: 'Flutter Demo',
+      title: 'OnPoint',
       home: (isLoggedIn)
           ? Root(selectedPage: EventsNavigation.NAV_HOME)
           : LoginPage(),
