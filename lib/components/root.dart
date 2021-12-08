@@ -175,7 +175,7 @@ class _RootState extends State<Root> {
       case EventsNavigation.NAV_HOME:
         {
           onPressed = () {
-            (body as Home).homeState.buildMessageAddEvent();
+            (body as Home).homeState.buildMessageAddEvent(context);
           };
           icon = Icon(Icons.person_add_rounded);
           label = Text("Unirse");

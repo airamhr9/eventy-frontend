@@ -593,6 +593,12 @@ class _AddEventState extends State<AddEvent> {
           content: Text("Debes seleccionar una ubicación")));
       return false;
     }
+    if (hasMaxAssistants && int.parse(_assistantsController.text) < 1) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El número mínimo de participantes posible es 1")));
+      return false;
+    }
     return true;
   }
 

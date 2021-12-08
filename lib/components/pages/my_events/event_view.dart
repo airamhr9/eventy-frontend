@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:isolate';
-import 'package:eventy_front/components/pages/my_events/related_event_card.dart';
 import 'package:eventy_front/components/pages/my_events/related_events.dart';
 import 'package:eventy_front/components/pages/my_events/add_survey.dart';
 import 'package:eventy_front/components/widgets/comment.dart';
@@ -14,7 +11,6 @@ import 'package:eventy_front/services/chat_service.dart';
 import 'package:eventy_front/services/user_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eventy_front/components/pages/chat/chat_event.dart';
 import 'package:eventy_front/components/pages/home/event_location.dart';
 import 'package:eventy_front/components/pages/home/participants_list.dart';
 import 'package:eventy_front/objects/event.dart';
@@ -127,7 +123,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         body: Container(
           decoration: BoxDecoration(
               border: Border(top: BorderSide(color: Colors.black, width: 1))),
-          child: SingleChildScrollView(child: buildTop()),
+          child: SingleChildScrollView(child: buildTop(context)),
         ),
       );
     else
@@ -166,7 +162,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             }));
   }
 
-  Widget buildTop() {
+  Widget buildTop(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 15),
       child: Column(
@@ -178,7 +174,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 20,
           ),
-          FilledButton(text: "Unirse", onPressed: () => showEventDialog()),
+          FilledButton(text: "Unirse", onPressed: () => showEventDialog(context)),
           SizedBox(
             height: 30,
           ),
@@ -646,7 +642,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     }
   }
 
-  void showEventDialog() {
+  void showEventDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -682,7 +678,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                             color: Colors.greenAccent,
                           ),
                           onPressed: () {
-                            addMemberToEvent("true");
+                            addMemberToEvent(true, context);
                             Navigator.of(context).pop();
                           },
                           label: Text(
@@ -699,7 +695,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                           icon:
                               Icon(Icons.av_timer, color: Colors.orangeAccent),
                           onPressed: () {
-                            addMemberToEvent("false");
+                            addMemberToEvent(false, context);
                             Navigator.of(context).pop();
                           },
                           label: Text(
@@ -726,9 +722,15 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  addMemberToEvent(String confirmed) async {
-    EventService().sendNewParticipant(widget.event.id.toString(),
-        await MySharedPreferences.instance.getStringValue("userId"), confirmed);
+  addMemberToEvent(bool confirmed, BuildContext context) async {
+    if (widget.event.participants.length >= widget.event.maxParticipants) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El evento ya está completo y no es posible unirse")));
+    } else {
+      EventService().sendNewParticipant(widget.event.id.toString(),
+          await MySharedPreferences.instance.getStringValue("userId"), confirmed);
+    }
   }
 
   pointEvent() {
