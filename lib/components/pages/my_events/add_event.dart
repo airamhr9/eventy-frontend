@@ -621,6 +621,7 @@ class _AddEventState extends State<AddEvent> {
         _addressController.text,
         (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
         [userId],
+        [],
         _eventNameController.text,
         userId,
         precio,

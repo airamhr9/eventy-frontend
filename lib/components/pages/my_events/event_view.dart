@@ -71,10 +71,12 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
     plazasText = (widget.event.maxParticipants != -1)
-        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas"
+        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length
+            - widget.event.possiblyParticipants.length} plazas"
         : "No hay límite de plazas";
     plazasCounter = (widget.event.maxParticipants != -1)
-        ? "${widget.event.participants.length}/${widget.event.maxParticipants}"
+        ? "${widget.event.participants.length + widget.event.possiblyParticipants.length}"
+            "/${widget.event.maxParticipants}"
         : "";
     EventService().getSurveys(widget.event.id.toString()).then((value) {
       setState(() {
@@ -135,7 +137,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   waitToCheck() {
     try {
-      isMember = widget.event.participants.contains(userId);
+      isMember = widget.event.participants.contains(userId)
+          || widget.event.possiblyParticipants.contains(userId);
     } catch (e) {
       //contains devuelve null si el usuario no es un particpante
       isMember = false;
@@ -163,6 +166,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildTop(BuildContext context) {
+    //print("\n\nPosibles participantes:" + widget.event.possiblyParticipants.toString() + "\n\n");
+    
     return Container(
       padding: EdgeInsets.only(top: 15),
       child: Column(
@@ -308,8 +313,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               children: [
                 LinearProgressIndicator(
                   minHeight: 30,
-                  value: widget.event.participants.length /
-                      widget.event.maxParticipants,
+                  value: (widget.event.participants.length
+                      + widget.event.possiblyParticipants.length)
+                      / widget.event.maxParticipants,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -723,7 +729,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   addMemberToEvent(bool confirmed, BuildContext context) async {
-    if (widget.event.participants.length >= widget.event.maxParticipants) {
+    if (widget.event.participants.length + widget.event.possiblyParticipants.length
+        >= widget.event.maxParticipants) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));
@@ -963,7 +970,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         Text("Han votado " +
             survey.numVotes.toString() +
             "/" +
-            widget.event.participants.length.toString())
+            (widget.event.participants.length +
+                widget.event.possiblyParticipants.length).toString())
       ],
     );
   }
@@ -1070,7 +1078,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildMemories() {
     if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0 &&
-        widget.event.participants.contains(userId)) {
+        (widget.event.participants.contains(userId) ||
+            widget.event.possiblyParticipants.contains(userId))) {
       return EventsMemories(widget.event);
     } else {
       return SizedBox(

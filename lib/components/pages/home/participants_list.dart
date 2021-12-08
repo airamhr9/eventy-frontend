@@ -171,7 +171,8 @@ class _ParticipantsState extends State<Participants> {
 
   Widget buildText(int maxParticipants) {
     print(maxParticipants);
-    int numberParticipants = widget.event.participants.length;
+    int numberParticipants = widget.event.participants.length
+        + widget.event.possiblyParticipants.length;
     if (maxParticipants == -1) {
       String asistentes =
           (numberParticipants == 1) ? " asistente." : " asistentes.";
@@ -197,8 +198,7 @@ class _ParticipantsState extends State<Participants> {
               children: [
                 LinearProgressIndicator(
                   minHeight: 30,
-                  value: widget.event.participants.length /
-                      widget.event.maxParticipants,
+                  value: numberParticipants / widget.event.maxParticipants,
                 ),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),

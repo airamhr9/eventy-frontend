@@ -188,7 +188,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   addMemberToEvent(bool confirmed, BuildContext context) async {
-    if (currentEvent.participants.length >= currentEvent.maxParticipants) {
+    if (currentEvent.participants.length + currentEvent.possiblyParticipants.length
+        >= currentEvent.maxParticipants) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));
