@@ -30,20 +30,29 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Seleccionar ubicación"),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         automaticallyImplyLeading: true,
       ),
-      body: GoogleMap(
-        markers: Set.from(myMarker),
-        mapType: MapType.normal,
-        initialCameraPosition: initialPos,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-          LocationService.determinePosition()
-              .then((value) => goToUserPos(value));
-        },
-        onTap: _onMapTapped,
+      body: Container(
+        decoration:
+            BoxDecoration(border: Border(top: BorderSide(color: Colors.black))),
+        child: GoogleMap(
+          markers: Set.from(myMarker),
+          mapType: MapType.normal,
+          initialCameraPosition: initialPos,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+            LocationService.determinePosition()
+                .then((value) => goToUserPos(value));
+          },
+          onTap: _onMapTapped,
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
           onPressed: () {
             Navigator.pop(context, selectedLocation);
           },

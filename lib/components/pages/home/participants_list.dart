@@ -14,7 +14,7 @@ class Participants extends StatefulWidget {
 
 class _ParticipantsState extends State<Participants> {
   List<List<User>> participantsList = [];
-bool loading = true;
+  bool loading = true;
 
   @override
   void initState() {
@@ -22,10 +22,10 @@ bool loading = true;
     EventService()
         .getParticipants(widget.event.id.toString())
         .then((value) => setState(() {
-      print("Here");
-      participantsList = value;
-      loading = false;
-    }));
+              print("Here");
+              participantsList = value;
+              loading = false;
+            }));
   }
 
   @override
@@ -34,12 +34,12 @@ bool loading = true;
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          foregroundColor: Colors.black,
         ),
-        backgroundColor: Colors.blue[500],
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             Container(
-                padding: EdgeInsets.only(right: 20, left: 20),
                 width: double.infinity,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -48,36 +48,48 @@ bool loading = true;
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        widget.event.name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                            color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        DateFormat("dd/MM/yyyy HH:mm")
-                            .format(DateTime.parse(widget.event.startDate)),
-                        style: TextStyle(fontSize: 15, color: Colors.white70),
-                      ),
-                      SizedBox(
-                        height: 18,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.event.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 24,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              DateFormat("dd/MM/yyyy HH:mm").format(
+                                  DateTime.parse(widget.event.startDate)),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
                       ),
                       buildText(widget.event.maxParticipants),
                       SizedBox(
-                        height: 20,
+                        height: 25,
                       ),
+                      Divider(
+                        height: 5,
+                        color: Colors.black,
+                        thickness: 1,
+                      )
                     ])),
             Expanded(
               child: Container(
                 width: double.infinity,
                 padding:
-                EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
+                    EdgeInsets.only(top: 15, right: 10, left: 10, bottom: 15),
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20))),
@@ -85,62 +97,71 @@ bool loading = true;
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Usuarios que asistirán",
+                      Text(
+                        "Usuarios que asistirán",
                         style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.blueAccent),
-
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black),
                       ),
-
-                      (!loading)?
-                      (participantsList[0].length > 0 )?
-                      Column(children: [
-                        ...participantsList[0].map((participant) => ListTile(
-                          leading: Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      participant.profilePicture,
-
-                                    )),
-                              )),
-                          title: Text(participant.userName),
-                        ))
-                      ],):SizedBox():Center(child: CircularProgressIndicator()),
+                      (!loading)
+                          ? (participantsList[0].length > 0)
+                              ? Column(
+                                  children: [
+                                    ...participantsList[0]
+                                        .map((participant) => ListTile(
+                                              leading: Container(
+                                                  width: 45,
+                                                  height: 45,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(
+                                                          participant
+                                                              .profilePicture,
+                                                        )),
+                                                  )),
+                                              title: Text(participant.userName),
+                                            ))
+                                  ],
+                                )
+                              : SizedBox()
+                          : Center(child: CircularProgressIndicator()),
                       SizedBox(height: 15),
-                      Text("Usuarios en duda",
-    style: TextStyle(
-    fontWeight: FontWeight.w500, fontSize: 20, color: Colors.orangeAccent),
-
+                      Text(
+                        "Usuarios en duda",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black54),
                       ),
-
-                      (!loading)?
-                      (participantsList[1].length > 0 )?
-                      Column(
-
-                        children: [
-                        ...participantsList[1].map((participant) => ListTile(
-                          leading: Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      participant.profilePicture,
-
-                                    )),
-                              )),
-                          title: Text(participant.userName),
-                        ))
-                      ],):SizedBox():Center(child: SizedBox())
+                      (!loading)
+                          ? (participantsList[1].length > 0)
+                              ? Column(
+                                  children: [
+                                    ...participantsList[1]
+                                        .map((participant) => ListTile(
+                                              leading: Container(
+                                                  width: 45,
+                                                  height: 45,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(
+                                                          participant
+                                                              .profilePicture,
+                                                        )),
+                                                  )),
+                                              title: Text(participant.userName),
+                                            ))
+                                  ],
+                                )
+                              : SizedBox()
+                          : Center(child: SizedBox())
                     ],
-
-                   ),
+                  ),
                 ),
               ),
             )
@@ -153,38 +174,43 @@ bool loading = true;
     int numberParticipants = widget.event.participants.length;
     if (maxParticipants == -1) {
       String asistentes =
-      (numberParticipants == 1) ? " asistente." : " asistentes.";
+          (numberParticipants == 1) ? " asistente." : " asistentes.";
       return Text(
         numberParticipants.toString() + asistentes,
-        style: TextStyle(
-            fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
       );
     } else {
       String plazasOcupadas =
-      (numberParticipants == 1) ? " plaza ocupada." : " plazas ocupadas.";
+          (numberParticipants == 1) ? " plaza ocupada." : " plazas ocupadas.";
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            numberParticipants.toString() +
-                "/" +
-                widget.event.maxParticipants.toString() +
-                plazasOcupadas,
-            style: TextStyle(
-                fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white),
-          ),
           SizedBox(
             height: 10,
           ),
           Container(
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: LinearProgressIndicator(
-                color: Colors.white,
-                value: numberParticipants / widget.event.maxParticipants,
-              ),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 1.5))),
+            child: Stack(
+              alignment: AlignmentDirectional.centerStart,
+              children: [
+                LinearProgressIndicator(
+                  minHeight: 30,
+                  value: widget.event.participants.length /
+                      widget.event.maxParticipants,
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      numberParticipants.toString() +
+                          "/" +
+                          widget.event.maxParticipants.toString() +
+                          plazasOcupadas,
+                    )),
+              ],
             ),
-          )
+          ),
         ],
       );
     }
