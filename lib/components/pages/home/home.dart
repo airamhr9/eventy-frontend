@@ -1,15 +1,12 @@
 import 'dart:async';
 
 import 'package:eventy_front/components/pages/home/recomendation.dart';
-import 'package:eventy_front/components/pages/login/login.dart';
 import 'package:eventy_front/components/pages/my_events/event_card.dart';
-import 'package:eventy_front/components/pages/profile/profile_edit.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/user.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/events_service.dart';
-import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -212,7 +209,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             }));
   }
 
-  addMemberToEvent(String confirmed) async {
+  addMemberToEvent(bool confirmed, BuildContext context) async {
+    if (currentEvent.participants.length + currentEvent.possiblyParticipants.length
+        >= currentEvent.maxParticipants) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El evento ya está completo y no es posible unirse")));
+      return;
+    }
     EventService().sendNewParticipant(currentEvent.id.toString(),
         await MySharedPreferences.instance.getStringValue("userId"), confirmed);
     showDialog(
@@ -266,7 +270,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
-  buildMessageAddEvent() async {
+  buildMessageAddEvent(BuildContext context) async {
     _loadParticipants();
     String myUserId =
         await MySharedPreferences.instance.getStringValue("userId");
@@ -308,11 +312,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             );
           });
     } else {
-      showJoinEventDialog();
+      showJoinEventDialog(context);
     }
   }
 
-  void showJoinEventDialog() {
+  void showJoinEventDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -348,7 +352,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             color: Colors.greenAccent,
                           ),
                           onPressed: () {
-                            addMemberToEvent("true");
+                            addMemberToEvent(true, context);
 
                             Navigator.of(context).pop();
                           },
@@ -366,7 +370,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           icon: Icon(Icons.av_timer_rounded,
                               color: Colors.orangeAccent),
                           onPressed: () {
-                            addMemberToEvent("false");
+                            addMemberToEvent(false, context);
                             Navigator.of(context).pop();
                           },
                           label: Text(

@@ -215,10 +215,10 @@ class _AddEventState extends State<AddEvent> {
                         SizedBox(
                           height: 20,
                         ),
-                        buildVisibilityRadioGroup(context),
+                        /*buildVisibilityRadioGroup(context),
                         SizedBox(
                           height: 20,
-                        ),
+                        ),*/
                         Container(
                           width: 180,
                           child: TextFormField(
@@ -363,7 +363,7 @@ class _AddEventState extends State<AddEvent> {
     ));
   }
 
-  Widget buildVisibilityRadioGroup(BuildContext context) {
+  /*Widget buildVisibilityRadioGroup(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -399,7 +399,7 @@ class _AddEventState extends State<AddEvent> {
         )
       ],
     );
-  }
+  }*/
 
   Widget buildMapPicker(BuildContext context) {
     return Column(
@@ -593,6 +593,12 @@ class _AddEventState extends State<AddEvent> {
           content: Text("Debes seleccionar una ubicación")));
       return false;
     }
+    if (hasMaxAssistants && int.parse(_assistantsController.text) < 1) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El número mínimo de participantes posible es 1")));
+      return false;
+    }
     return true;
   }
 
@@ -615,6 +621,7 @@ class _AddEventState extends State<AddEvent> {
         _addressController.text,
         (hasMaxAssistants) ? int.parse(_assistantsController.text) : -1,
         [userId],
+        [],
         _eventNameController.text,
         userId,
         precio,

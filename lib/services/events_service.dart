@@ -191,7 +191,7 @@ class EventService extends Service {
   }
 
   Future<bool> sendNewParticipant(
-      String eventId, String userId, String confirmed) async {
+      String eventId, String userId, bool confirmed) async {
     final query = {
       'eventId': eventId,
       'userId': userId,

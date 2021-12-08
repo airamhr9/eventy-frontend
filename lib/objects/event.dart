@@ -9,6 +9,7 @@ class Event {
   String address;
   int maxParticipants;
   List<String> participants;
+  List<String> possiblyParticipants;
   String name;
   String ownerId;
   double price;
@@ -28,6 +29,7 @@ class Event {
       this.address,
       this.maxParticipants,
       this.participants,
+      this.possiblyParticipants,
       this.name,
       this.ownerId,
       this.price,
@@ -51,6 +53,9 @@ class Event {
         json['maxParticipants'],
         (json['participants'] != null)
             ? (json['participants'] as List).cast<String>()
+            : [],
+        (json['possiblyParticipants'] != null)
+            ? (json['possiblyParticipants'] as List).cast<String>()
             : [],
         json['name'],
         json['owner'],
