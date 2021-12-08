@@ -21,7 +21,7 @@
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#000000"
+        "color": "#bdbdbd"
       }
     ]
   },
