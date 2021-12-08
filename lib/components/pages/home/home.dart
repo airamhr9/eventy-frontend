@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:tiktoklikescroller/tiktoklikescroller.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Home extends StatefulWidget {
   final _HomeState homeState = _HomeState();
@@ -40,10 +41,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   LatLng selectedLocation = LatLng(37.42796133580664, 1.085749655962);
   List<Marker> myMarker = [];
   late final initialPos;
+  late String _mapStyle;
 
   @override
   void initState() {
     super.initState();
+    rootBundle.loadString('assets/map_style.txt').then((string) {
+      _mapStyle = string;
+    });
     EventService().get().then((value) => setState(() {
           print("Here");
           events = value;
@@ -112,12 +117,29 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         height: 20,
       ),
       SizedBox(
+        height: 30,
+        child: Row(
+          children: [
+            ...currentMapEvent.tags.map((e) => Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  margin: EdgeInsets.only(right: 1),
+                  color: Colors.black,
+                  child: Text(
+                    e,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ))
+          ],
+        ),
+      ),
+      SizedBox(
         height: 400,
         child: GoogleMap(
           markers: Set.from(myMarker),
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
           onMapCreated: (GoogleMapController controller) {
+            controller.setMapStyle(_mapStyle);
             _controller.complete(controller);
           },
           onTap: _onMapTapped,
@@ -142,7 +164,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return Column(
       children: [
         SizedBox(
-          height: 55,
+          height: 60,
           child: MovingTitle("● Eventos para ti"),
         ),
         SizedBox(

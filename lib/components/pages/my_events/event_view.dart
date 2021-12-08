@@ -172,8 +172,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       child: Column(
         children: [
           SizedBox(
-            height: 55,
-            child: MovingTitle(widget.event.name),
+            height: 60,
+            child: MovingTitle("● " + widget.event.name),
           ),
           SizedBox(
             height: 20,
@@ -259,7 +259,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                       Container(
                           width: MediaQuery.of(context).size.width / 2 - 10,
                           child: Text(
-                            widget.event.description,
+                            "● " + widget.event.description,
                             style: TextStyle(color: Colors.black54),
                           )),
                       buildTextDate(),

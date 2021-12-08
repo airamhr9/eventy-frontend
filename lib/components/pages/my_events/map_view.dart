@@ -2,6 +2,7 @@ import 'package:eventy_front/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MapPositionSelector extends StatefulWidget {
   const MapPositionSelector() : super();
@@ -15,14 +16,18 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
   LatLng selectedLocation = LatLng(37.42796133580664, 1.085749655962);
   List<Marker> myMarker = [];
   late final initialPos;
+  late String _mapStyle;
 
   @override
   void initState() {
-    super.initState();
+    rootBundle.loadString('assets/map_style.txt').then((string) {
+      _mapStyle = string;
+    });
     initialPos = CameraPosition(
       target: selectedLocation,
       zoom: 14.4746,
     );
+    super.initState();
   }
 
   @override
@@ -43,6 +48,7 @@ class _MapPositionSelectorState extends State<MapPositionSelector> {
           mapType: MapType.normal,
           initialCameraPosition: initialPos,
           onMapCreated: (GoogleMapController controller) {
+            controller.setMapStyle(_mapStyle);
             _controller.complete(controller);
             LocationService.determinePosition()
                 .then((value) => goToUserPos(value));
