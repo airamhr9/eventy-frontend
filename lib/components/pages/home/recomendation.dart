@@ -59,8 +59,9 @@ class RecommendedEventState extends State<RecommendedEvent> {
       children: [
         LinearProgressIndicator(
           minHeight: 20,
-          value:
-              widget.event.participants.length / widget.event.maxParticipants,
+          value: (widget.event.participants.length
+              + widget.event.possiblyParticipants.length)
+              / widget.event.maxParticipants,
         ),
         CarouselSlider(
           carouselController: _controller,
