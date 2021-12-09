@@ -1,12 +1,14 @@
 import 'package:eventy_front/components/pages/my_events/related_event_card.dart';
+import 'package:eventy_front/objects/community.dart';
 import 'package:eventy_front/objects/event.dart';
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class CommunityEvents extends StatefulWidget {
-  final Event event;
-  const CommunityEvents(this.event) : super();
+  final Community community;
+  const CommunityEvents(this.community) : super();
 
   @override
   _CommunityEventsState createState() => _CommunityEventsState();
@@ -20,13 +22,13 @@ class _CommunityEventsState extends State<CommunityEvents> {
   initState() {
     _fetchEvents();
     super.initState();
+    print("id de comunidad " + widget.community.id.toString());
   }
 
   _fetchEvents() async {
-    EventService()
-        .getRelatedEvents(widget.event.id, widget.event.tags,
-            widget.event.latitude, widget.event.longitude)
+    CommunityService().getCommunityEvents(widget.community.id.toString())
         .then((value) => setState(() {
+          print(widget.community.id);
               relatedEvents = value;
               hasEvents = true;
             }));
@@ -37,10 +39,6 @@ class _CommunityEventsState extends State<CommunityEvents> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(
-          "Eventos relacionados",
-          style: TextStyle(fontSize: 18),
-        ),
         SizedBox(
           height: 20,
         ),
@@ -66,7 +64,7 @@ class _CommunityEventsState extends State<CommunityEvents> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text("No hay eventos relacionados")
+                      Text("No hay eventos en esta comunidad")
                     ],
                   )
             : CircularProgressIndicator()

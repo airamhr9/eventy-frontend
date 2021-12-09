@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
+import 'communityEvents.dart';
+
 class CommunityView extends StatefulWidget {
   final Community community;
   const CommunityView(this.community) : super();
@@ -392,8 +394,11 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildEvent() {
-   return Padding(
+   return Column(
+     children: [
+    Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -417,6 +422,10 @@ class _CommunitiesState extends State<CommunityView>
                  )
         ],
       ),
-    );
+
+    ),
+       CommunityEvents(widget.community)
+     ]
+   );
   }
 }
