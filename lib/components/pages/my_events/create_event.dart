@@ -1,3 +1,4 @@
+import 'package:eventy_front/services/communities_service.dart';
 import 'package:eventy_front/services/events_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventy_front/objects/event.dart';
@@ -5,8 +6,9 @@ import 'package:eventy_front/objects/event.dart';
 class CreateEvent extends StatefulWidget {
   final Event event;
   final List<FileImage> images;
+  final int type;
 
-  const CreateEvent(this.event, this.images) : super();
+  const CreateEvent(this.event, this.images, this.type) : super();
 
   @override
   _CreateEventState createState() => _CreateEventState();
@@ -21,6 +23,8 @@ class _CreateEventState extends State<CreateEvent> {
   void initState() {
     super.initState();
     final eventService = EventService();
+
+    if(widget.type == -1){
     if (widget.event.id == -1) {
       print("HOLAA ID MAL");
       eventService.postEvent(widget.event).then((value) {
@@ -45,7 +49,19 @@ class _CreateEventState extends State<CreateEvent> {
           requestCompleted = true;
         });
       });
+    }} else {
+      CommunityService().postEvent(widget.event, widget.type).then((value) {
+        if (value == false)
+          setState(() {
+            error = true;
+          });
+        setState(() {
+          requestCompleted = true;
+        });
+      });
+
     }
+
     for (var image in widget.images) {
       eventService.sendImage(image).then((value) {
         if (!value) {

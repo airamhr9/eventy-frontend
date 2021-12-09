@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventy_front/components/pages/chat/chat_community.dart';
 import 'package:eventy_front/components/pages/communities/add_new_post.dart';
 import 'package:eventy_front/components/pages/communities/post.dart';
+import 'package:eventy_front/components/pages/my_events/add_event.dart';
 import 'package:eventy_front/components/widgets/filled_button.dart';
 import 'package:eventy_front/components/widgets/moving_title.dart';
 import 'package:eventy_front/objects/community.dart';
@@ -165,6 +166,7 @@ class _CommunitiesState extends State<CommunityView>
         SizedBox(
           height: 20,
         ),
+
         CarouselSlider(
           options: CarouselOptions(
             height: 200.0,
@@ -185,7 +187,9 @@ class _CommunitiesState extends State<CommunityView>
               },
             );
           }).toList(),
+
         ),
+
         SizedBox(
           height: 20,
         ),
@@ -258,6 +262,7 @@ class _CommunitiesState extends State<CommunityView>
               SizedBox(
                 height: 20,
               ),
+              buildEvent(),
             ],
           ),
         ),
@@ -384,5 +389,34 @@ class _CommunitiesState extends State<CommunityView>
         },
       );
     } else {}
+  }
+
+  buildEvent() {
+   return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            "Eventos",
+            style: TextStyle(
+                fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+          ),
+          TextButton(
+              child: Text(
+                "Crear evento",
+                style: TextStyle(color: Colors.black54, fontSize: 20),
+              ),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddEvent(widget.community.id)),
+                );
+              }
+                 )
+        ],
+      ),
+    );
   }
 }

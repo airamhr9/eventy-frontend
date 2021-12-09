@@ -17,7 +17,9 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 class AddEvent extends StatefulWidget {
-  const AddEvent() : super();
+  final int type;
+  //-1 si es evento normal, otro comunidad
+  const AddEvent(this.type) : super();
 
   @override
   _AddEventState createState() => _AddEventState();
@@ -632,7 +634,7 @@ class _AddEventState extends State<AddEvent> {
       );
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return CreateEvent(event, imageFiles);
+        return CreateEvent(event, imageFiles, widget.type);
       })).then((value) => null);
     }
   }

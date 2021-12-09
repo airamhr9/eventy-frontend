@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventy_front/objects/community.dart';
+import 'package:eventy_front/objects/event.dart';
 import 'package:eventy_front/objects/message.dart';
 import 'package:eventy_front/persistence/my_shared_preferences.dart';
 import 'package:eventy_front/services/service.dart';
@@ -95,4 +96,36 @@ class CommunityService extends Service {
         body: json.encode(message.toJson()), headers: headers);
     return response.statusCode == 200;
   }
+
+  Future<List<Event>> getCommunityEvents(String communityId) async {
+    final query = {
+      'commId': communityId,
+    };
+    Uri url = Uri.http(this.url, '/eventsComm', query);
+    print(url);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    final list = data as List;
+    print(data);
+    List<Event> events =
+    list.map((events) => Event.fromJson(events)).toList();
+    print(events);
+    return events;
+  }
+
+  Future<bool> postEvent(Event event, int id) async {
+
+    final query = {
+      'commId': id.toString(),
+    };
+    Uri url = Uri.http(this.url, '/eventsComm', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final response = await http.post(url,
+        headers: headers, body: jsonEncode(event.toJson()));
+    return response.statusCode == 200;
+  }
+
+
+
 }

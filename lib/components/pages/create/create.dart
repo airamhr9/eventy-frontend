@@ -33,7 +33,7 @@ class _CreateState extends State<Create> {
       FilledButton(
         text: "Crear evento",
         onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddEvent())),
+            context, MaterialPageRoute(builder: (context) => AddEvent(-1))),
       ),
       SizedBox(
         height: 10,

@@ -219,7 +219,7 @@ class _RootState extends State<Root> {
           onPressed = () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddEvent()),
+              MaterialPageRoute(builder: (context) => AddEvent(-1)),
             );
           };
           icon = Icon(Icons.add_rounded);
