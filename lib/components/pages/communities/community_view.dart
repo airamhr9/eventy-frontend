@@ -116,59 +116,10 @@ class _CommunitiesState extends State<CommunityView>
           height: 80,
           child: MovingTitle(widget.community.name),
         ),
-        (!isMember)
-            ? Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Divider(
-                    thickness: 1,
-                    height: 0,
-                    color: Colors.black,
-                  ),
-                  FilledButton(
-                      text: "Unirse",
-                      onPressed: () {
-                        CommunityService().sendNewMember(
-                            widget.community.id.toString(), userId);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(
-                                  "Te has unido con exito",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 20,
-                                      color: Colors.black87),
-                                ),
-                                actionsPadding: EdgeInsets.only(left: 10),
-                                actionsAlignment: MainAxisAlignment.start,
-                                actions: [
-                                  TextButton(
-                                      child: Text(
-                                        "Aceptar",
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      onPressed: () {
-                                        CommunityService().sendNewMember(
-                                            widget.community.id.toString(),
-                                            userId);
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          isMember = true;
-                                        });
-                                      })
-                                ],
-                              );
-                            });
-                      })
-                ],
-              )
-            : SizedBox(),
+        (!isMember) ? buildAddButton() : SizedBox(),
         SizedBox(
           height: 20,
         ),
-
         CarouselSlider(
           options: CarouselOptions(
             height: 200.0,
@@ -189,9 +140,7 @@ class _CommunitiesState extends State<CommunityView>
               },
             );
           }).toList(),
-
         ),
-
         SizedBox(
           height: 20,
         ),
@@ -245,7 +194,7 @@ class _CommunitiesState extends State<CommunityView>
                 height: 20,
               ),
               Text(
-                "${widget.community.members.length} miembrxs",
+                "${widget.community.members.length} miembros",
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
@@ -270,7 +219,61 @@ class _CommunitiesState extends State<CommunityView>
         ),
       ],
     );
+  }
 
+  buildAddButton() {
+    if (widget.community.members.contains(userId)) {
+      return SizedBox(
+        height: 0,
+      );
+    } else {
+      return Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          Divider(
+            thickness: 1,
+            height: 0,
+            color: Colors.black,
+          ),
+          FilledButton(
+              text: "Unirse",
+              onPressed: () {
+                CommunityService()
+                    .sendNewMember(widget.community.id.toString(), userId);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(
+                          "Te has unido con exito",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              color: Colors.black87),
+                        ),
+                        actionsPadding: EdgeInsets.only(left: 10),
+                        actionsAlignment: MainAxisAlignment.start,
+                        actions: [
+                          TextButton(
+                              child: Text(
+                                "Aceptar",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              onPressed: () {
+                                CommunityService().sendNewMember(
+                                    widget.community.id.toString(), userId);
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  isMember = true;
+                                });
+                              })
+                        ],
+                      );
+                    });
+              })
+        ],
+      );
+    }
   }
 
   buildTextMembers() {
@@ -395,39 +398,42 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildEvent() {
-   return Column(
-     children: [
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            "Eventos",
-            style: TextStyle(
-                fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
-          ),
-          TextButton(
-              child: Text(
-                "Crear evento",
-                style: TextStyle(color: Colors.black54, fontSize: 20),
-              ),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddEvent(widget.community.id)),
-                );
-              }
-                 )
-        ],
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              "Eventos",
+              style: TextStyle(
+                  fontFamily: 'Tiny', fontSize: 30, color: Colors.black),
+            ),
+            buildButtonCreateEvent(),
+          ],
+        ),
       ),
+      SizedBox(height: 200, child: CommunityEvents(widget.community)),
+    ]);
+  }
 
-    ),
-
-       SizedBox(height: 200, child: CommunityEvents(widget.community)),
-     ]
-   );
+  buildButtonCreateEvent() {
+    if (widget.community.creator == userId) {
+      return TextButton(
+          child: Text(
+            "Crear evento",
+            style: TextStyle(color: Colors.black54, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddEvent(widget.community.id)),
+            );
+          });
+    } else {
+      return SizedBox(height: 0);
+    }
   }
 }
