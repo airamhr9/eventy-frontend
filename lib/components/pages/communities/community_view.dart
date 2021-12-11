@@ -222,7 +222,8 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildAddButton() {
-    if (widget.community.members.contains(userId)) {
+    if (widget.community.members.contains(userId) ||
+        widget.community.creator == userId) {
       return SizedBox(
         height: 0,
       );
