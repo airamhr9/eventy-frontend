@@ -270,6 +270,7 @@ class _CommunitiesState extends State<CommunityView>
         ),
       ],
     );
+
   }
 
   buildTextMembers() {
@@ -424,7 +425,8 @@ class _CommunitiesState extends State<CommunityView>
       ),
 
     ),
-       CommunityEvents(widget.community)
+
+       SizedBox(height: 200, child: CommunityEvents(widget.community)),
      ]
    );
   }

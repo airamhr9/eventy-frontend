@@ -26,10 +26,12 @@ class _CommunityEventsState extends State<CommunityEvents> {
   }
 
   _fetchEvents() async {
-    CommunityService().getCommunityEvents(widget.community.id.toString())
+    CommunityService().getCommunityEvents(widget.community.id)
         .then((value) => setState(() {
-          print(widget.community.id);
+
               relatedEvents = value;
+              print("Events loaded: " + relatedEvents.length.toString());
+              print(relatedEvents.toString());
               hasEvents = true;
             }));
   }
@@ -42,12 +44,13 @@ class _CommunityEventsState extends State<CommunityEvents> {
         SizedBox(
           height: 20,
         ),
+
         (hasEvents)
             ? (relatedEvents.length > 0)
                 ? Expanded(
                     child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (contex, index) =>
+                        itemBuilder: (context, index) =>
                             RelatedEvent(relatedEvents[index]),
                         separatorBuilder: (context, int) => Padding(
                               padding: const EdgeInsets.only(

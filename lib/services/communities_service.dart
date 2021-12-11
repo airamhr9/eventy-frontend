@@ -97,9 +97,9 @@ class CommunityService extends Service {
     return response.statusCode == 200;
   }
 
-  Future<List<Event>> getCommunityEvents(String communityId) async {
+  Future<List<Event>> getCommunityEvents(int communityId) async {
     final query = {
-      'commId': communityId,
+      'commId': communityId.toString(),
     };
     Uri url = Uri.http(this.url, '/eventsComm', query);
     print(url);
@@ -107,6 +107,7 @@ class CommunityService extends Service {
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
+    print("GET COMMUNITY EVENTS:");
     print(data);
     List<Event> events =
     list.map((events) => Event.fromJson(events)).toList();
