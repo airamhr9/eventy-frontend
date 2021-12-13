@@ -50,8 +50,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool showDate = true;
 
   String optionVoted = "";
-  bool reloadSurveys = false;
-  List<String> participantsId = [];
+  //bool reloadSurveys = false;
 
   @override
   void initState() {
@@ -69,8 +68,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
     plazasText = (widget.event.maxParticipants != -1)
-        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length
-            - widget.event.possiblyParticipants.length} plazas"
+        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length - widget.event.possiblyParticipants.length} plazas"
         : "No hay límite de plazas";
     plazasCounter = (widget.event.maxParticipants != -1)
         ? "${widget.event.participants.length + widget.event.possiblyParticipants.length}"
@@ -135,8 +133,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   waitToCheck() {
     try {
-      isMember = widget.event.participants.contains(userId)
-          || widget.event.possiblyParticipants.contains(userId);
+      isMember = widget.event.participants.contains(userId) ||
+          widget.event.possiblyParticipants.contains(userId) ||
+          widget.event.ownerId == userId;
     } catch (e) {
       //contains devuelve null si el usuario no es un particpante
       isMember = false;
@@ -165,7 +164,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildTop(BuildContext context) {
     //print("\n\nPosibles participantes:" + widget.event.possiblyParticipants.toString() + "\n\n");
-    
+
     return Container(
       padding: EdgeInsets.only(top: 15),
       child: Column(
@@ -311,9 +310,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               children: [
                 LinearProgressIndicator(
                   minHeight: 30,
-                  value: (widget.event.participants.length
-                      + widget.event.possiblyParticipants.length)
-                      / widget.event.maxParticipants,
+                  value: (widget.event.participants.length +
+                          widget.event.possiblyParticipants.length) /
+                      widget.event.maxParticipants,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -450,58 +449,13 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           SizedBox(
             height: 10,
           ),
-          /*  Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  Spacer(),
-                  buildTextParticipantsAndScoreEvent(),
-                  Spacer(),
-                ]),
-                SizedBox(
-                  height: 20,
-                ),
-                buildTextDescription(),
-                SizedBox(
-                  height: 20,
-                ),
-                buidDateAndLocation(),
-                SizedBox(
-                  height: 15,
-                ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(
-                    "Precio",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.lightBlueAccent),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.event.price.toString() + " €",
-                    style: TextStyle(fontSize: 16),
-                  )
-                ]),
-                SizedBox(
-                  height: 15,
-                ),
-                //buildSurveys()
-              ],
-            ),
-          ), */
         ],
       ),
     );
   }
 
   Widget buildAddEventButton() {
-    if (userId == widget.event.ownerId || 
-        widget.event.participants.contains(userId) || widget.event.possiblyParticipants.contains(userId)) {
+    if (isMember) {
       return SizedBox(
         height: 0,
       );
@@ -738,17 +692,17 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         });
   }
 
-  addMemberToEvent(bool confirmed, BuildContext context) async {
-    if (widget.event.participants.length + widget.event.possiblyParticipants.length
-        >= widget.event.maxParticipants) {
+  addMemberToEvent(bool confirmed, BuildContext context) {
+    if (widget.event.participants.length +
+            widget.event.possiblyParticipants.length >=
+        widget.event.maxParticipants) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));
     } else {
-      EventService().sendNewParticipant(
-          widget.event.id.toString(),
-          await MySharedPreferences.instance.getStringValue("userId"),
-          confirmed);
+      EventService()
+          .sendNewParticipant(widget.event.id.toString(), userId, confirmed)
+          .then((value) => EventService());
     }
   }
 
@@ -856,7 +810,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildSurveys() {
-    if ((surveysList.isNotEmpty && (widget.event.participants.contains(userId) || widget.event.possiblyParticipants.contains(userId))) ||
+    if ((surveysList.isNotEmpty &&
+            (widget.event.participants.contains(userId) ||
+                widget.event.possiblyParticipants.contains(userId))) ||
         widget.event.ownerId == userId) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -982,7 +938,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             survey.numVotes.toString() +
             "/" +
             (widget.event.participants.length +
-                widget.event.possiblyParticipants.length).toString())
+                    widget.event.possiblyParticipants.length)
+                .toString())
       ],
     );
   }

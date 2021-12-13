@@ -32,6 +32,16 @@ class EventService extends Service {
     return events;
   }
 
+  Future<Event> getEvent(String eventId) async {
+    final query = {'event': eventId};
+    Uri url = Uri.http(this.url, '/event', query);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    Event event = data;
+    return event;
+  }
+
   Future<List<Event>> getHistory() async {
     //sustituir por obtener localizacion
     final query = {
@@ -195,7 +205,7 @@ class EventService extends Service {
     final query = {
       'eventId': eventId,
       'userId': userId,
-      'confirmed': confirmed
+      'confirmed': confirmed.toString()
     };
     Uri url = Uri.http(this.url, '/joinEvent', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
