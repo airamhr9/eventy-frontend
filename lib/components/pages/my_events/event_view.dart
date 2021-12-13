@@ -54,7 +54,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    super.initState();
     MySharedPreferences.instance.getStringValue("userId").then((value) {
       setState(() {
         userId = value;
@@ -85,6 +84,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         }
       });
     });
+    super.initState();
   }
 
   _fetch() async {
@@ -456,8 +456,11 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildAddEventButton() {
     if (isMember) {
-      return SizedBox(
-        height: 0,
+      return Divider(
+        color: Colors.black,
+        indent: 15,
+        endIndent: 15,
+        thickness: 1,
       );
     } else {
       return FilledButton(

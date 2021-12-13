@@ -601,6 +601,12 @@ class _AddEventState extends State<AddEvent> {
           content: Text("El número mínimo de participantes posible es 1")));
       return false;
     }
+    if (tagsEvent.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("El evento debe tener al menos un tag")));
+      return false;
+    }
     return true;
   }
 
