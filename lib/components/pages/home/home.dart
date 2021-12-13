@@ -196,22 +196,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     EventService()
         .getParticipants(currentEvent.id.toString())
         .then((value) => setState(() {
-              print(value.toString());
               participants = value[0];
               possiblyParticipants = value[1];
-              print("cargando usuarios");
-              print("participantes");
-              print(participants);
-              print("posible");
-              print(possiblyParticipants);
-              print(participants.toString());
-              print("usuarios cargados");
             }));
   }
 
   addMemberToEvent(bool confirmed, BuildContext context) async {
-    if (currentEvent.participants.length + currentEvent.possiblyParticipants.length
-        >= currentEvent.maxParticipants) {
+    if (currentEvent.participants.length +
+            currentEvent.possiblyParticipants.length >=
+        currentEvent.maxParticipants) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));

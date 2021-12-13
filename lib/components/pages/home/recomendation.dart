@@ -30,7 +30,6 @@ class RecommendedEventState extends State<RecommendedEvent> {
 
   @override
   void initState() {
-    super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
     EventService().getSurveys(widget.event.id.toString()).then((value) {
@@ -59,9 +58,9 @@ class RecommendedEventState extends State<RecommendedEvent> {
       children: [
         LinearProgressIndicator(
           minHeight: 20,
-          value: (widget.event.participants.length
-              + widget.event.possiblyParticipants.length)
-              / widget.event.maxParticipants,
+          value: (widget.event.participants.length +
+                  widget.event.possiblyParticipants.length) /
+              widget.event.maxParticipants,
         ),
         CarouselSlider(
           carouselController: _controller,
@@ -196,6 +195,8 @@ class RecommendedEventState extends State<RecommendedEvent> {
   }
 
   Widget buildTextDate() {
+    print("HERE IN DATE");
+    print(date);
     if (showDate == false) {
       return SizedBox(
         height: 0,

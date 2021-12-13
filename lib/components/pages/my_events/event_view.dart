@@ -706,6 +706,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
       EventService()
           .sendNewParticipant(widget.event.id.toString(), userId, confirmed)
           .then((value) => EventService());
+      setState(() {
+        isMember = true;
+      });
     }
   }
 
