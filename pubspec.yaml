@@ -45,7 +45,7 @@ dependencies:
   restart_app: ^1.1.0
   network_image_mock: ^2.0.1
   marquee: ^2.2.0
-  custom_line_indicator_bottom_navbar: ^0.0.7
+  custom_line_indicator_bottom_navbar: ^0.0.8
 
 dev_dependencies:
   flutter_test:

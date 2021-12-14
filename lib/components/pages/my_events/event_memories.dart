@@ -158,30 +158,33 @@ class _EventsMemoriesState extends State<EventsMemories> {
                 ),
                 Row(
                   children: [
-                    GestureDetector(
-                        onTap: () {
-                          _imgFromGallery();
-                        },
-                        child: Container(
-                            height: 140,
-                            width: 140,
-                            child: Card(
-                              elevation: 0,
-                              shape: CircleBorder(
-                                  side: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 1,
-                                      style: BorderStyle.solid)),
-                              child: Container(
-                                  height: 100,
-                                  child: Center(child: buildImg())),
-                            ))),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2 - 80,
+                      child: GestureDetector(
+                          onTap: () {
+                            _imgFromGallery();
+                          },
+                          child: Container(
+                              height: 140,
+                              width: 140,
+                              child: Card(
+                                elevation: 0,
+                                shape: CircleBorder(
+                                    side: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 1,
+                                        style: BorderStyle.solid)),
+                                child: Container(
+                                    height: 100,
+                                    child: Center(child: buildImg())),
+                              ))),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
                     Container(
                         height: 140,
-                        width: 220,
+                        width: MediaQuery.of(context).size.width / 2 + 20,
                         child: TextFormField(
                           minLines: 8,
                           maxLines: 20,

@@ -93,7 +93,8 @@ class _AddSurveyState extends State<AddSurvey> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text("Duración", style: TextStyle(fontSize: 18)),
+                      Text("Duración de la encuesta",
+                          style: TextStyle(fontSize: 18)),
                       SizedBox(
                         height: 15,
                       ),
