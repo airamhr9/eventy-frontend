@@ -70,6 +70,7 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   void _fetchMuro() {
+    muroLoading = true;
     MuroService()
         .getCommunityMuro(widget.community.id)
         .then((value) => setState(() {
@@ -439,31 +440,34 @@ class _CommunitiesState extends State<CommunityView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => AddNewPost(widget.community.id)),
+                    builder: (context) =>
+                        AddNewPost(widget.community.id, _fetchMuro)),
               );
             },
             icon: Icon(Icons.create_outlined),
             label: Text("Nueva publicación")),
         (!muroLoading)
             ? (muro.length > 0)
-                ? ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Post(muro[index])
-                          ],
-                        );
-                      } else
-                        return Post(muro[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider();
-                    },
-                    itemCount: muro.length,
+                ? Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Post(muro[index])
+                            ],
+                          );
+                        } else
+                          return Post(muro[index]);
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider();
+                      },
+                      itemCount: muro.length,
+                    ),
                   )
                 : Center(
                     child: Column(

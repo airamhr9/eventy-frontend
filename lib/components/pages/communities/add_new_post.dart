@@ -9,7 +9,8 @@ import 'package:image_picker/image_picker.dart';
 
 class AddNewPost extends StatefulWidget {
   final int cId;
-  const AddNewPost(this.cId) : super();
+  final Function createCallback;
+  const AddNewPost(this.cId, this.createCallback) : super();
 
   @override
   _AddNewPostState createState() => _AddNewPostState();
@@ -206,6 +207,7 @@ class _AddNewPostState extends State<AddNewPost> {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.of(context).pop();
+                    widget.createCallback();
                   },
                   child: Text(
                     "Vale",
