@@ -2,6 +2,7 @@ import 'package:eventy_front/components/pages/friends/group_detail.dart';
 import 'package:eventy_front/objects/group.dart';
 import 'package:eventy_front/objects/group_request.dart';
 import 'package:eventy_front/objects/user.dart';
+import 'package:eventy_front/objects/user_group.dart';
 import 'package:eventy_front/services/group_service.dart';
 import 'package:eventy_front/services/muro_service.dart';
 import 'package:eventy_front/services/user_service.dart';
@@ -140,14 +141,25 @@ class _GroupsState extends State<Groups> with TickerProviderStateMixin {
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    group.users.first.imageUrl,
-                                  )),
+                                  image: NetworkImage(buildGroupImage(group))),
                             )),
-                        title: Text("Grupo de " + group.users.first.username),
+                        title: Text(buildGroupTitle(group)),
                       ))
                 ],
               );
+  }
+
+  String buildGroupTitle(Group group) {
+    String creatorName = group.users
+        .firstWhere((element) => element.id == group.creator)
+        .username;
+    return "Grupo de $creatorName y ${group.users.length - 1} más";
+  }
+
+  String buildGroupImage(Group group) {
+    return group.users
+        .firstWhere((element) => element.id == group.creator)
+        .imageUrl;
   }
 
   Widget buildTabRequests() {

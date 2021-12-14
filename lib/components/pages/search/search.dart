@@ -181,7 +181,7 @@ class _SearchState extends State<Search> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
               return Container(
-                height: 550,
+                height: 600,
                 padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -125,13 +125,14 @@ class RecommendedEventState extends State<RecommendedEvent> {
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width / 2 - 10,
-                            child: Text(
-                              widget.event.name,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                              ),
-                            )),
+                            child: Text(widget.event.name,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 22,
+                                ),
+                                maxLines: 3,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis)),
                         buildTextDate(),
                       ],
                     ),

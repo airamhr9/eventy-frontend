@@ -275,7 +275,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.event.address),
+                    Container(
+                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        child: Text(widget.event.address)),
                     TextButton(
                         onPressed: () {
                           Navigator.push(
