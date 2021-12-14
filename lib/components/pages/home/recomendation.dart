@@ -23,16 +23,19 @@ class RecommendedEvent extends StatefulWidget {
 class RecommendedEventState extends State<RecommendedEvent> {
   late String plazasLabel = "Ver a los asistentes";
   final CarouselController _controller = CarouselController();
-  int _current = 0;
   late String date;
-  bool showDate = false;
+  int _current = 0;
+  bool showDate = true;
   bool check = false;
 
   @override
   void initState() {
+    super.initState();
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
-    EventService().getSurveys(widget.event.id.toString()).then((value) {
+    print(date);
+    /*EventService().getSurveys(widget.event.id.toString()).then((value) {
+      print("hola1");
       for (Survey s in value) {
         if (s.question == "¿Qué fecha prefieres?") {
           check = true;
@@ -48,7 +51,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
           showDate = true;
         });
       }
-    });
+    });*/
   }
 
   @override
@@ -138,7 +141,14 @@ class RecommendedEventState extends State<RecommendedEvent> {
                                 fontSize: 22,
                               ),
                             )),
-                        buildTextDate(),
+                        //buildTextDate(),
+                        Text(
+                          date.substring(0, 10),
+                          style: TextStyle(
+                              fontFamily: 'Tiny',
+                              fontSize: 20,
+                              color: Colors.black),
+                        ),
                       ],
                     ),
                     Text(
@@ -195,8 +205,8 @@ class RecommendedEventState extends State<RecommendedEvent> {
   }
 
   Widget buildTextDate() {
-    print("HERE IN DATE");
-    print(date);
+    //print("HERE IN DATE");
+    //print(dateEvent);
     if (showDate == false) {
       return SizedBox(
         height: 0,

@@ -6,26 +6,28 @@ import 'package:intl/intl.dart';
 
 class Participants extends StatefulWidget {
   final Event event;
-  const Participants(this.event) : super();
+  final List<User> participants;
+   final List<User> possiblyParticipants;
+  const Participants(this.event, this.participants, this.possiblyParticipants) : super();
 
   @override
   _ParticipantsState createState() => _ParticipantsState();
 }
 
 class _ParticipantsState extends State<Participants> {
-  List<List<User>> participantsList = [];
-  bool loading = true;
+  //List<List<User>> participantsList = [];
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    EventService()
+    /*EventService()
         .getParticipants(widget.event.id.toString())
         .then((value) => setState(() {
               print("Here");
               participantsList = value;
               loading = false;
-            }));
+            }));*/
   }
 
   @override
@@ -105,10 +107,10 @@ class _ParticipantsState extends State<Participants> {
                             color: Colors.black),
                       ),
                       (!loading)
-                          ? (participantsList[0].length > 0)
+                          ? (widget.participants.isNotEmpty)
                               ? Column(
                                   children: [
-                                    ...participantsList[0]
+                                    ...widget.participants
                                         .map((participant) => ListTile(
                                               leading: Container(
                                                   width: 45,
@@ -137,10 +139,10 @@ class _ParticipantsState extends State<Participants> {
                             color: Colors.black54),
                       ),
                       (!loading)
-                          ? (participantsList[1].length > 0)
+                          ? (widget.possiblyParticipants.isNotEmpty)
                               ? Column(
                                   children: [
-                                    ...participantsList[1]
+                                    ...widget.possiblyParticipants
                                         .map((participant) => ListTile(
                                               leading: Container(
                                                   width: 45,
@@ -170,9 +172,8 @@ class _ParticipantsState extends State<Participants> {
   }
 
   Widget buildText(int maxParticipants) {
-    print(maxParticipants);
-    int numberParticipants = widget.event.participants.length
-        + widget.event.possiblyParticipants.length;
+    int numberParticipants = widget.participants.length +
+        widget.possiblyParticipants.length;
     if (maxParticipants == -1) {
       String asistentes =
           (numberParticipants == 1) ? " asistente." : " asistentes.";

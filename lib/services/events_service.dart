@@ -21,7 +21,7 @@ class EventService extends Service {
       'latitude': position.latitude.toString(),
       'longitude': position.longitude.toString()
     };
-    print(query['userId']);
+    //print(query['userId']);
     Uri url = Uri.http(this.url, '/recomend', query);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
@@ -51,7 +51,7 @@ class EventService extends Service {
     Uri url = Uri.http(this.url, '/users', query);
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
-    print(data);
+    //print(data);
     final list = data as List;
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
@@ -66,7 +66,7 @@ class EventService extends Service {
     Uri url = Uri.http(this.url, '/users', query);
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
-    print(data);
+    //print(data);
     final list = data as List;
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
@@ -80,7 +80,7 @@ class EventService extends Service {
     Uri url = Uri.http(this.url, '/seeItLater', query);
     final localhostResponse = await http.get(url);
     final data = await json.decode(localhostResponse.body);
-    print("SEE LATER DATA" + data.toString());
+    //print("SEE LATER DATA" + data.toString());
     final list = data as List;
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
@@ -95,9 +95,9 @@ class EventService extends Service {
         query[element] = filters[element].toString();
       });
     }
-    print(query);
+    //print(query);
     Uri url = Uri.http(this.url, '/search', query);
-    print("URL $url");
+    //print("URL $url");
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
@@ -121,7 +121,7 @@ class EventService extends Service {
     final localhostResponse = await http.get(url, headers: headers);
     //print("RESPONSE " + localhostResponse.body.toString());
     final data = await json.decode(localhostResponse.body);
-    print(data);
+    //print(data);
     final list = data['items'] as List;
     List<Event> events = list.map((event) => Event.fromJson(event)).toList();
     return events;
@@ -187,9 +187,9 @@ class EventService extends Service {
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
-    print("lista de participantes: ");
-    print(list);
-    print("Fin de lista");
+    //print("lista de participantes: ");
+    //print(list);
+    //print("Fin de lista");
 
     List<User> participantsList = (list[0] as List)
         .map((participant) => User.fromJson(participant))
@@ -259,7 +259,7 @@ class EventService extends Service {
 
   Future<bool> postSurveyVote(
       String eventId, String surveyId, String option) async {
-    print(option);
+    //print(option);
     final query = {
       'event': eventId,
       'survey': surveyId,
@@ -267,7 +267,7 @@ class EventService extends Service {
       'user': await MySharedPreferences.instance.getStringValue("userId")
     };
     Uri url = Uri.http(this.url, '/votes', query);
-    print(url);
+    //print(url);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(url, headers: headers);
     return response.statusCode == 200;

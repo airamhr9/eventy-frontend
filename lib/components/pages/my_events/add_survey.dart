@@ -24,8 +24,8 @@ class _AddSurveyState extends State<AddSurvey> {
   final TextEditingController _optionsController = TextEditingController();
   String startDateLabel = "Sin seleccionar";
   String finishDateLabel = "Sin seleccionar";
-  DateTime startDate = DateTime.now().add(Duration(days: 1));
-  DateTime finishDate = DateTime.now().add(Duration(days: 2));
+  DateTime startDateSurvey = DateTime.now().add(Duration(days: 1));
+  DateTime finishDateSurvey = DateTime.now().add(Duration(days: 2));
   List<String> options = [];
   late Survey survey;
 
@@ -182,18 +182,18 @@ class _AddSurveyState extends State<AddSurvey> {
                     showTitleActions: true,
                     minTime: DateTime.now(),
                     maxTime: DateTime.now().add(Duration(days: 730)),
-                    onChanged: (date) {
-                  print('change $date');
-                }, onConfirm: (date) {
-                  print('confirm $date');
+                    onChanged: (dateSurvey) {
+                  print('change $dateSurvey');
+                }, onConfirm: (dateSurvey) {
+                  print('confirm $dateSurvey');
                   setState(() {
                     final DateFormat formatter = DateFormat('dd/MM/yyyy');
-                    final String formatted = formatter.format(date);
+                    final String formatted = formatter.format(dateSurvey);
                     if (isStart) {
-                      startDate = date;
+                      startDateSurvey = dateSurvey;
                       startDateLabel = formatted;
                     } else {
-                      finishDate = date;
+                      finishDateSurvey = dateSurvey;
                       finishDateLabel = formatted;
                     }
                   });
@@ -210,15 +210,15 @@ class _AddSurveyState extends State<AddSurvey> {
     if (options.isEmpty) {
       return false;
     }
-    if (startDate.isAfter(finishDate)) {
+    if (startDateSurvey.isAfter(finishDateSurvey)) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content:
               Text("La fecha de final no debe ser posterior a la de inicio")));
       return false;
     }
-    if (startDate.isBefore(DateTime.now()) ||
-        finishDate.isBefore(DateTime.now())) {
+    if (startDateSurvey.isBefore(DateTime.now()) ||
+        finishDateSurvey.isBefore(DateTime.now())) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("Las fechas no pueden ser anteriores a la actual")));
@@ -284,8 +284,8 @@ class _AddSurveyState extends State<AddSurvey> {
                                 0,
                                 options,
                                 false,
-                                startDate.toIso8601String(),
-                                finishDate.toIso8601String(),
+                                startDateSurvey.toIso8601String(),
+                                finishDateSurvey.toIso8601String(),
                               );
                               if (widget.eventId == -1) {
                                 EventService()

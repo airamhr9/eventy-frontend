@@ -50,29 +50,66 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   bool showDate = true;
 
   String optionVoted = "";
-  //bool reloadSurveys = false;
+  List<List<User>> participantsList = [];
+  List<User> participants = [];
+  List<User> possiblyParticipants = [];
+  List<String> particpantsId = [];
+  bool showAddEventButton = true;
 
   @override
   void initState() {
+    getSurveys();
+    getParticipants(false);
     MySharedPreferences.instance.getStringValue("userId").then((value) {
       setState(() {
         userId = value;
       });
       _fetch();
-      waitToCheck();
     });
     priceText = (widget.event.price > 0)
         ? widget.event.price.toString() + "€"
         : "Gratis";
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
-    plazasText = (widget.event.maxParticipants != -1)
-        ? "Quedan ${widget.event.maxParticipants - widget.event.participants.length - widget.event.possiblyParticipants.length} plazas"
-        : "No hay límite de plazas";
-    plazasCounter = (widget.event.maxParticipants != -1)
-        ? "${widget.event.participants.length + widget.event.possiblyParticipants.length}"
-            "/${widget.event.maxParticipants}"
-        : "";
+    super.initState();
+  }
+
+  getParticipants(bool newParticipant) {
+    if (newParticipant == true) {
+      EventService().getParticipants(widget.event.id.toString()).then((value) {
+        setState(() {
+          participantsList = value;
+          participants = participantsList[0];
+          possiblyParticipants = participantsList[1];
+          showAddEventButton = false;
+          for (User u in participants) {
+            particpantsId.add(u.id);
+          }
+          for (User u in possiblyParticipants) {
+            particpantsId.add(u.id);
+          }
+        });
+        waitToCheck();
+      });
+    } else {
+      EventService().getParticipants(widget.event.id.toString()).then((value) {
+        setState(() {
+          participantsList = value;
+          participants = participantsList[0];
+          possiblyParticipants = participantsList[1];
+          for (User u in participants) {
+            particpantsId.add(u.id);
+          }
+          for (User u in possiblyParticipants) {
+            particpantsId.add(u.id);
+          }
+        });
+        waitToCheck();
+      });
+    }
+  }
+
+  getSurveys() {
     EventService().getSurveys(widget.event.id.toString()).then((value) {
       setState(() {
         surveysList = value;
@@ -82,9 +119,9 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
             break;
           }
         }
+        print("Acabo con las encuestas: " + surveysList.length.toString());
       });
     });
-    super.initState();
   }
 
   _fetch() async {
@@ -133,20 +170,36 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   waitToCheck() {
     try {
-      isMember = widget.event.participants.contains(userId) ||
-          widget.event.possiblyParticipants.contains(userId) ||
-          widget.event.ownerId == userId;
+      isMember =
+          particpantsId.contains(userId) || widget.event.ownerId == userId;
     } catch (e) {
       //contains devuelve null si el usuario no es un particpante
       isMember = false;
     }
     if (isMember == true) {
+      setState(() {
+        showAddEventButton = false;
+      });
       getScores();
+      plazasText = (widget.event.maxParticipants != -1)
+          ? "Quedan ${widget.event.maxParticipants - participants.length - possiblyParticipants.length} plazas"
+          : "No hay límite de plazas";
+      plazasCounter = (widget.event.maxParticipants != -1)
+          ? "${participants.length + possiblyParticipants.length}"
+              "/${widget.event.maxParticipants}"
+          : "";
     } else {
       setState(() {
         isMember = false;
         waitComplete = true;
       });
+      plazasText = (widget.event.maxParticipants != -1)
+          ? "Quedan ${widget.event.maxParticipants - participants.length - possiblyParticipants.length} plazas"
+          : "No hay límite de plazas";
+      plazasCounter = (widget.event.maxParticipants != -1)
+          ? "${participants.length + possiblyParticipants.length}"
+              "/${widget.event.maxParticipants}"
+          : "";
     }
   }
 
@@ -291,8 +344,8 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
                         onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Participants(widget.event))))
+                                builder: (context) => Participants(widget.event,
+                                    participants, possiblyParticipants))))
                   ],
                 ),
               ],
@@ -310,8 +363,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
               children: [
                 LinearProgressIndicator(
                   minHeight: 30,
-                  value: (widget.event.participants.length +
-                          widget.event.possiblyParticipants.length) /
+                  value: (participants.length + possiblyParticipants.length) /
                       widget.event.maxParticipants,
                 ),
                 Padding(
@@ -455,7 +507,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildAddEventButton() {
-    if (isMember) {
+    if (showAddEventButton == false || isMember == true) {
       return Divider(
         color: Colors.black,
         indent: 15,
@@ -467,111 +519,6 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
           text: "Unirse", onPressed: () => showEventDialog(context));
     }
   }
-
-  /*buildTextParticipantsAndScoreEvent() {
-    if (widget.event.averageScore != 0.0 &&
-        widget.event.finishDate.compareTo(DateTime.now().toString()) < 0) {
-      return Row(
-        children: [
-          buildTextParticipants(),
-          SizedBox(
-            width: 60,
-          ),
-          Text(widget.event.averageScore.toString()),
-          Icon(
-            Icons.star_rounded,
-            color: Colors.orange,
-          ),
-        ],
-      );
-    } else {
-      return buildTextParticipants();
-    }
-  }*/
-
-  /*Widget buildTextParticipants() {
-    return TextButton.icon(
-      onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Participants(widget.event)));
-      },
-      icon: Icon(
-        Icons.people_rounded,
-        size: 28,
-      ),
-      label: Text(
-        (widget.event.maxParticipants == -1)
-            ? "Consultar asistentes"
-            : "Quedan ${widget.event.maxParticipants - widget.event.participants.length} plazas",
-        style: TextStyle(fontSize: 18),
-      ),
-    );
-  }*/
-
-  /*Widget buildTextDescription() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Descripción",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.lightBlueAccent),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        SingleChildScrollView(
-            child: Text(
-          widget.event.description,
-          style: TextStyle(fontSize: 16),
-        ))
-      ],
-    );
-  }*/
-
-  /*buidDateAndLocation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Fecha y ubicación",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.lightBlueAccent),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          "El evento se realizará el " + date,
-          style: TextStyle(fontSize: 16),
-        ),
-        Row(
-          children: [
-            Text(
-              "VALENCIA, ESPAÑA  ",
-              style: TextStyle(fontSize: 15),
-            ),
-            TextButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EventLocation(LatLng(
-                              widget.event.latitude, widget.event.longitude))));
-                },
-                label: Text("Ver en mapa"),
-                icon: Icon(Icons.place_rounded))
-          ],
-        ),
-      ],
-    );
-  }*/
 
   buildButtonsSaveEnventAndPoint() {
     if (isMember == true &&
@@ -696,18 +643,17 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   addMemberToEvent(bool confirmed, BuildContext context) {
-    if (widget.event.participants.length +
-            widget.event.possiblyParticipants.length >=
-        widget.event.maxParticipants) {
+    if ((widget.event.maxParticipants != -1) &&
+        (participants.length + possiblyParticipants.length >=
+            widget.event.maxParticipants)) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text("El evento ya está completo y no es posible unirse")));
     } else {
       EventService()
           .sendNewParticipant(widget.event.id.toString(), userId, confirmed)
-          .then((value) => EventService());
-      setState(() {
-        isMember = true;
+          .then((value) {
+        getParticipants(true);
       });
     }
   }
@@ -816,9 +762,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildSurveys() {
-    if ((surveysList.isNotEmpty &&
-            (widget.event.participants.contains(userId) ||
-                widget.event.possiblyParticipants.contains(userId))) ||
+    if ((surveysList.isNotEmpty && (particpantsId.contains(userId))) ||
         widget.event.ownerId == userId) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -866,6 +810,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildSurveyDataOrOptionsToVote() {
     if (surveysList.isNotEmpty) {
+      print("Construyendo DATOS O OPCIONES");
       return Column(
         children: [
           ...surveysList.map((survey) {
@@ -943,9 +888,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
         Text("Han votado " +
             survey.numVotes.toString() +
             "/" +
-            (widget.event.participants.length +
-                    widget.event.possiblyParticipants.length)
-                .toString())
+            (participants.length + possiblyParticipants.length).toString())
       ],
     );
   }
@@ -1052,8 +995,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
 
   Widget buildMemories() {
     if (widget.event.finishDate.compareTo(DateTime.now().toString()) < 0 &&
-        (widget.event.participants.contains(userId) ||
-            widget.event.possiblyParticipants.contains(userId))) {
+        (particpantsId.contains(userId))) {
       return EventsMemories(widget.event);
     } else {
       return SizedBox(
