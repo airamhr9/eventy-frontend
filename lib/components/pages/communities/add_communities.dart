@@ -328,15 +328,18 @@ class _AddCommunityState extends State<AddCommunity> {
           content: Text("La comunidad debe tener un logo.")));
       return false;
     }
+    if (tagsCommunity.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("La comunidad debe tener al menos un tag.")));
+      return false;
+    }
     return true;
   }
 
   createCommunity(BuildContext context) async {
     String userId = await MySharedPreferences.instance.getStringValue("userId");
     if (_formKey.currentState!.validate() && validateFields(context)) {
-      if (tagsCommunity.isEmpty) {
-        tagsCommunity.add("");
-      }
       String logo = basename(imageLogoToSend!.file.path);
       community = Community(
           -1,

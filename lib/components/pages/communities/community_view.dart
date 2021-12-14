@@ -261,8 +261,6 @@ class _CommunitiesState extends State<CommunityView>
                                 style: TextStyle(fontSize: 16),
                               ),
                               onPressed: () {
-                                CommunityService().sendNewMember(
-                                    widget.community.id.toString(), userId);
                                 Navigator.of(context).pop();
                                 setState(() {
                                   isMember = true;
@@ -354,48 +352,6 @@ class _CommunitiesState extends State<CommunityView>
       }
     }
     return isMember;
-  }
-
-  buildAddToCommunityButton() {
-    checkUser();
-    if (isMember == false) {
-      return FloatingActionButton.extended(
-        icon: Icon(Icons.add),
-        label: Text("Unirse"),
-        onPressed: () {
-          CommunityService()
-              .sendNewMember(widget.community.id.toString(), userId);
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text(
-                    "Te has unido con exito",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: Colors.black87),
-                  ),
-                  actionsPadding: EdgeInsets.only(left: 10),
-                  actionsAlignment: MainAxisAlignment.start,
-                  actions: [
-                    TextButton(
-                        child: Text(
-                          "Aceptar",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            isMember = true;
-                          });
-                        })
-                  ],
-                );
-              });
-        },
-      );
-    } else {}
   }
 
   buildEvent() {
