@@ -34,24 +34,27 @@ class RecommendedEventState extends State<RecommendedEvent> {
     date = DateFormat("dd/MM/yyyy HH:mm")
         .format(DateTime.parse(widget.event.startDate));
     print(date);
-    /*EventService().getSurveys(widget.event.id.toString()).then((value) {
-      print("hola1");
-      for (Survey s in value) {
-        if (s.question == "¿Qué fecha prefieres?") {
-          check = true;
-          break;
+    EventService().getSurveys(widget.event.id.toString()).then((value) {
+      List<Survey> listSurveys = value;
+      if (listSurveys.isNotEmpty) {
+        print("lista de encuestas no vaciaaaaa ***************************");
+        for (Survey s in listSurveys) {
+          if (s.question == "¿Qué fecha prefieres?") {
+            check = true;
+            break;
+          }
+        }
+        if (check == true) {
+          setState(() {
+            showDate = false;
+          });
+        } else {
+          setState(() {
+            showDate = true;
+          });
         }
       }
-      if (check == true) {
-        setState(() {
-          showDate = false;
-        });
-      } else {
-        setState(() {
-          showDate = true;
-        });
-      }
-    });*/
+    });
   }
 
   @override
@@ -141,14 +144,7 @@ class RecommendedEventState extends State<RecommendedEvent> {
                                 fontSize: 22,
                               ),
                             )),
-                        //buildTextDate(),
-                        Text(
-                          date.substring(0, 10),
-                          style: TextStyle(
-                              fontFamily: 'Tiny',
-                              fontSize: 20,
-                              color: Colors.black),
-                        ),
+                        buildTextDate(),
                       ],
                     ),
                     Text(
