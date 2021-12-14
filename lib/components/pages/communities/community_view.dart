@@ -431,44 +431,52 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildTabMuro() {
-    return (!muroLoading)
-        ? (muro.length > 0)
-            ? ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextButton.icon(
-                            style: TextButton.styleFrom(
-                                elevation: 0, primary: Colors.black),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AddNewPost(widget.community.id)),
-                              );
-                            },
-                            icon: Icon(Icons.create_outlined),
-                            label: Text("Nueva publicación")),
-                        Post(muro[index])
-                      ],
-                    );
-                  } else
-                    return Post(muro[index]);
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider();
-                },
-                itemCount: muro.length,
-              )
-            : Center(
-                child: Text("No hay posts en el muro"),
-              )
-        : (Center(child: CircularProgressIndicator()));
+    return Column(
+      children: [
+        TextButton.icon(
+            style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddNewPost(widget.community.id)),
+              );
+            },
+            icon: Icon(Icons.create_outlined),
+            label: Text("Nueva publicación")),
+        (!muroLoading)
+            ? (muro.length > 0)
+                ? ListView.separated(
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Post(muro[index])
+                          ],
+                        );
+                      } else
+                        return Post(muro[index]);
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider();
+                    },
+                    itemCount: muro.length,
+                  )
+                : Center(
+                    child: Column(
+                    children: [
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text("No hay posts en el muro"),
+                    ],
+                  ))
+            : (Center(child: CircularProgressIndicator()))
+      ],
+    );
   }
 
   bool isMember = false;

@@ -182,8 +182,12 @@ class _AddNewPostState extends State<AddNewPost> {
         0,
         imageFiles.path.split('/').last);
     print(sendingPost.toJson());
-    MuroService().newPost(sendingPost, widget.cId.toString());
-    MuroService().sendImage(FileImage(imageFiles));
+    MuroService().newPost(sendingPost, widget.cId.toString()).then((value) {
+      print("post creadoooooo: " + value.toString());
+    });
+    MuroService()
+        .sendImage(FileImage(imageFiles))
+        .then((value) => print("Imagen del post enviada"));
 
     showDialog(
         context: context,

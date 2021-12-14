@@ -41,6 +41,7 @@ class MuroService extends Service {
       'text': post.text,
       'date': post.date,
       'author': post.author,
+      //'author': post.author,
       'images': post.images
     };
     Uri url = Uri.http(this.url, '/post', query);
