@@ -107,11 +107,11 @@ class CommunityService extends Service {
     final localhostResponse = await http.get(url, headers: headers);
     final data = await json.decode(localhostResponse.body);
     final list = data as List;
-    print("GET COMMUNITY EVENTS:");
-    print(data);
+    //print("GET COMMUNITY EVENTS:");
+    //print(data);
     List<Event> events =
     list.map((events) => Event.fromJson(events)).toList();
-    print(events);
+    //print(events);
     return events;
   }
 

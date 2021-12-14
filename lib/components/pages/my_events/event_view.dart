@@ -764,8 +764,7 @@ class _EventView extends State<EventView> with TickerProviderStateMixin {
   }
 
   Widget buildSurveys() {
-    if ((surveysList.isNotEmpty && (particpantsId.contains(userId))) ||
-        widget.event.ownerId == userId) {
+    if ((particpantsId.contains(userId)) || widget.event.ownerId == userId) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
