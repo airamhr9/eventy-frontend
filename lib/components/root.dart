@@ -75,6 +75,8 @@ class _RootState extends State<Root> {
               border: Border(top: BorderSide(color: Colors.black, width: 1))),
           child: body),
       bottomNavigationBar: CustomLineIndicatorBottomNavbar(
+        unselectedIconSize: 25,
+        selectedIconSize: 25,
         unselectedFontSize: 0,
         selectedFontSize: 0,
         enableLineIndicator: true,

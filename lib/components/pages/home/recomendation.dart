@@ -23,35 +23,23 @@ class RecommendedEvent extends StatefulWidget {
 class RecommendedEventState extends State<RecommendedEvent> {
   late String plazasLabel = "Ver a los asistentes";
   final CarouselController _controller = CarouselController();
-  late String date;
   int _current = 0;
   bool showDate = true;
-  bool check = false;
 
   @override
   void initState() {
     super.initState();
-    date = DateFormat("dd/MM/yyyy HH:mm")
-        .format(DateTime.parse(widget.event.startDate));
-    print(date);
     EventService().getSurveys(widget.event.id.toString()).then((value) {
       List<Survey> listSurveys = value;
       if (listSurveys.isNotEmpty) {
         print("lista de encuestas no vaciaaaaa ***************************");
         for (Survey s in listSurveys) {
           if (s.question == "¿Qué fecha prefieres?") {
-            check = true;
+            setState(() {
+              showDate = false;
+            });
             break;
           }
-        }
-        if (check == true) {
-          setState(() {
-            showDate = false;
-          });
-        } else {
-          setState(() {
-            showDate = true;
-          });
         }
       }
     });
@@ -209,7 +197,9 @@ class RecommendedEventState extends State<RecommendedEvent> {
       );
     } else {
       return Text(
-        date.substring(0, 10),
+        DateFormat("dd/MM/yyyy HH:mm")
+            .format(DateTime.parse(widget.event.startDate))
+            .substring(0, 10),
         style: TextStyle(fontFamily: 'Tiny', fontSize: 20, color: Colors.black),
       );
     }

@@ -18,8 +18,7 @@ class User {
       this.password,
       this.bio,
       this.birthdate,
-      this.profilePictureName
-      );
+      this.profilePictureName);
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -33,8 +32,7 @@ class User {
         json['password'],
         json['bio'],
         json['birthdate'],
-        json['imageName']
-        );
+        json['imageName']);
   }
 
   Map toJson() {
@@ -47,7 +45,7 @@ class User {
       'password': this.password,
       'bio': this.bio,
       'birthdate': this.birthdate,
-      'image': this.profilePictureName
+      'imageName': this.profilePictureName
     };
     return result;
   }
