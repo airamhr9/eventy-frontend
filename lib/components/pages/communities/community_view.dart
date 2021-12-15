@@ -48,6 +48,7 @@ class _CommunitiesState extends State<CommunityView>
   bool hasUser = false;
 
   bool wait = true;
+  bool showButtons = false;
 
   late Community community;
 
@@ -310,6 +311,7 @@ class _CommunitiesState extends State<CommunityView>
                                 Navigator.of(context).pop();
                                 setState(() {
                                   isMember = true;
+                                  showButtons = true;
                                 });
                               })
                         ],
@@ -354,7 +356,9 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildButtonComment() {
-    if (community.members.contains(userId) || community.creator == userId) {
+    if (community.members.contains(userId) ||
+        community.creator == userId ||
+        showButtons == true) {
       return TextButton.icon(
           style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
           onPressed: () {
@@ -492,7 +496,9 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildButtonPublication() {
-    if (community.members.contains(userId) || community.creator == userId) {
+    if (community.members.contains(userId) ||
+        community.creator == userId ||
+        showButtons == true) {
       return TextButton.icon(
           style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
           onPressed: () {
