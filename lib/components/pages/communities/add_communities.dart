@@ -289,10 +289,10 @@ class _AddCommunityState extends State<AddCommunity> {
                         SizedBox(
                           height: 20,
                         ),
-                        buildVisibilityRadioGroup(context),
+                        /*buildVisibilityRadioGroup(context),
                         SizedBox(
                           height: 20,
-                        ),
+                        ),*/
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(double.infinity,
@@ -358,7 +358,7 @@ class _AddCommunityState extends State<AddCommunity> {
     }
   }
 
-  Widget buildVisibilityRadioGroup(BuildContext context) {
+  /*Widget buildVisibilityRadioGroup(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -395,5 +395,5 @@ class _AddCommunityState extends State<AddCommunity> {
         )
       ],
     );
-  }
+  }*/
 }
