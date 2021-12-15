@@ -70,7 +70,6 @@ class _CommunitiesState extends State<CommunityView>
 
     _fetchMuro();
     _fetchChat();
-    _fetchCommunity();
     super.initState();
   }
 
@@ -87,11 +86,12 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   void _fetchCommunity() {
-    CommunityService()
-        .getCommunity(widget.community.id)
-        .then((value) => setState(() {
-              community = value;
-            }));
+    CommunityService().getCommunity(widget.community.id).then((value) {
+      setState(() {
+        community = value;
+        wait = false;
+      });
+    });
   }
 
   _fetchChat() {
@@ -100,8 +100,8 @@ class _CommunitiesState extends State<CommunityView>
         comments.addAll(value);
         comments = comments.reversed.toList();
         hasComments = true;
-        wait = false;
       });
+      _fetchCommunity();
     });
   }
 
