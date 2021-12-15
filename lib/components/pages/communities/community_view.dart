@@ -354,7 +354,7 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildButtonComment() {
-    if (community.members.contains(userId)) {
+    if (community.members.contains(userId) || community.creator == userId) {
       return TextButton.icon(
           style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
           onPressed: () {
@@ -492,7 +492,7 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   Widget buildButtonPublication() {
-    if (community.members.contains(userId)) {
+    if (community.members.contains(userId) || community.creator == userId) {
       return TextButton.icon(
           style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
           onPressed: () {
