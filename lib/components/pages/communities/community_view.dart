@@ -49,8 +49,12 @@ class _CommunitiesState extends State<CommunityView>
 
   bool wait = true;
 
+  late Community community;
+
   @override
   void initState() {
+    community = widget.community;
+
     _tabController = TabController(length: 2, vsync: this);
     MySharedPreferences.instance.getStringValue("userId").then((value) {
       setState(() {
@@ -66,6 +70,7 @@ class _CommunitiesState extends State<CommunityView>
 
     _fetchMuro();
     _fetchChat();
+    _fetchCommunity();
     super.initState();
   }
 
@@ -78,6 +83,14 @@ class _CommunitiesState extends State<CommunityView>
               muroLoading = false;
               print("value loaded with ${value.length} posts");
               print("muro loaded with ${muro.length} posts");
+            }));
+  }
+
+  void _fetchCommunity() {
+    CommunityService()
+        .getCommunity(widget.community.id)
+        .then((value) => setState(() {
+              community = value;
             }));
   }
 
@@ -148,7 +161,7 @@ class _CommunitiesState extends State<CommunityView>
         ),
         SizedBox(
           height: 80,
-          child: MovingTitle(widget.community.name),
+          child: MovingTitle(community.name),
         ),
         (!isMember) ? buildAddButton() : SizedBox(),
         SizedBox(
@@ -160,7 +173,7 @@ class _CommunitiesState extends State<CommunityView>
             viewportFraction: 1,
             enableInfiniteScroll: false,
           ),
-          items: widget.community.images.map((i) {
+          items: community.images.map((i) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
@@ -185,14 +198,14 @@ class _CommunitiesState extends State<CommunityView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.community.name.toUpperCase(),
+                community.name.toUpperCase(),
                 style: TextStyle(
                     fontWeight: FontWeight.w100, color: Colors.black54),
               ),
               SizedBox(
                 height: 10,
               ),
-              Text(widget.community.description)
+              Text(community.description)
             ],
           ),
         ),
@@ -216,7 +229,7 @@ class _CommunitiesState extends State<CommunityView>
                 spacing: 5,
                 runSpacing: 3,
                 children: [
-                  ...widget.community.tags.map((tag) => FilterChip(
+                  ...community.tags.map((tag) => FilterChip(
                       label: Text(tag),
                       onSelected: (bool selected) {},
                       side: BorderSide(color: Colors.black, width: 1),
@@ -228,7 +241,7 @@ class _CommunitiesState extends State<CommunityView>
                 height: 20,
               ),
               Text(
-                "${widget.community.members.length} miembros",
+                "${community.members.length} miembros",
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
@@ -238,7 +251,7 @@ class _CommunitiesState extends State<CommunityView>
                 spacing: 5,
                 runSpacing: 3,
                 children: [
-                  ...widget.community.members.map((member) => CircleAvatar(
+                  ...community.members.map((member) => CircleAvatar(
                         radius: 10,
                         backgroundColor: Colors.blue,
                       ))
@@ -256,8 +269,7 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildAddButton() {
-    if (widget.community.members.contains(userId) ||
-        widget.community.creator == userId) {
+    if (community.members.contains(userId) || community.creator == userId) {
       return SizedBox(
         height: 0,
       );
@@ -274,7 +286,7 @@ class _CommunitiesState extends State<CommunityView>
               text: "Unirse",
               onPressed: () {
                 CommunityService()
-                    .sendNewMember(widget.community.id.toString(), userId);
+                    .sendNewMember(community.id.toString(), userId);
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -310,14 +322,12 @@ class _CommunitiesState extends State<CommunityView>
   }
 
   buildTextMembers() {
-    if (widget.community.members.length > 1) {
-      return Text(
-          "  " + widget.community.members.length.toString() + " miembros",
+    if (community.members.length > 1) {
+      return Text("  " + community.members.length.toString() + " miembros",
           textAlign: TextAlign.center,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18));
     } else {
-      return Text(
-          "  " + widget.community.members.length.toString() + " miembro",
+      return Text("  " + community.members.length.toString() + " miembro",
           textAlign: TextAlign.center,
           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18));
     }
@@ -327,7 +337,7 @@ class _CommunitiesState extends State<CommunityView>
     return Container(
       padding: EdgeInsets.all(10),
       child: SingleChildScrollView(
-        child: Text(widget.community.description),
+        child: Text(community.description),
       ),
     );
   }
@@ -440,8 +450,7 @@ class _CommunitiesState extends State<CommunityView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        AddNewPost(widget.community.id, _fetchMuro)),
+                    builder: (context) => AddNewPost(community.id, _fetchMuro)),
               );
             },
             icon: Icon(Icons.create_outlined),
@@ -486,7 +495,7 @@ class _CommunitiesState extends State<CommunityView>
   bool isMember = false;
   Future<bool> checkUser() async {
     userId = await MySharedPreferences.instance.getStringValue("userId");
-    for (String userIdInCommunity in widget.community.members) {
+    for (String userIdInCommunity in community.members) {
       if (userId == userIdInCommunity) {
         return isMember = true;
       }
@@ -511,12 +520,12 @@ class _CommunitiesState extends State<CommunityView>
           ],
         ),
       ),
-      SizedBox(height: 200, child: CommunityEvents(widget.community)),
+      SizedBox(height: 200, child: CommunityEvents(community)),
     ]);
   }
 
   buildButtonCreateEvent() {
-    if (widget.community.creator == userId) {
+    if (community.creator == userId) {
       return TextButton(
           child: Text(
             "Crear evento",
@@ -525,8 +534,7 @@ class _CommunitiesState extends State<CommunityView>
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => AddEvent(widget.community.id)),
+              MaterialPageRoute(builder: (context) => AddEvent(community.id)),
             );
           });
     } else {

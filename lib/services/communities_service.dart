@@ -27,6 +27,19 @@ class CommunityService extends Service {
     return communities;
   }
 
+  Future<Community> getCommunity(int commId) async {
+    final query = {
+      'id': commId.toString(),
+    };
+    Uri url = Uri.http(this.url, '/communities', query);
+    print(url);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final localhostResponse = await http.get(url, headers: headers);
+    final data = await json.decode(localhostResponse.body);
+    Community community = Community.fromJson(data);
+    return community;
+  }
+
   Future<bool> post(Community community) async {
     final body = json.encode(community);
     Uri url = Uri.http(this.url, '/communities');
@@ -109,14 +122,12 @@ class CommunityService extends Service {
     final list = data as List;
     //print("GET COMMUNITY EVENTS:");
     //print(data);
-    List<Event> events =
-    list.map((events) => Event.fromJson(events)).toList();
+    List<Event> events = list.map((events) => Event.fromJson(events)).toList();
     //print(events);
     return events;
   }
 
   Future<bool> postEvent(Event event, int id) async {
-
     final query = {
       'commId': id.toString(),
     };
@@ -126,7 +137,4 @@ class CommunityService extends Service {
         headers: headers, body: jsonEncode(event.toJson()));
     return response.statusCode == 200;
   }
-
-
-
 }
