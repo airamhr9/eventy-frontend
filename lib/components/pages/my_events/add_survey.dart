@@ -61,7 +61,7 @@ class _AddSurveyState extends State<AddSurvey> {
                       Row(
                         children: [
                           Container(
-                            width: 250,
+                            width: MediaQuery.of(context).size.width / 2 + 35,
                             child: TextFormField(
                               controller: _optionsController,
                               /*validator: (value) {
@@ -79,15 +79,18 @@ class _AddSurveyState extends State<AddSurvey> {
                             ),
                           ),
                           Spacer(),
-                          FilledButton(
-                              onPressed: () {
-                                if (_optionsController.text.isNotEmpty) {
-                                  setState(() {
-                                    options.add(_optionsController.text);
-                                  });
-                                }
-                              },
-                              text: "Añadir")
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2 - 100,
+                            child: FilledButton(
+                                onPressed: () {
+                                  if (_optionsController.text.isNotEmpty) {
+                                    setState(() {
+                                      options.add(_optionsController.text);
+                                    });
+                                  }
+                                },
+                                text: "Añadir"),
+                          )
                         ],
                       ),
                       SizedBox(
