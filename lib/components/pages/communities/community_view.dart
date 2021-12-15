@@ -345,83 +345,92 @@ class _CommunitiesState extends State<CommunityView>
   Widget buildTabChat() {
     return Column(
       children: [
-        TextButton.icon(
-            style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    TextEditingController commentController =
-                        TextEditingController();
-                    return AlertDialog(
-                      title: Text("Comentar"),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Cancelar",
-                              style: TextStyle(color: Colors.black54),
-                            )),
-                        TextButton(
-                            onPressed: () {
-                              String messageText =
-                                  commentController.text.trim();
-                              if (messageText.isNotEmpty) {
-                                Message newMessage = Message(
-                                    "",
-                                    messageText,
-                                    DateTime.now(),
-                                    userId,
-                                    user.userName,
-                                    user.profilePicture);
-                                Navigator.pop(context);
-                                setState(() {
-                                  comments.insert(0, newMessage);
-                                });
-                                Message messageToSend = Message(
-                                    newMessage.id,
-                                    newMessage.text,
-                                    newMessage.dateTime,
-                                    newMessage.userId,
-                                    newMessage.userName,
-                                    user.profilePictureName!);
-                                ChatService().sendMessageCommunity(
-                                    messageToSend, widget.community.id);
-                              }
-                            },
-                            child: Text(
-                              "Comentar",
-                              style: TextStyle(color: Colors.black),
-                            ))
-                      ],
-                      content: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5.0, vertical: 10),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          controller: commentController,
-                          decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.only(bottom: 25, left: 15),
-                              fillColor: Colors.white70,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1)),
-                              filled: true,
-                              hintText: "Comentario"),
-                        ),
-                      ),
-                    );
-                  });
-            },
-            icon: Icon(Icons.create_outlined),
-            label: Text("Comentar")),
+        buildButtonComment(),
         Container(
           child: buildComments(),
         )
       ],
     );
+  }
+
+  Widget buildButtonComment() {
+    if (community.members.contains(userId)) {
+      return TextButton.icon(
+          style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  TextEditingController commentController =
+                      TextEditingController();
+                  return AlertDialog(
+                    title: Text("Comentar"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "Cancelar",
+                            style: TextStyle(color: Colors.black54),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            String messageText = commentController.text.trim();
+                            if (messageText.isNotEmpty) {
+                              Message newMessage = Message(
+                                  "",
+                                  messageText,
+                                  DateTime.now(),
+                                  userId,
+                                  user.userName,
+                                  user.profilePicture);
+                              Navigator.pop(context);
+                              setState(() {
+                                comments.insert(0, newMessage);
+                              });
+                              Message messageToSend = Message(
+                                  newMessage.id,
+                                  newMessage.text,
+                                  newMessage.dateTime,
+                                  newMessage.userId,
+                                  newMessage.userName,
+                                  user.profilePictureName!);
+                              ChatService().sendMessageCommunity(
+                                  messageToSend, widget.community.id);
+                            }
+                          },
+                          child: Text(
+                            "Comentar",
+                            style: TextStyle(color: Colors.black),
+                          ))
+                    ],
+                    content: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 10),
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: commentController,
+                        decoration: InputDecoration(
+                            contentPadding:
+                                EdgeInsets.only(bottom: 25, left: 15),
+                            fillColor: Colors.white70,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 1)),
+                            filled: true,
+                            hintText: "Comentario"),
+                      ),
+                    ),
+                  );
+                });
+          },
+          icon: Icon(Icons.create_outlined),
+          label: Text("Comentar"));
+    } else {
+      return SizedBox(
+        height: 0,
+      );
+    }
   }
 
   Widget buildComments() {
@@ -444,17 +453,7 @@ class _CommunitiesState extends State<CommunityView>
   Widget buildTabMuro() {
     return Column(
       children: [
-        TextButton.icon(
-            style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddNewPost(community.id, _fetchMuro)),
-              );
-            },
-            icon: Icon(Icons.create_outlined),
-            label: Text("Nueva publicación")),
+        buildButtonPublication(),
         (!muroLoading)
             ? (muro.length > 0)
                 ? Expanded(
@@ -490,6 +489,26 @@ class _CommunitiesState extends State<CommunityView>
             : (Center(child: CircularProgressIndicator()))
       ],
     );
+  }
+
+  Widget buildButtonPublication() {
+    if (community.members.contains(userId)) {
+      return TextButton.icon(
+          style: TextButton.styleFrom(elevation: 0, primary: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddNewPost(community.id, _fetchMuro)),
+            );
+          },
+          icon: Icon(Icons.create_outlined),
+          label: Text("Nueva publicación"));
+    } else {
+      return SizedBox(
+        height: 0,
+      );
+    }
   }
 
   bool isMember = false;
